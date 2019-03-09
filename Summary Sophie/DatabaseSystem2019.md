@@ -36,7 +36,7 @@ ER model = entity-relationship model <br>
 #####2.2 Constraints
 ######2.2.1 Key constraints
 
-![key](images/key_constraints.png "key")
+![key](Images/key_constraints.png "key")
 * Many-to-many : <br>
 an employee can work in many departments; a department can have many employees
 
@@ -47,7 +47,7 @@ each department has at most one manager
 each driver can drive at most one vehicle and each vehicle will have at most one driver.
 
 ######2.2.2 Participation constraints
-![participation](images/participation_constraints.png "key")
+![participation](Images/participation_constraints.png "key")
 * Total participation : <br>
 Every employee should work in
 at least one department.<br>
@@ -69,25 +69,25 @@ customers.<br>
 
 #####2.3 Weak entities
 Entity that can be identified uniquely only by considering the primary key of another entity (owner).
-![weak](images/weak_entity.png "weak")
+![weak](Images/weak_entity.png "weak")
 There has to be a one-to-many relationship (one owner, many weak entities).<br>
 The weak entity set must have total participation
 
 #####2.4 Ternary relationships
-![weak](images/ternary_relation.png "weak")
+![weak](Images/ternary_relation.png "weak")
 
 #####2.5 ISA ('is a') hierarchies
 Attributes inherited
-![weak](images/isa_hierarchie.png "weak")
+![weak](Images/isa_hierarchie.png "weak")
 ######2.5.1 **Constraints** :
 * **Overlap cosntraints** :
 *Can a student be a master as well as a doctorate entity? (Allowed/Disallowed)*
 * **Covering constraints** : *Does every Employees entity also have to be an Hourly_Emps or a Contract_Emps entity? (Yes/No)*
-![weak](images/example_hierarchie.png "weak")
+![weak](Images/example_hierarchie.png "weak")
 
 #####2.6 Aggregation :
 Can treat a relationship set as an entity set.
-![weak](images/aggregation.png "weak")
+![weak](Images/aggregation.png "weak")
 
 
 ---------
