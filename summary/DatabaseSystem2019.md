@@ -92,3 +92,107 @@ Can treat a relationship set as an entity set.
 
 ---------
 ###Lecture 3 : Data model
+**SQL** = Structured Query Language
+#####3.1 Creating relations in SQL
+![table](images/sql_creation.png "key")
+
+#####3.2 Key
+* **superkey** : <br>
+Set of attributes for which no two distinct tuples can have same values in all key fields . Can be all the attributes, or just a few.
+* **key** :<br>
+ minimal superkey (no subset of the fields is a superkey)
+* **candidate key** :<br>
+ if there are multiple keys, then each of them is referred to as candidate key
+* **primary key** : <br>
+one of the candidate key is chosen
+
+*Example :*
+![key](images/candidate_keys.png "key")
+* *UNIQUE* keyword indicates a candidate key that is not the primary key.
+* *PRIMARY* keyword indicates the primary key.
+
+#####3.3 Integrity constraints (ICs)
+* **IC** = condition that must be true for any instance of the database (the domain constraints)<br>
+* **legal instance** : satisfies all the specified ICs.<br>
+//TODO ...
+
+---------
+###Lecture 4 : Relational algebra
+#####4.1 Introduction
+relation algebra = operational, useful for representing execution plans <br>
+* query is applied to *relation instances*, the result is also a *relation instance*.
+* Schema of the input relations for a query is **fixed** (but query will run over any legal instance)
+* Schema of output (result) of a given query is also **fixed**
+
+#####4.2 Basic operations
+* **selection** $\sigma$ :<br>
+  selects *rows* from a relation (horizontal) <br>
+  $\leftrightarrow$ *WHERE* in SQL
+
+  *example :*
+  ![selection](images/selection.png "sel")
+
+* **projection** $\pi$ : <br>
+  retains only wanted *columns* from a relation (vertical) <br>
+  $\leftrightarrow$ *SELECT* in SQL
+
+  *example :*
+  ![proj](images/projection.png "proj")
+* **cross-product** $\times$ :<br>
+  combines two relations
+
+  *example :*
+  ![cross_product](images/cross_prod.png "cross")
+
+* **set-difference** $-$ : <br>
+  tuples in $R_1$ but not in $R_2$<br>
+
+  $R_1$ and $R_2$ must be *union compatible* (same number of fields and fields of same type)
+
+  *example :*
+  ![set_diff](images/set_diff.png "set_diff")
+
+* **union** $\cup$ : <br>
+  tuples in $R_1$ and/or in $R_2$<br>
+
+  $R_1$ and $R_2$ must be *union compatible* (same number of fields and fields of same type)
+
+  *example :*
+  ![union](images/union.png "sel")
+
+
+#####4.3 Renaming operator $\rho$
+renames the list of attributes :<br>
+$<oldname> \longrightarrow <newname>$<br>
+or<br>
+$<position> \longrightarrow <newname>$<br>, where *position* starts at 1!
+
+*example :*
+![rename](images/rename.png "rename")
+
+#####4.4 Compound operators
+######4.4.1 Natural join $\Join$
+*idea* : <br>
+* compute $R \times S$
+* select rows where attributes that appear in both relations have equal values
+* project all unique attributes and one copy of the common ones <br>
+
+*example :*
+![natJoin](images/nat_join.png "natJoin")
+
+######4.4.2 Condition join or theta-join $\Join_c$
+
+$R\Join_c S = \sigma_c (R \times S)$
+
+######4.4.3 Equi-join
+special case of the theta-join : condition *c* contains only conjunction of equality conditions<br>
+
+*example :*<br>
+good way of finding all pairs of sailors in $S_1\times S_2$ who have the same age : <br>
+$$
+  \sigma_{sid_1 < sid_2}(S_1 \Join_{age = age_2}\rho _{age \rightarrow age2, sid \rightarrow sid2}(S_2))
+$$
+
+######4.4.3 Division
+$A/B$ contains all $x$ tuples such that for every tuple in $B$, there is an $(x,y)$ tuple in $A$.<br>
+($B$ is a proper subset of $A$)
