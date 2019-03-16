@@ -29,6 +29,8 @@ CREATE TABLE Listing(
       REFERENCES Host(host_id),
   FOREIGN KEY(country_code)
       REFERENCES Country
+  FOREIGN KEY(neigbourhood)
+      REFERENCES Neigbourhood
 
 
 )
