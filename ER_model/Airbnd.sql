@@ -76,7 +76,6 @@ CREATE TABLE City(
 
 CREATE TABLE House_properties(
   ---------attributes---------
-  listing_id INTEGER,
   property_type VARCHAR(50),
   room_type VARCHAR(50),
   accomodates INTEGER,
@@ -88,6 +87,7 @@ CREATE TABLE House_properties(
   square_feet INTEGER,
 
   -----relation attributes----
+  listing_id INTEGER,
   ------------keys------------
   PRIMARY KEY(listing_id),
   FOREIGN KEY(listing_id)
@@ -97,7 +97,6 @@ CREATE TABLE House_properties(
 
 CREATE TABLE Economic_properties(
   ---------attributes---------
-  listing_id INTEGER,
   price INTEGER,
   weekly_price INTEGER,
   monthly_price INTEGER,
@@ -106,6 +105,7 @@ CREATE TABLE Economic_properties(
   guests_included INTEGER,
   extra_people INTEGER,
   -----relation attributes----
+  listing_id INTEGER,
   ------------keys------------
   PRIMARY KEY(listing_id),
   FOREIGN KEY(listing_id)
@@ -115,6 +115,7 @@ CREATE TABLE Economic_properties(
 
 CREATE TABLE Administrative_properties(
   ---------attributes---------
+  
   -----relation attributes----
   ------------keys------------
 
