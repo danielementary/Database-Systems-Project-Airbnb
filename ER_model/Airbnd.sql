@@ -13,8 +13,15 @@ CREATE TABLE Listing(
   transit TEXT,
   access TEXT,
   interaction TEXT,
-  picture_url VARCHAR(50)
-
+  picture_url VARCHAR(50),
+  review_scores_rating DECIMAL,
+  review_scores_accuracy DECIMAL,
+  review_scores_cleanliness DECIMAL,
+  review_scores_checkin DECIMAL,
+  review_scores_communication DECIMAL,
+  review_scores_location DECIMAL,
+  review_scores_checkin DECIMAL,
+  review_scores_value DECIMAL,  
   -----relation attributes----
   --a host owns a listing
   host_id INTEGER NOT NULL,
@@ -119,6 +126,8 @@ CREATE TABLE Administrative_properties(
   cancellation_policy TEXT,
   require_guest_profile_picture VARCHAR(10),
   require_guest_phone_verification VARCHAR(10),
+  minimum_nights INTEGER,
+  maximum_nights INTEGER,
   -----relation attributes----
   listing_id INTEGER,
   ------------keys------------
@@ -145,8 +154,10 @@ CREATE TABLE Review(
 
 CREATE TABLE Reviewer(
   ---------attributes---------
+  reviewer_id INTEGER,
   -----relation attributes----
   ------------keys------------
+  PRIMARY KEY(reviewer_id),
 )
 
 CREATE TABLE Reservation(
