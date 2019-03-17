@@ -21,7 +21,7 @@ CREATE TABLE Listing(
   review_scores_communication DECIMAL,
   review_scores_location DECIMAL,
   review_scores_checkin DECIMAL,
-  review_scores_value DECIMAL,  
+  review_scores_value DECIMAL,
   -----relation attributes----
   --a host owns a listing
   host_id INTEGER NOT NULL,
@@ -160,10 +160,17 @@ CREATE TABLE Reviewer(
   PRIMARY KEY(reviewer_id),
 )
 
-CREATE TABLE Reservation(
+CREATE TABLE Calendar(
   ---------attributes---------
+  date DATE,
+  available BOOLEAN,
+  price INTEGER,
   -----relation attributes----
+  listing_id INTEGER,
   ------------keys------------
+  PRIMARY KEY(listing_id, date),
+  FOREIGN KEY(listing_id)
+    REFERENCES Listing
 
 )
 ----------------Relations------------------
