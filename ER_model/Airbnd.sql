@@ -19,17 +19,17 @@ CREATE TABLE Listing(
   --a host owns a listing
   host_id INTEGER NOT NULL,
   --a listing is in a country
-  country_code INTEGER NOT NULL,
+  city VARCHAR(50) NOT NULL,
   --a listing is in a neigbourhood
-  neigbourhood VARCHAR(50) NOT NULL,
+  neigbourhood_id INTEGER NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(id),
   FOREIGN KEY(host_id)
       REFERENCES Host(host_id),
-  FOREIGN KEY(country_code)
-      REFERENCES Country
-  FOREIGN KEY(neigbourhood)
+  FOREIGN KEY(city)
+      REFERENCES City
+  FOREIGN KEY(neigbourhood_id)
       REFERENCES Neigbourhood
 
 
