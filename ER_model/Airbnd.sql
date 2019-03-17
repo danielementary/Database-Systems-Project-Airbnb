@@ -96,22 +96,47 @@ CREATE TABLE House_properties(
 )
 
 CREATE TABLE Economic_properties(
+  ---------attributes---------
+  listing_id INTEGER,
+  price INTEGER,
+  weekly_price INTEGER,
+  monthly_price INTEGER,
+  security_deposit INTEGER,
+  cleaning_fee INTEGER,
+  guests_included INTEGER,
+  extra_people INTEGER,
+  -----relation attributes----
+  ------------keys------------
+  PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id)
+    REFERENCES Listing
 
 )
 
 CREATE TABLE Administrative_properties(
+  ---------attributes---------
+  -----relation attributes----
+  ------------keys------------
 
 )
 
 CREATE TABLE Review(
+  ---------attributes---------
+  -----relation attributes----
+  ------------keys------------
 
 )
 
 CREATE TABLE Reviewer(
-
+  ---------attributes---------
+  -----relation attributes----
+  ------------keys------------
 )
 
 CREATE TABLE Reservation(
+  ---------attributes---------
+  -----relation attributes----
+  ------------keys------------
 
 )
 ----------------Relations------------------
