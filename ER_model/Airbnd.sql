@@ -95,7 +95,25 @@ CREATE TABLE House_properties(
 
 )
 
+CREATE TABLE Economic_properties(
 
+)
+
+CREATE TABLE Administrative_properties(
+
+)
+
+CREATE TABLE Review(
+
+)
+
+CREATE TABLE Reviewer(
+
+)
+
+CREATE TABLE Reservation(
+
+)
 ----------------Relations------------------
 
 CREATE TABLE Location(
