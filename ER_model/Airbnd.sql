@@ -115,10 +115,16 @@ CREATE TABLE Economic_properties(
 
 CREATE TABLE Administrative_properties(
   ---------attributes---------
-  
+  is_business_travel_ready VARCHAR(20),
+  cancellation_policy TEXT,
+  require_guest_profile_picture VARCHAR(10),
+  require_guest_phone_verification VARCHAR(10),
   -----relation attributes----
+  listing_id INTEGER,
   ------------keys------------
-
+  PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id)
+    REFERENCES Listing
 )
 
 CREATE TABLE Review(
