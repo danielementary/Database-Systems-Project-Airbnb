@@ -64,14 +64,18 @@ CREATE TABLE Neigbourhood(
   PRIMARY KEY(id)
 )
 
-CREATE TABLE Country(
+CREATE TABLE City(
   ---------attributes---------
   city VARCHAR(30),
   country_code INTEGER,
   country VARCHAR(30),
   -----relation attributes----
   ------------keys------------
-  PRIMARY KEY(country_code)
+  PRIMARY KEY(city)
+)
+
+CREATE TABLE House_properties(
+
 )
 
 
