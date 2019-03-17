@@ -75,6 +75,23 @@ CREATE TABLE City(
 )
 
 CREATE TABLE House_properties(
+  ---------attributes---------
+  listing_id INTEGER,
+  property_type VARCHAR(50),
+  room_type VARCHAR(50),
+  accomodates INTEGER,
+  bathrooms INTEGER,
+  bedrooms INTEGER,
+  beds INTEGER,
+  bed_type VARCHAR(50),
+  amenities TEXT,
+  square_feet INTEGER,
+
+  -----relation attributes----
+  ------------keys------------
+  PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id)
+    REFERENCES Listing
 
 )
 
