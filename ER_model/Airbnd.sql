@@ -129,9 +129,18 @@ CREATE TABLE Administrative_properties(
 
 CREATE TABLE Review(
   ---------attributes---------
+  review_id INTEGER,
+  date DATE,
+  comments TEXT,
   -----relation attributes----
+  listing_id INTEGER NOT NULL,
+  reviewer_id INTEGER NOT NULL,
   ------------keys------------
-
+  PRIMARY KEY(review_id),
+  FOREIGN KEY(review_id)
+    REFERENCES Review,
+  FOREIGN KEY(listing_id)
+    REFERENCES Listing
 )
 
 CREATE TABLE Reviewer(
