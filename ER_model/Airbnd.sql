@@ -55,11 +55,13 @@ CREATE TABLE Host(
 )
 
 CREATE TABLE Neigbourhood(
+  neigbourhood_id INTEGER AUTO_INCREMENT,
   ---------attributes---------
   neigbourhood VARCHAR(50),
+  neigbourhood_overview TEXT,
   -----relation attributes----
   ------------keys------------
-  PRIMARY KEY(neigbourhood) --not a good key....
+  PRIMARY KEY(id)
 )
 
 CREATE TABLE Country(
@@ -83,23 +85,24 @@ CREATE TABLE Location(
 
   ------------keys------------
   PRIMARY KEY(listing_id, country_code),
-  FOREIGN KEY(listing_id)   --on a le droit de changer le nom pour plus de clarté???
+  FOREIGN KEY(listing_id)
       REFERENCES Listing(id)
   FOREIGN KEY(country_code)
       REFERENCES Country(country_code)
 )
 
+-- A mon avis elle n'est pas utile, vu qu'un listing ne peut avoir qu'un seul neigbourhood
 
-CREATE TABLE NeigbourhoodLocation(
-  listing_id INTEGER,
-  neigbourhood VARCHAR(50), --peut avoir plusieurs neigbourhood par listing !
-  neigbourhood_overview TEXT,
-
-  ------------keys------------
-  PRIMARY KEY(listing_id, neigbourhood),
-  FOREIGN KEY(listing_id)
-      REFERENCES Listing(listing_id),
-  FOREIGN KEY(neigbourhood)
-      REFERENCES Neigbourhood(neigbourhood)
-
-)
+-- CREATE TABLE NeigbourhoodLocation(
+--   listing_id INTEGER,
+--   neigbourhood VARCHAR(50), --peut avoir plusieurs neigbourhood par listing !
+--   neigbourhood_overview TEXT,
+--
+--   ------------keys------------
+--   PRIMARY KEY(listing_id, neigbourhood),
+--   FOREIGN KEY(listing_id)
+--       REFERENCES Listing(listing_id),
+--   FOREIGN KEY(neigbourhood)
+--       REFERENCES Neigbourhood(neigbourhood)
+--
+-- )
