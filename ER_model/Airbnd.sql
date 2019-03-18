@@ -4,68 +4,69 @@
 CREATE TABLE Listing (
 
   ---------attributes---------
-  id          INTEGER,
-  listing_url VARCHAR(50),
-  name        VARCHAR(50),
-  summary     VARCHAR(50),
-  space       VARCHAR(50),
-  description TEXT,
-  notes       TEXT,
-  transit     TEXT,
-  access      TEXT,
-  interaction TEXT,
-  picture_url VARCHAR(50),
-  review_scores_rating        DECIMAL,
-  review_scores_accuracy      DECIMAL,
-  review_scores_cleanliness   DECIMAL,
-  review_scores_checkin       DECIMAL,
-  review_scores_communication DECIMAL,
-  review_scores_location      DECIMAL,
-  review_scores_checkin       DECIMAL,
-  review_scores_value         DECIMAL,
+  listing_id          INT,
+  listing_url         VARCHAR(50),
+  listing_name        VARCHAR(50),
+  listing_summary     TINYTEXT,
+  listing_space       TINYTEXT,
+  listing_description TEXT,
+  listing_notes       TEXT,
+  listing_transit     TEXT,
+  listing_access      TEXT,
+  listing_interaction TEXT,
+  listing_picture_url VARCHAR(50),
+  review_scores_rating        FLOAT,
+  review_scores_accuracy      FLOAT,
+  review_scores_cleanliness   FLOAT,
+  review_scores_checkin       FLOAT,
+  review_scores_communication FLOAT,
+  review_scores_location      FLOAT,
+  review_scores_checkin       FLOAT,
+  review_scores_value         FLOAT,
 
   -----relation attributes----
   --a listing is owned by a host--
-  host_id INTEGER NOT NULL,
+  host_id INT NOT NULL,
   --a listing is in a country--
-  city VARCHAR(50) NOT NULL,
-  --a listing is in a neigbourhood--
-  neigbourhood_id INTEGER NOT NULL,
+  city_name VARCHAR(50) NOT NULL,
+  --a listing is in a neighbourhood--
+  neighbourhood_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(id),
   FOREIGN KEY(host_id) REFERENCES Host(host_id),
-  FOREIGN KEY(city) REFERENCES City,
-  FOREIGN KEY(neigbourhood_id) REFERENCES Neigbourhood
+  FOREIGN KEY(city) REFERENCES City(city_name),
+  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
 );
 
 CREATE TABLE Host (
 
   ---------attributes---------
-  host_id    INTEGER,
+  host_id    INT,
   host_url   VARCHAR(50),
-  host_name  VARCHAR(40),
+  host_name  VARCHAR(50),
   host_since DATE,
-  host_about TEXT,
+  host_about TINYTEXT,
   host_response_time TIME,
-  host_response_rate DECIMAL,
+  host_response_rate FLOAT,
   host_thumbnail_url VARCHAR(50),
   host_picture_url   VARCHAR(50),
-  host_neigbourhood  TEXT,
   host_verifications TEXT,
 
   -----relation attributes----
+  host_neighbourhood INT NOT NULL,
 
   ------------keys------------
-  PRIMARY KEY(host_id)
+  PRIMARY KEY(host_id),
+  FOREIGN KEY(host_neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
 );
 
-CREATE TABLE Neigbourhood (
+CREATE TABLE Neighbourhood (
 
   ---------attributes---------
-  neigbourhood_id INTEGER AUTO_INCREMENT,
-  neigbourhood    VARCHAR(50),
-  neigbourhood_overview TEXT,
+  neighbourhood_id INT AUTO_INCREMENT,
+  neighbourhood    VARCHAR(50),
+  neighbourhood_overview TEXT,
 
   -----relation attributes----
 
@@ -76,31 +77,32 @@ CREATE TABLE Neigbourhood (
 CREATE TABLE City (
 
   ---------attributes---------
-  city         VARCHAR(30),
-  country_code INTEGER,
-  country      VARCHAR(30),
+  city_name    VARCHAR(50),
+  country_code INT,
+  country      VARCHAR(50),
 
   -----relation attributes----
 
   ------------keys------------
-  PRIMARY KEY(city)
+  PRIMARY KEY(city_name)
 );
 
 CREATE TABLE House_properties (
 
   ---------attributes---------
+  rules         TEXT,
   property_type VARCHAR(50),
   room_type     VARCHAR(50),
-  accomodates   INTEGER,
-  bathrooms     INTEGER,
-  bedrooms      INTEGER,
-  beds          INTEGER,
+  accomodates   TINYINT,
+  bathrooms     TINYINT,
+  bedrooms      TINYINT,
+  beds          TINYINT,
   bed_type      VARCHAR(50),
   amenities     TEXT,
-  square_feet   INTEGER,
+  square_feet   SMALLINT,
 
   -----relation attributes----
-  listing_id INTEGER,
+  listing_id INT,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
@@ -110,16 +112,16 @@ CREATE TABLE House_properties (
 CREATE TABLE Economic_properties (
 
   ---------attributes---------
-  price            INTEGER,
-  weekly_price     INTEGER,
-  monthly_price    INTEGER,
-  security_deposit INTEGER,
-  cleaning_fee     INTEGER,
-  guests_included  INTEGER,
-  extra_people     INTEGER,
+  price            FLOAT,
+  weekly_price     FLOAT,
+  monthly_price    FLOAT,
+  security_deposit FLOAT,
+  cleaning_fee     FLOAT,
+  guests_included  TINYINT,
+  extra_people     FLOAT,
 
   -----relation attributes----
-  listing_id INTEGER,
+  listing_id INT,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
@@ -129,15 +131,15 @@ CREATE TABLE Economic_properties (
 CREATE TABLE Administrative_properties (
 
   ---------attributes---------
-  is_business_travel_ready VARCHAR(20),
+  minimum_nights INT,
+  maximum_nights INT,
+  is_business_travel_ready BIT,
   cancellation_policy      TEXT,
-  require_guest_profile_picture    VARCHAR(10),
-  require_guest_phone_verification VARCHAR(10),
-  minimum_nights INTEGER,
-  maximum_nights INTEGER,
+  require_guest_profile_picture    BIT,
+  require_guest_phone_verification BIT,
 
   -----relation attributes----
-  listing_id INTEGER,
+  listing_id INT,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
@@ -147,24 +149,24 @@ CREATE TABLE Administrative_properties (
 CREATE TABLE Review (
 
   ---------attributes---------
-  review_id INTEGER,
+  review_id INT,
   date      DATE,
   comments  TEXT,
 
   -----relation attributes----
-  listing_id  INTEGER NOT NULL,
-  reviewer_id INTEGER NOT NULL,
+  listing_id  INT NOT NULL,
+  reviewer_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(review_id),
-  FOREIGN KEY(review_id)  REFERENCES Review,
-  FOREIGN KEY(listing_id) REFERENCES Listing
+  FOREIGN KEY(reviewer_id)  REFERENCES Reviewer(review_id),
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
 CREATE TABLE Reviewer (
 
   ---------attributes---------
-  reviewer_id INTEGER,
+  reviewer_id INT,
 
   -----relation attributes----
 
@@ -176,28 +178,29 @@ CREATE TABLE Calendar (
 
   ---------attributes---------
   date      DATE,
-  available BOOLEAN,
-  price     INTEGER,
+  available BIT,
+  price     FLOAT,
 
   -----relation attributes----
-  listing_id INTEGER,
+  listing_id INT,
 
   ------------keys------------
   PRIMARY KEY(listing_id, date),
-  FOREIGN KEY(listing_id) REFERENCES Listing
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
 ----------------Relations------------------
 
 CREATE TABLE Location (
 
-  listing_id   INTEGER,
-  country_code INTEGER,
-  latitude     DECIMAL,
-  longitude    DECIMAL,
+  ---------attributes---------
+  latitude     FLOAT,
+  longitude    FLOAT,
+
+  -----relation attributes----
+  listing_id   INT,
 
   ------------keys------------
-  PRIMARY KEY(listing_id, country_code),
-  FOREIGN KEY(listing_id) REFERENCES Listing(id),
-  FOREIGN KEY(country_code) REFERENCES Country(country_code)
+  PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id) REFERENCES Listing(id)
 );
