@@ -15,14 +15,6 @@ CREATE TABLE Listing (
   listing_access      TEXT,
   listing_interaction TEXT,
   listing_picture_url VARCHAR(50),
-  review_scores_rating        FLOAT,
-  review_scores_accuracy      FLOAT,
-  review_scores_cleanliness   FLOAT,
-  review_scores_checkin       FLOAT,
-  review_scores_communication FLOAT,
-  review_scores_location      FLOAT,
-  review_scores_checkin       FLOAT,
-  review_scores_value         FLOAT,
 
   -----relation attributes----
   --a listing is owned by a host--
@@ -54,7 +46,7 @@ CREATE TABLE Host (
   host_verifications TEXT,
 
   -----relation attributes----
-  host_neighbourhood INT NOT NULL,
+  host_neighbourhood_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(host_id),
@@ -106,7 +98,7 @@ CREATE TABLE House_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
 CREATE TABLE Economic_properties (
@@ -125,7 +117,7 @@ CREATE TABLE Economic_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
 CREATE TABLE Administrative_properties (
@@ -143,15 +135,15 @@ CREATE TABLE Administrative_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
 CREATE TABLE Review (
 
   ---------attributes---------
-  review_id INT,
-  date      DATE,
-  comments  TEXT,
+  review_id   INT,
+  review_date DATE,
+  review_comments TEXT,
 
   -----relation attributes----
   listing_id  INT NOT NULL,
@@ -159,7 +151,7 @@ CREATE TABLE Review (
 
   ------------keys------------
   PRIMARY KEY(review_id),
-  FOREIGN KEY(reviewer_id)  REFERENCES Reviewer(review_id),
+  FOREIGN KEY(reviewer_id) REFERENCES Reviewer(reviewer_id),
   FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
@@ -174,12 +166,32 @@ CREATE TABLE Reviewer (
   PRIMARY KEY(reviewer_id),
 );
 
+CREATE TABLE review_scores (
+
+  ---------attributes---------
+  review_scores_rating        FLOAT,
+  review_scores_accuracy      FLOAT,
+  review_scores_cleanliness   FLOAT,
+  review_scores_checkin       FLOAT,
+  review_scores_communication FLOAT,
+  review_scores_location      FLOAT,
+  review_scores_checkin       FLOAT,
+  review_scores_value         FLOAT,
+
+  -----relation attributes----
+  listing_id INT,
+
+  ------------keys------------
+  PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+);
+
 CREATE TABLE Calendar (
 
   ---------attributes---------
-  date      DATE,
-  available BIT,
-  price     FLOAT,
+  calendar_date      DATE,
+  calendar_available BIT,
+  calendar_price     FLOAT,
 
   -----relation attributes----
   listing_id INT,
@@ -194,13 +206,13 @@ CREATE TABLE Calendar (
 CREATE TABLE Location (
 
   ---------attributes---------
-  latitude     FLOAT,
-  longitude    FLOAT,
+  latitude  FLOAT,
+  longitude FLOAT,
 
   -----relation attributes----
-  listing_id   INT,
+  listing_id INT,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
