@@ -15,6 +15,7 @@ CREATE TABLE Listing (
   listing_access      TEXT,
   listing_interaction TEXT,
   listing_picture_url VARCHAR(50),
+  neighbourhood_overview TEXT,
 
   -----relation attributes----
   --a listing is owned by a host--
@@ -58,8 +59,6 @@ CREATE TABLE Neighbourhood (
   ---------attributes---------
   neighbourhood_id INT AUTO_INCREMENT,
   neighbourhood_name VARCHAR(50),
-  neighbourhood_overview TEXT,
-
   -----relation attributes----
 
   ------------keys------------
