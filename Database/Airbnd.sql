@@ -175,7 +175,6 @@ CREATE TABLE review_scores (
   review_scores_checkin       FLOAT,
   review_scores_communication FLOAT,
   review_scores_location      FLOAT,
-  review_scores_checkin       FLOAT,
   review_scores_value         FLOAT,
 
   -----relation attributes----
