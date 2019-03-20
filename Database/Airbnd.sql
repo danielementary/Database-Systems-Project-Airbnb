@@ -76,7 +76,7 @@ CREATE TABLE City (
   -----relation attributes----
 
   ------------keys------------
-  PRIMARY KEY(city_name)
+  PRIMARY KEY(city_name, country_code)
 );
 
 CREATE TABLE House_properties (
