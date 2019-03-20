@@ -166,7 +166,7 @@ CREATE TABLE Reviewer (
   PRIMARY KEY(reviewer_id),
 );
 
-CREATE TABLE review_scores (
+CREATE TABLE Review_scores (
 
   ---------attributes---------
   review_scores_rating        FLOAT,
