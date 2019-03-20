@@ -57,6 +57,7 @@ CREATE TABLE Neighbourhood (
 
   ---------attributes---------
   neighbourhood_id INT AUTO_INCREMENT,
+  neighbourhood_name VARCHAR(50),
   neighbourhood_overview TEXT,
 
   -----relation attributes----
