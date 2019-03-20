@@ -21,16 +21,10 @@ CREATE TABLE Listing (
   -----relation attributes----
   --a listing is owned by a host--
   host_id INT NOT NULL,
-  --a listing is in a country--
-  city_name VARCHAR(50) NOT NULL,
-  --a listing is in a neighbourhood--
-  neighbourhood_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(id),
   FOREIGN KEY(host_id) REFERENCES Host(host_id),
-  FOREIGN KEY(city) REFERENCES City(city_name),
-  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
 );
 
 CREATE TABLE Host (
@@ -58,12 +52,13 @@ CREATE TABLE Host (
 CREATE TABLE Neighbourhood (
 
   ---------attributes---------
-  neighbourhood_id INT AUTO_INCREMENT,
   neighbourhood_name VARCHAR(50),
   -----relation attributes----
-
+  city_name    VARCHAR(50),
+  country_code INT,
   ------------keys------------
-  PRIMARY KEY(id)
+  PRIMARY KEY(neighbourhood_id)
+  FOREIGN KEY(city_name, country_code) REFERENCES City
 );
 
 CREATE TABLE City (
@@ -210,8 +205,10 @@ CREATE TABLE Location (
 
   -----relation attributes----
   listing_id INT,
+  neighbourhood_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id),
+  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood
 );
