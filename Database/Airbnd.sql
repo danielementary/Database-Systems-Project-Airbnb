@@ -81,7 +81,7 @@ CREATE TABLE City (
 CREATE TABLE House_properties (
 
   ---------attributes---------
-  rules         TEXT,
+  rules         TEXT,           -- I would put this  one in the Administrative_properties table
   property_type VARCHAR(50),
   room_type     VARCHAR(50),
   accomodates   TINYINT,
@@ -158,7 +158,7 @@ CREATE TABLE Reviewer (
 
   ---------attributes---------
   reviewer_id INT,
-
+  reviewer_name VARCHAR(50),
   -----relation attributes----
 
   ------------keys------------
