@@ -16,15 +16,14 @@ CREATE TABLE Listing (
   listing_access      TEXT,
   listing_interaction TEXT,
   listing_picture_url VARCHAR(50),
-  neighbourhood_overview TEXT,
+  listing_neighbourhood_overview TEXT,
 
   -----relation attributes----
-  --a listing is owned by a host--
   host_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(id),
-  FOREIGN KEY(host_id) REFERENCES Host(host_id),
+  FOREIGN KEY(host_id) REFERENCES Host(host_id)
 );
 
 CREATE TABLE Host (
@@ -42,42 +41,31 @@ CREATE TABLE Host (
   host_verifications TEXT,
 
   -----relation attributes----
-  host_neighbourhood_id INT NOT NULL,
+  neighbourhood_name VARCHAR(50),
+  city_name          VARCHAR(50),
 
   ------------keys------------
   PRIMARY KEY(host_id),
-  FOREIGN KEY(host_neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
+  FOREIGN KEY(neighbourhood_name, city_name) REFERENCES Neighbourhood(neighbourhood_name, city_name)
 );
 
 CREATE TABLE Neighbourhood (
 
   ---------attributes---------
   neighbourhood_name VARCHAR(50),
+
   -----relation attributes----
   city_name    VARCHAR(50),
   country_code INT,
-  ------------keys------------
-  PRIMARY KEY(neighbourhood_id)
-  FOREIGN KEY(city_name, country_code) REFERENCES City
-);
-
-CREATE TABLE City (
-
-  ---------attributes---------
-  city_name    VARCHAR(50),
-  country_code INT,
-  country      VARCHAR(50),
-
-  -----relation attributes----
 
   ------------keys------------
-  PRIMARY KEY(city_name, country_code)
+  PRIMARY KEY(neighbourhood_name, city_name)
+  FOREIGN KEY(city_name, country_code) REFERENCES City(city_name, country_code) ON DELETE CASCADE
 );
 
 CREATE TABLE House_properties (
 
   ---------attributes---------
-  rules         TEXT,           -- I would put this  one in the Administrative_properties table
   property_type VARCHAR(50),
   room_type     VARCHAR(50),
   accomodates   TINYINT,
@@ -93,7 +81,7 @@ CREATE TABLE House_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Economic_properties (
@@ -112,12 +100,13 @@ CREATE TABLE Economic_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Administrative_properties (
 
   ---------attributes---------
+  rules          TEXT,
   minimum_nights INT,
   maximum_nights INT,
   is_business_travel_ready BIT,
@@ -130,38 +119,10 @@ CREATE TABLE Administrative_properties (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Review (
-
-  ---------attributes---------
-  review_id   INT,
-  review_date DATE,
-  review_comments TEXT,
-
-  -----relation attributes----
-  listing_id  INT NOT NULL,
-  reviewer_id INT NOT NULL,
-
-  ------------keys------------
-  PRIMARY KEY(review_id),
-  FOREIGN KEY(reviewer_id) REFERENCES Reviewer(reviewer_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
-);
-
-CREATE TABLE Reviewer (
-
-  ---------attributes---------
-  reviewer_id INT,
-  reviewer_name VARCHAR(50),
-  -----relation attributes----
-
-  ------------keys------------
-  PRIMARY KEY(reviewer_id),
-);
-
-CREATE TABLE review_scores (
+CREATE TABLE Review_scores (
 
   ---------attributes---------
   review_scores_rating        FLOAT,
@@ -177,8 +138,37 @@ CREATE TABLE review_scores (
 
   ------------keys------------
   PRIMARY KEY(listing_id),
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Review (
+
+  ---------attributes---------
+  review_id   INT,
+  review_date DATE,
+  review_comments TEXT,
+
+  -----relation attributes----
+  reviewer_id INT,
+  listing_id  INT,
+
+  ------------keys------------
+  PRIMARY KEY(review_id),
+  FOREIGN KEY(reviewer_id) REFERENCES Reviewer(reviewer_id),
   FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
+
+CREATE TABLE Reviewer (
+
+  ---------attributes---------
+  reviewer_id   INT,
+  reviewer_name VARCHAR(50),
+  -----relation attributes----
+
+  ------------keys------------
+  PRIMARY KEY(reviewer_id)
+);
+
 
 CREATE TABLE Calendar (
 
@@ -195,6 +185,19 @@ CREATE TABLE Calendar (
   FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
 );
 
+CREATE TABLE City (
+
+  ---------attributes---------
+  city_name    VARCHAR(50),
+  country_code TINYINT,
+  country      VARCHAR(50),
+
+  -----relation attributes----
+
+  ------------keys------------
+  PRIMARY KEY(city_name, country_code)
+);
+
 ----------------Relations------------------
 
 CREATE TABLE Location (
@@ -204,11 +207,12 @@ CREATE TABLE Location (
   longitude FLOAT,
 
   -----relation attributes----
-  listing_id INT,
-  neighbourhood_id INT NOT NULL,
+  listing_id         INT,
+  neighbourhood_name VARCHAR(50),
+  city_name          VARCHAR(50),
 
   ------------keys------------
   PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id),
-  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON CASCADE DELETE,
+  FOREIGN KEY(neighbourhood_name, city_name) REFERENCES Neighbourhood(neighbourhood_name, city_name) ON CASCADE DELETE
 );
