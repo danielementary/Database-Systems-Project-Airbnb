@@ -271,4 +271,49 @@ Alt. 1 is a dense indexing
       - The data entries are arranged in sorted order by search key value, and a hierarchical search data structure is maintained that directs searches to the correct page of data entries.
       - The **leaf level** (lowest level on the tree) contains the data entries.
       - The average number of children for a non-leaf node is called the **fan-out**
-      - A **B+ tree** is a tree where all leafs have equal height
+      - A **B+ tree** is a tree where all leafs have equal **height** (path from root to leaf)
+
+#####5.4 File organisation
+######5.4.1 heap files
+* randomly ordered file
+* contains records in no particular order, search based on *rid*
+* the file manager must keep track of the pages allocated for the file
+
+######5.4.2 sorted files
+* sorted file on a certain attribute
+* search done on file-ordering attribute
+
+######5.4.3 cost
+Assumptions :
+* IO is the dominating cost
+* consider average case
+![class](images/cost_operations.png "class")
+
+
+---------
+###Lecture 6 : Storage layer
+#####6.1 Remainder
+![storage](images/memory_hierarchy.png "storage")
+* **DBMS** stores information on disks
+* a flash is more expensive than disks
+* data is stored in disks
+
+![storage](images/disk_vs_tape.png "storage")
+
+#####6.2 Disk
+######6.2.1 Anatomy
+![storage](images/magnetic_disk.png "storage")
+* **Disk head** has a horizontal movement (from the spindle to the side of the platter, arm movement)
+* **Platters** spin around the **spindle** (rotation)
+* A **track** is a concentric ring on a platter where data is written
+* A set of tracks is a called **cylinder**.
+* **Block size** : multiple of a **sector size** (fixed)
+
+######6.2.2 Access time
+* **seek time** : moving arms to position to position disk head on tracks
+* **rotational delay** : waiting for block to rotate under head, less than seek time
+* **transfer time** : actually moving data to/from disk surface
+* **settle time** : part of the seek time, time that the head need to stabilise to the wanted location
+
+######6.2.3 Adjacent blocks
+![storage](images/adjacent_block.png "storage")
