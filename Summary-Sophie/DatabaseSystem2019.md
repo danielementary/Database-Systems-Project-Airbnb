@@ -196,3 +196,124 @@ $$
 ######4.4.3 Division
 $A/B$ contains all $x$ tuples such that for every tuple in $B$, there is an $(x,y)$ tuple in $A$.<br>
 ($B$ is a proper subset of $A$)
+
+---------
+###Lecture 5 : Storage, files and indexing
+#####5.1 Introduction
+file and access layer :
+* retrieve one particular record (using record id) : **point access**
+* retrieve a range of records (satisfying some conditions) : **range access**
+* retrieve all records : **scan**
+
+#####5.2 N-ary storage model (flash page)
+![n_ary](images/n_ary_storage.png "ary")
+* **page** : collection of slots
+* **slot** : one record
+* **rid** : record id = <page id, slot#>, should be unique
+#####5.3 PAX
+**PAX** = partition attributes across
+![pax](images/pax.png "pax")
+
+#####5.3 Indexing
+
+* an **index** : <br>
+An index is a data structure that organizes data records on disk to optimize certain kinds of retrieval operations. An index allows us to efficiently retrieve all records that satisfy search conditions on the search key fields of the index.
+* a **key** : <br>
+indexing field
+* a **data entry** :<br>
+refers to the records stored in an index file.<br>
+A data entry with search key value $k$, denoted as $k*$, contains enough information to locate (one or more) data records with search key value $k$.
+
+######5.3.1 Data entry representation
+three alternative representations with search key value $k$ :
+1) data entry with $k*$ is an actual data record
+![index](images/index_alternative1.png "index")
+*(image : Alt. 1, hash-based indexing)*<br>
+At most one index can use Alt. 1. Efficient but can be expensive to maintain (insertions and deletion modify the data file)
+2) data entry is a $(k, rid)$ pair
+3) data entry is a $(k, rid-list)$ pair
+![index](images/index_alternative2.png "index")
+*(image : Alt. 2, hash-based indexing)*<br>
+
+Notes :<br>
+Alt. 2 and Alt. 3, which contain data entries that point to data records, are independent of the file organization that is used for the indexed file. <br>
+Easier to maintain than Alt. 1.
+
+######5.3.2 Primary and secondary indexes
+* **primary index** : index on a set of fields that includes the primary key
+* **secondary index** : all the other indexes
+* *Note* : a primary index is guaranteed not to contain duplicates, but an index on other (collections of) fields can contain duplicates.
+
+######5.3.3 Clustering
+
+* **clustered index** : index whose data entries are sorted and ordered the same way as the file records. One index entry per distinct value, sparse index
+* **unclustered index** : not the same sorting
+
+######5.3.4 Dense vs Sparse
+* **dense** : at least one entry per key value <br>
+Alt. 1 is a dense indexing
+* **sparse** : an entry
+
+* **summary** :
+![class](images/index_classification.png "class")
+
+######5.3.5 Index data structure
+1) hash-based indexing :
+    - hash function:
+      $$
+        r = record  \\
+        h(r.searchKey) = bucket \ for \ record \ r
+      $$
+    - the records in a file are grouped in **buckets**, where a bucket consists of a **primary page** and, possibly, additional pages linked in a chain.
+    - The bucket to which a record belongs can be determined by applying a special function, called a *hash* function, to the search key.
+
+2) tree-based indexing :
+      - The data entries are arranged in sorted order by search key value, and a hierarchical search data structure is maintained that directs searches to the correct page of data entries.
+      - The **leaf level** (lowest level on the tree) contains the data entries.
+      - The average number of children for a non-leaf node is called the **fan-out**
+      - A **B+ tree** is a tree where all leafs have equal **height** (path from root to leaf)
+
+#####5.4 File organisation
+######5.4.1 heap files
+* randomly ordered file
+* contains records in no particular order, search based on *rid*
+* the file manager must keep track of the pages allocated for the file
+
+######5.4.2 sorted files
+* sorted file on a certain attribute
+* search done on file-ordering attribute
+
+######5.4.3 cost
+Assumptions :
+* IO is the dominating cost
+* consider average case
+![class](images/cost_operations.png "class")
+
+
+---------
+###Lecture 6 : Storage layer
+#####6.1 Remainder
+![storage](images/memory_hierarchy.png "storage")
+* **DBMS** stores information on disks
+* a flash is more expensive than disks
+* data is stored in disks
+
+![storage](images/disk_vs_tape.png "storage")
+
+#####6.2 Disk
+######6.2.1 Anatomy
+![storage](images/magnetic_disk.png "storage")
+* **Disk head** has a horizontal movement (from the spindle to the side of the platter, arm movement)
+* **Platters** spin around the **spindle** (rotation)
+* A **track** is a concentric ring on a platter where data is written
+* A set of tracks is a called **cylinder**.
+* **Block size** : multiple of a **sector size** (fixed)
+
+######6.2.2 Access time
+* **seek time** : moving arms to position to position disk head on tracks
+* **rotational delay** : waiting for block to rotate under head, less than seek time
+* **transfer time** : actually moving data to/from disk surface
+* **settle time** : part of the seek time, time that the head need to stabilise to the wanted location
+
+######6.2.3 Adjacent blocks
+![storage](images/adjacent_block.png "storage")
