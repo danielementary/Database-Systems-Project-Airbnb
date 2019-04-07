@@ -44,12 +44,19 @@ def insert_reviews(filename):
     for index, row in data_frame.iterrows():
         #here get columns and create sql query
         #columns are in order: review_id, review_date, review_comments, reviewer_id, listing_id
-        sql_query = """INSERT INTO review VALUES ({}, {}, {}, {}, {})""".format(
+        sql_query = """INSERT INTO Review VALUES ({}, {}, {}, {}, {})""".format(
                 row['id'],
                 row['date'],
                 '"' + str(row['comments']) + '"',
                 row['reviewer_id'],
                 row['listing_id']
+        )
+        queries.append(sql_query)
+
+        #insert reviewer in reviewer table
+        sql_query = """INSERT INTO Reviewer VALUES ({}, {})""".format(
+                row['reviewer_id'],
+                row['reviewer_name']
         )
         queries.append(sql_query)
 
