@@ -73,7 +73,6 @@ def insert_reviews_reviewers(filename):
         outputfile.write(sql_query + '\n')
 
 
-    # seen_ids = {}
     for index, row in reviewer_df.iterrows():
         #insert reviewer in reviewer table
         sql_query = """INSERT INTO Reviewer VALUES ({}, {})""".format(
@@ -81,11 +80,6 @@ def insert_reviews_reviewers(filename):
                 row['reviewer_name']
         )
         outputfile.write(sql_query + '\n')
-
-        # if int(row['reviewer_id']) in seen_ids:
-        #     print(seen_ids.get(row['reviewer_id']), "   :   ", row['reviewer_name'])
-        # seen_ids[(row['reviewer_id'])] =  row['reviewer_name']
-
 
     print("insert queries have been written for (", filename, ") in : ", outname)
     outputfile.close()
