@@ -1,9 +1,12 @@
 # DBS-Project
 
-## Install Git LFS
+## Git LFS
 https://git-lfs.github.com/
 
 ## Python MySQL
+### Installation
+`python -m pip install mysql-connector`
+### Tutorial
 https://www.w3schools.com/python/python_mysql_getstarted.asp
 
 ## TODO
@@ -13,10 +16,11 @@ https://www.w3schools.com/python/python_mysql_getstarted.asp
 
 ### Samuel
 - Parse data
+- Prepare database
 
 ### Daniel
-- SQL insert statements
 - Interface
+- Data manipulation
 
-### Later
+### Other
 Complete report
