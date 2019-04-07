@@ -55,7 +55,10 @@ def insert_reviews_reviewers(filename):
     write a .sql file containing INSERT statements required to insert data contained in filename
     """
     (review_df, reviewer_df) = clean_reviews_data(filename)
-    queries = []
+
+    splited_original_name = filename.split('/')
+    outname = '/'.join(splited_original_name[:-1]) + '/' + splited_original_name[-1:][0].split('.')[0] + "_insert_queries.sql"
+    outputfile = open(outname, 'w')
 
     for index, row in review_df.iterrows():
         #here get columns and create sql query
@@ -67,7 +70,7 @@ def insert_reviews_reviewers(filename):
                 row['reviewer_id'],
                 row['listing_id']
         )
-        queries.append(sql_query)
+        outputfile.write(sql_query + '\n')
 
 
     # seen_ids = {}
@@ -77,19 +80,12 @@ def insert_reviews_reviewers(filename):
                 row['reviewer_id'],
                 row['reviewer_name']
         )
+        outputfile.write(sql_query + '\n')
 
         # if int(row['reviewer_id']) in seen_ids:
         #     print(seen_ids.get(row['reviewer_id']), "   :   ", row['reviewer_name'])
         # seen_ids[(row['reviewer_id'])] =  row['reviewer_name']
-        queries.append(sql_query)
 
-
-    splited_original_name = filename.split('/')
-    outname = '/'.join(splited_original_name[:-1]) + '/' + splited_original_name[-1:][0].split('.')[0] + "_insert_queries.sql"
-    outputfile = open(outname, 'w')
-
-    for q in queries:
-        outputfile.write(q + '\n')
 
     print("insert queries have been written for (", filename, ") in : ", outname)
     outputfile.close()
