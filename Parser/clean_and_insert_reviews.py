@@ -3,6 +3,10 @@ import numpy as np
 
 
 def clean_reviews_data(filename):
+    """
+    clean data in reviews files. return a data_frame containing reviews data and
+    one containing reviewers data.
+    """
     file = open(filename, newline='')
     data_frame = pd.read_csv(filename, dtype={'listing_id': int, 'id': int, 'reviewer_id': int, 'reviewer_name': str, 'comments': str})
 
@@ -17,31 +21,43 @@ def clean_reviews_data(filename):
 
     print("Is there duplicated ids in file (", filename, ")? : ", duplicated_id)
 
-    #save the cleaned version back
+    review_df = data_frame[['id', 'date', 'comments', 'listing_id', 'reviewer_id']]
+    reviewer_df = data_frame[['reviewer_id', 'reviewer_name']]
 
+    # remove duplicated reviewers
+    # there is only one reviewer id duplicated with 2 different names (Casa Nuna : Mi Casa Bali)
+    # We chose to remove one
+    reviewer_df = reviewer_df.drop_duplicates(['reviewer_id'])
+
+    du = reviewer_df.duplicated(['reviewer_id']).tolist()
+    duplicated_reviewer = True in du
+
+    print("duplicated reviewers : ", duplicated_reviewer)
+
+
+    file.close()
+
+    # not directly useful but for checks if needed
     splited_original_name = filename.split('/')
     newname = '/'.join(splited_original_name[:-1]) + "/cleaned/cleaned_" + splited_original_name[-1:][0]
     data_frame.to_csv(newname, encoding='utf8')
     print("new cleaned version of the file has been saved under name : " + newname)
 
-    file.close()
-    return newname
+    return (review_df, reviewer_df)
 
 def addQuotes(string):
     string = str(string)
     return string
 
 
-def insert_reviews(filename):
+def insert_reviews_reviewers(filename):
     """
     write a .sql file containing INSERT statements required to insert data contained in filename
     """
-    file = open(filename, newline='')
-    data_frame = pd.read_csv(filename, dtype={'listing_id': int, 'id': int, 'reviewer_id': int, 'reviewer_name': str, 'comments': str})
-
+    (review_df, reviewer_df) = clean_reviews_data(filename)
     queries = []
 
-    for index, row in data_frame.iterrows():
+    for index, row in review_df.iterrows():
         #here get columns and create sql query
         #columns are in order: review_id, review_date, review_comments, reviewer_id, listing_id
         sql_query = """INSERT INTO Review VALUES ({}, {}, {}, {}, {})""".format(
@@ -53,11 +69,18 @@ def insert_reviews(filename):
         )
         queries.append(sql_query)
 
+
+    # seen_ids = {}
+    for index, row in reviewer_df.iterrows():
         #insert reviewer in reviewer table
         sql_query = """INSERT INTO Reviewer VALUES ({}, {})""".format(
                 row['reviewer_id'],
                 row['reviewer_name']
         )
+
+        # if int(row['reviewer_id']) in seen_ids:
+        #     print(seen_ids.get(row['reviewer_id']), "   :   ", row['reviewer_name'])
+        # seen_ids[(row['reviewer_id'])] =  row['reviewer_name']
         queries.append(sql_query)
 
 
@@ -78,7 +101,4 @@ reviews_files = ["../Dataset/" + file for file in reviews_files]
 cleaned_files = []
 
 for file in reviews_files:
-    cleaned_files.append(clean_reviews_data(file))
-
-for file in cleaned_files:
-    insert_reviews(file)
+    insert_reviews_reviewers(file)
