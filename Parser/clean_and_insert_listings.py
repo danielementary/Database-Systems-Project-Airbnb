@@ -4,22 +4,39 @@ import numpy as np
 
 def clean_listings_data(filename):
     file = open(filename, newline='')
-    data_frame = pd.read_csv(filename)
+    df = pd.read_csv(filename)
 
-    string_attributes = ['url', 'name', 'summary',"space", "description", "notes",\
-                        "transit","access","interaction","picture_url","neighbourhood_overview",\
+    #rename neighborhood_overview to neighboUrhood_overview to be consistent
+    df = df.rename(columns = {'neighborhood_overview': 'neighbourhood_overview'})
+
+    string_attributes = ['listing_url', 'name', 'summary',"space", "description", "notes",\
+                        "transit","access","interaction","picture_url","neighbourhood_overview", "neighbourhood",\
                         "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", \
-                        "host_verifications", "neighbourhood_name", "property_type", "room_type"]
+                        "host_verifications", "property_type", "room_type", "bed_type",\
+                        "amenities", "house_rules", "cancellation_policy", "city", "country"]
+    bit_attributes = ['is_business_travel_ready', 'require_guest_profile_picture', 'require_guest_phone_verification']
 
-    columns = data_frame.columns.tolist()
+    date_attributes = ["review_date", "host_since"]
 
-    data_frame['neighbourhood'] = data_frame['neighbourhood'].apply(addQuotes)
-    print(data_frame['neighbourhood'].tolist())
+    int_attributes = ['id', 'host_id', 'accomodates', 'bathrooms', 'bedrooms', 'beds', 'square_feet', 'guests_included',\
+                        'minimum_nights', 'maximum_nights']
+
+    columns = df.columns.tolist()
+
+    # add quotes arround every string typed attributes
+    for a in string_attributes:
+        df[a] = df[a].apply(addQuotes)
+
+    # replace f or t for Bit typed attributes
+    for a in bit_attributes:
+        df[a] = df[a].apply(replace_f_t_by_bit)
+
+
+    print(df['host_since'])
 
 
 def create_insert_queries(filename):
-    file = open(filename, newline='')
-    data_frame = pd.read_csv(filename)
+
 
     tables = ["Listing", "Host", "Neighbourhood", "House_properties",\
                 "Economic_properties", "Administrative_properties",\
@@ -40,10 +57,19 @@ def create_insert_queries(filename):
          "City": {"city_name": "city", "country_code": "country_code", "country": "country",\
          "Location": {"latitude": "latitude", "longitude": "longitude", "listing_id": "id", "neighbourhood_name": "neighbourhood", "city_name": "city"}}}
 
+    # use something like INSERT INTO `BITTESTTABLE` VALUES('XYZ', b'0');
+    # to insert bit values
+
 
 
 def addQuotes(string):
     string = str(string)
     return string
+
+def replace_f_t_by_bit(obj):
+    f_t = str(obj)
+    if(f_t == 't'):
+        return 1
+    return 0
 
 clean_listings_data("../Dataset/barcelona_listings.csv")
