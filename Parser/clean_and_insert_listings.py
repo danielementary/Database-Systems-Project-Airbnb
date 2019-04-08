@@ -6,7 +6,9 @@ def clean_listings_data(filename):
     file = open(filename, newline='')
     data_frame = pd.read_csv(filename)
 
-    string_attributes = ['url', 'name', 'summary']
+    string_attributes = ['url', 'name', 'summary',"space", "description", "notes",\
+                        "transit","access","interaction","picture_url","neighbourhood_overview",\
+                        "host_url", "host_name", "host_about", ]
 
     columns = data_frame.columns.tolist()
 
