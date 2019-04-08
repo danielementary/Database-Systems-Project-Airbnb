@@ -8,7 +8,8 @@ def clean_listings_data(filename):
 
     string_attributes = ['url', 'name', 'summary',"space", "description", "notes",\
                         "transit","access","interaction","picture_url","neighbourhood_overview",\
-                        "host_url", "host_name", "host_about", ]
+                        "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", \
+                        "host_verifications", "neighbourhood_name", "property_type", "room_type"]
 
     columns = data_frame.columns.tolist()
 
