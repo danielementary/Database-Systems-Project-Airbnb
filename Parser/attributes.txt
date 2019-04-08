@@ -1,5 +1,5 @@
  "id",
- "url",
+ "listing_url",
  "name",
  "summary",
  "space",
