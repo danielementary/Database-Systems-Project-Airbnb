@@ -1,13 +1,9 @@
 import pandas as pd
 import numpy as np
+import math
 
 
 def clean_listings_data(filename):
-    file = open(filename, newline='')
-    df = pd.read_csv(filename)
-
-    #rename neighborhood_overview to neighboUrhood_overview to be consistent
-    df = df.rename(columns = {'neighborhood_overview': 'neighbourhood_overview'})
 
     string_attributes = ['listing_url', 'name', 'summary',"space", "description", "notes",\
                         "transit","access","interaction","picture_url","neighbourhood_overview", "neighbourhood",\
@@ -18,8 +14,18 @@ def clean_listings_data(filename):
 
     date_attributes = ["review_date", "host_since"]
 
-    int_attributes = ['id', 'host_id', 'accomodates', 'bathrooms', 'bedrooms', 'beds', 'square_feet', 'guests_included',\
+    int_attributes = ['id', 'host_id', 'accommodates', 'bathrooms', 'bedrooms', 'beds', 'square_feet', 'guests_included',\
                         'minimum_nights', 'maximum_nights']
+
+    data_types = {}
+    for a in string_attributes:
+        data_types[a] = str
+
+    file = open(filename, newline='')
+    df = pd.read_csv(filename, dtype=data_types)
+
+    #rename neighborhood_overview to neighboUrhood_overview to be consistent
+    df = df.rename(columns = {'neighborhood_overview': 'neighbourhood_overview'})
 
     columns = df.columns.tolist()
 
@@ -32,7 +38,7 @@ def clean_listings_data(filename):
         df[a] = df[a].apply(replace_f_t_by_bit)
 
 
-    print(df['host_since'])
+    return df
 
 
 def create_insert_queries(filename):
@@ -60,6 +66,18 @@ def create_insert_queries(filename):
     # use something like INSERT INTO `BITTESTTABLE` VALUES('XYZ', b'0');
     # to insert bit values
 
+    # use math.isnan(x) to check if float is NaN value before convert to int
+
+    df = clean_listings_data(filename)
+
+    # in these store the primary key of the corresponding row
+    added_city = []
+    added_neighbourhood = []
+    added_host = []
+
+
+    for index, row in df.iterrows():
+        # first let
 
 
 def addQuotes(string):
