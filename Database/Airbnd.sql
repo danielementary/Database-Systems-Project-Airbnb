@@ -162,6 +162,7 @@ CREATE TABLE City (
 
   -----relation attributes----
 
+
   ------------keys------------
   PRIMARY KEY(city_id)
 );
