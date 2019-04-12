@@ -43,12 +43,12 @@ CREATE TABLE Listing (
   require_guest_profile_picture    BIT,
   require_guest_phone_verification BIT,
 
-  property_type_id            INT,
+  property_type_id        INT,
   room_type_id            INT,
   bed_type_id             INT,
   amenities_id            INT,
-  cancellation_policy_id            INT,
-  host_verifications_id             INT,
+  cancellation_policy_id  INT,
+  host_verifications_id   INT,
 
   -- Review_scores
   review_scores_rating        FLOAT,
