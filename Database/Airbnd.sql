@@ -19,6 +19,7 @@ CREATE TABLE Listing (
   listing_neighbourhood_overview TEXT,
 
   -- House_properties
+
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
@@ -39,9 +40,15 @@ CREATE TABLE Listing (
   minimum_nights INT,
   maximum_nights INT,
   is_business_travel_ready BIT,
-
   require_guest_profile_picture    BIT,
   require_guest_phone_verification BIT,
+
+  property_type_id        INT,
+  room_type_id            INT,
+  bed_type_id             INT,
+  amenities_id            INT,
+  cancellation_policy_id  INT,
+  host_verifications_id   INT,
 
   -- Review_scores
   review_scores_rating        FLOAT,
@@ -78,7 +85,6 @@ CREATE TABLE Host (
   host_response_rate FLOAT,
   host_thumbnail_url TINYTEXT,
   host_picture_url   TINYTEXT,
-
 
   -----relation attributes----
   neighbourhood_id INT,
@@ -130,7 +136,6 @@ CREATE TABLE Reviewer (
   PRIMARY KEY(reviewer_id)
 );
 
-
 CREATE TABLE Calendar (
 
   ---------attributes---------
@@ -167,8 +172,7 @@ CREATE TABLE Country(
   PRIMARY KEY(country_id)
 );
 
-
-CREATE TABLE property_type(
+CREATE TABLE Property_type(
   ---------attributes---------
   property_type_id INT,
   property_type    TINYTEXT,
@@ -177,7 +181,7 @@ CREATE TABLE property_type(
   PRIMARY KEY(property_type_id)
 );
 
-CREATE TABLE room_type(
+CREATE TABLE Room_type(
   ---------attributes---------
   room_type_id INT,
   room_type    TINYTEXT,
@@ -185,7 +189,8 @@ CREATE TABLE room_type(
   ---------keys---------------
   PRIMARY KEY(room_type_id)
 );
-CREATE TABLE bed_type(
+
+CREATE TABLE Bed_type(
   ---------attributes---------
   bed_type_id INT,
   bed_type    TINYTEXT,
@@ -193,7 +198,8 @@ CREATE TABLE bed_type(
   ---------keys---------------
   PRIMARY KEY(bed_type_id)
 );
-CREATE TABLE amenities(
+
+CREATE TABLE Amenities(
   ---------attributes---------
   amenities_id INT,
   amenities    TEXT,
@@ -201,7 +207,8 @@ CREATE TABLE amenities(
   ---------keys---------------
   PRIMARY KEY(amenities_id)
 );
-CREATE TABLE cancellation_policy(
+
+CREATE TABLE Cancellation_policy(
   ---------attributes---------
   cancellation_policy_id INT,
   cancellation_policy    TEXT,
@@ -210,7 +217,7 @@ CREATE TABLE cancellation_policy(
   PRIMARY KEY(cancellation_policy_id)
 );
 
-CREATE TABLE host_verifications TEXT,(
+CREATE TABLE Host_verifications TEXT,(
   ---------attributes---------
   host_verifications_id INT,
   host_verifications    TEXT,

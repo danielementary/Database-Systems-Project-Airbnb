@@ -37,6 +37,13 @@ def clean_listings_data(filename):
     for a in bit_attributes:
         df[a] = df[a].apply(replace_f_t_by_bit)
 
+    # NEXT THINGS TO DO
+
+    # replace " by '
+    # remove $
+    # when there is a ' in a string, put another before to escape
+
+
 
     return df
 
