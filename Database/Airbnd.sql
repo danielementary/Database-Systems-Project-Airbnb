@@ -20,13 +20,10 @@ CREATE TABLE Listing (
 
   -- House_properties
 
-
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
   beds          TINYINT,
-
-
   square_feet   SMALLINT,
 
   -- Economic_properties
@@ -82,7 +79,6 @@ CREATE TABLE Host (
   host_response_rate FLOAT,
   host_thumbnail_url TINYTEXT,
   host_picture_url   TINYTEXT,
-
 
   -----relation attributes----
   neighbourhood_id INT,
@@ -189,6 +185,7 @@ CREATE TABLE room_type(
   ---------keys---------------
   PRIMARY KEY(room_type_id)
 );
+
 CREATE TABLE bed_type(
   ---------attributes---------
   bed_type_id INT,
@@ -197,6 +194,7 @@ CREATE TABLE bed_type(
   ---------keys---------------
   PRIMARY KEY(bed_type_id)
 );
+
 CREATE TABLE amenities(
   ---------attributes---------
   amenities_id INT,
@@ -205,6 +203,7 @@ CREATE TABLE amenities(
   ---------keys---------------
   PRIMARY KEY(amenities_id)
 );
+
 CREATE TABLE cancellation_policy(
   ---------attributes---------
   cancellation_policy_id INT,
