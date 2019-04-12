@@ -6,8 +6,8 @@ CREATE TABLE Listing (
 
   ---------attributes---------
   listing_id          INT,
-  listing_url         VARCHAR(50),
-  listing_name        VARCHAR(50),
+  listing_url         TINYTEXT,
+  listing_name        TINYTEXT,
   listing_summary     TINYTEXT,
   listing_space       TINYTEXT,
   listing_description TEXT,
@@ -15,17 +15,17 @@ CREATE TABLE Listing (
   listing_transit     TEXT,
   listing_access      TEXT,
   listing_interaction TEXT,
-  listing_picture_url VARCHAR(50),
+  listing_picture_url TINYTEXT,
   listing_neighbourhood_overview TEXT,
 
   -- House_properties
-  property_type VARCHAR(50),
-  room_type     VARCHAR(50),
+  property_type TINYTEXT,
+  room_type     TINYTEXT,
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
   beds          TINYINT,
-  bed_type      VARCHAR(50),
+  bed_type      TINYTEXT,
   amenities     TEXT,
   square_feet   SMALLINT,
 
@@ -74,19 +74,19 @@ CREATE TABLE Host (
 
   ---------attributes---------
   host_id    INT,
-  host_url   VARCHAR(50),
-  host_name  VARCHAR(50),
+  host_url   TINYTEXT,
+  host_name  TINYTEXT,
   host_since DATE,
   host_about TINYTEXT,
   host_response_time TIME,
   host_response_rate FLOAT,
-  host_thumbnail_url VARCHAR(50),
-  host_picture_url   VARCHAR(50),
+  host_thumbnail_url TINYTEXT,
+  host_picture_url   TINYTEXT,
   host_verifications TEXT,
 
   -----relation attributes----
-  neighbourhood_name VARCHAR(50),
-  city_name          VARCHAR(50),
+  neighbourhood_name TINYTEXT,
+  city_name          TINYTEXT,
 
   ------------keys------------
   PRIMARY KEY(host_id),
@@ -97,10 +97,10 @@ CREATE TABLE Neighbourhood (
 
   ---------attributes---------
   neighbourhood_id   INT,
-  neighbourhood_name VARCHAR(50),
+  neighbourhood_name TINYTEXT,
 
   -----relation attributes----
-  city_name    VARCHAR(50),
+  city_name    TINYTEXT,
   country_code VARCHAR(4),
 
   ------------keys------------
@@ -129,7 +129,7 @@ CREATE TABLE Reviewer (
 
   ---------attributes---------
   reviewer_id   INT,
-  reviewer_name VARCHAR(50),
+  reviewer_name TINYTEXT,
   -----relation attributes----
 
   ------------keys------------
@@ -156,9 +156,9 @@ CREATE TABLE City (
 
   ---------attributes---------
   city_id      INT,
-  city_name    VARCHAR(50),
+  city_name    TINYTEXT,
   country_code VARCHAR(4),
-  country      VARCHAR(50),
+  country      TINYTEXT,
 
   -----relation attributes----
 
