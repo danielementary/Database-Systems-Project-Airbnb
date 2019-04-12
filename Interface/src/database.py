@@ -1,28 +1,37 @@
 import mysql.connector
 
-# db = mysql.connector.connect(
-#     user="Group32",
-#     password="1234"
-# )
-#
-# cursor = db.cursor
-
 def connect_database(database_name):
-    return mysql.connector.connect(
-        user="Group32",
-        password="1234",
-        database=database_name
-    )
+    try:
+        print(0)
+        connection = mysql.connector.connect(
+            user    ="Group32",
+            password="1234",
+            database=database_name
+        )
+        return connection
+    except:
+        print(1)
+        connection = mysql.connector.connect(
+            user    ="Group32",
+            password="1234"
+        )
+        cursor = connection.cursor()
+        cursor.execute("CREATE DATABASE {};".format(database_name))
+        cursor.close()
+        connect_database(database_name)
 
-def create_cursor(db):
-    return db.cursor();
-
-def create_database(cursor, database_name):
-    sql = "CREATE DATABASE {}".format(database_name)
-    cursor.execute(sql)
-
-def close_database(database):
+def disconnect(database):
     database.close()
+    return
 
-db = connect_database("test")
-db.close()
+def execute_sql(db_connection, sql):
+    cursor = db_connection.cursor()
+    cursor.execute(sql)
+    for x in cursor:
+        print(x)
+    cursor.close()
+    return
+
+db = connect_database("Airbnb")
+execute_sql(db, "SHOW DATABASES;")
+disconnect(db)
