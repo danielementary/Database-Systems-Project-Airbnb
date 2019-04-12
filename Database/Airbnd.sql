@@ -85,8 +85,8 @@ CREATE TABLE Host (
   host_verifications TEXT,
 
   -----relation attributes----
-  neighbourhood_name TINYTEXT,
-  city_name          TINYTEXT,
+  neighbourhood_id INT,
+  city_id          INT,
 
   ------------keys------------
   PRIMARY KEY(host_id),
@@ -100,8 +100,7 @@ CREATE TABLE Neighbourhood (
   neighbourhood_name TINYTEXT,
 
   -----relation attributes----
-  city_name    TINYTEXT,
-  country_code VARCHAR(4),
+  city_id      INT,
 
   ------------keys------------
   PRIMARY KEY(neighbourhood_id)
@@ -165,22 +164,4 @@ CREATE TABLE City (
 
   ------------keys------------
   PRIMARY KEY(city_id)
-);
-
-----------------Relations------------------
-
-CREATE TABLE Location (
-
-  ---------attributes---------
-  latitude  FLOAT,
-  longitude FLOAT,
-
-  -----relation attributes----
-  listing_id         INT,
-  neighbourhood_id   INT,
-
-  ------------keys------------
-  PRIMARY KEY(listing_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON CASCADE DELETE,
-  FOREIGN KEY(neighbourhood_id REFERENCES Neighbourhood(neighbourhood_id) ON CASCADE DELETE
 );
