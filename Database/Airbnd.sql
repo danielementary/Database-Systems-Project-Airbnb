@@ -36,7 +36,7 @@ CREATE TABLE Listing (
   security_deposit FLOAT,
   cleaning_fee     FLOAT,
   guests_included  TINYINT,
-  extra_people     FLOAT,
+  extra_people     INT,
 
   -- Administrative_properties
   rules          TEXT,
@@ -86,7 +86,6 @@ CREATE TABLE Host (
 
   -----relation attributes----
   neighbourhood_id INT,
-  city_id          INT,
 
   ------------keys------------
   PRIMARY KEY(host_id),
@@ -100,7 +99,7 @@ CREATE TABLE Neighbourhood (
   neighbourhood_name TINYTEXT,
 
   -----relation attributes----
-  city_id      INT,
+  city_id      INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(neighbourhood_id)
@@ -116,12 +115,12 @@ CREATE TABLE Review (
 
   -----relation attributes----
   reviewer_id INT,
-  listing_id  INT,
+  listing_id  INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(review_id),
   FOREIGN KEY(reviewer_id) REFERENCES Reviewer(reviewer_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Reviewer (
@@ -144,11 +143,11 @@ CREATE TABLE Calendar (
   calendar_price     FLOAT,
 
   -----relation attributes----
-  listing_id INT,
+  listing_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(listing_id, date),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id)
+  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
 CREATE TABLE City (
@@ -156,12 +155,18 @@ CREATE TABLE City (
   ---------attributes---------
   city_id      INT,
   city_name    TINYTEXT,
-  country_code VARCHAR(4),
-  country      TINYTEXT,
-
-  -----relation attributes----
-
+  country_id   INT,
 
   ------------keys------------
   PRIMARY KEY(city_id)
+  FOREIGN KEY(country_id) REFERENCES Country(country_id)
 );
+
+CREATE TABLE Country(
+  ---------attributes---------
+  country_id INT,
+  country_code VARCHAR(2),
+
+  ------------keys------------
+  PRIMARY KEY(country_id)
+)
