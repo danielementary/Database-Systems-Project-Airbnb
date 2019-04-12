@@ -19,14 +19,14 @@ CREATE TABLE Listing (
   listing_neighbourhood_overview TEXT,
 
   -- House_properties
-  property_type TINYTEXT,
-  room_type     TINYTEXT,
+
+
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
   beds          TINYINT,
-  bed_type      TINYTEXT,
-  amenities     TEXT,
+
+
   square_feet   SMALLINT,
 
   -- Economic_properties
@@ -43,7 +43,7 @@ CREATE TABLE Listing (
   minimum_nights INT,
   maximum_nights INT,
   is_business_travel_ready BIT,
-  cancellation_policy      TEXT,
+
   require_guest_profile_picture    BIT,
   require_guest_phone_verification BIT,
 
@@ -78,11 +78,11 @@ CREATE TABLE Host (
   host_name  TINYTEXT,
   host_since DATE,
   host_about TINYTEXT,
-  host_response_time TIME,
+  host_response_time INT,       -- check in the data
   host_response_rate FLOAT,
   host_thumbnail_url TINYTEXT,
   host_picture_url   TINYTEXT,
-  host_verifications TEXT,
+
 
   -----relation attributes----
   neighbourhood_id INT,
@@ -169,4 +169,56 @@ CREATE TABLE Country(
 
   ------------keys------------
   PRIMARY KEY(country_id)
-)
+);
+
+
+CREATE TABLE property_type(
+  ---------attributes---------
+  property_type_id INT,
+  property_type    TINYTEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(property_type_id)
+);
+
+CREATE TABLE room_type(
+  ---------attributes---------
+  room_type_id INT,
+  room_type    TINYTEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(room_type_id)
+);
+CREATE TABLE bed_type(
+  ---------attributes---------
+  bed_type_id INT,
+  bed_type    TINYTEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(bed_type_id)
+);
+CREATE TABLE amenities(
+  ---------attributes---------
+  amenities_id INT,
+  amenities    TEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(amenities_id)
+);
+CREATE TABLE cancellation_policy(
+  ---------attributes---------
+  cancellation_policy_id INT,
+  cancellation_policy    TEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(cancellation_policy_id)
+);
+
+CREATE TABLE host_verifications TEXT,(
+  ---------attributes---------
+  host_verifications_id INT,
+  host_verifications    TEXT,
+
+  ---------keys---------------
+  PRIMARY KEY(host_verifications_id)
+);
