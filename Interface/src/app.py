@@ -1,12 +1,26 @@
 from tkinter import *
 from tkinter import ttk
 
+import src.database as db
+
 class App(Tk):
     def __init__(self):
         super(App, self).__init__()
         self.title("DBS-Project Group32")
         self.geometry("720x480")
         self.resizable(width=False, height=False)
+        self.databaseConnection = None
+
+        databaseSettingsFrame = ttk.Frame(self)
+        databaseSettingsFrame.pack(fill=X)
+
+        Label(databaseSettingsFrame, text="Status").pack(side=LEFT, padx=5, pady=5)
+
+        statusLabel = Label(databaseSettingsFrame, text="Not Connected")
+        statusLabel.pack(side=LEFT, padx=5, pady=5)
+
+        connectionButton = Button(databaseSettingsFrame, text="Connect to Airbnb DB", command=lambda : connectDatabase(self))
+        connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
 
         tabControl = ttk.Notebook(self)
 
@@ -35,3 +49,17 @@ class App(Tk):
 
         #modifications tab
         Label(modificationsFrame, text="This will be implemented later on.").pack()
+
+        def connectDatabase(self):
+            if self.databaseConnection is None:
+                self.databaseConnection = db.connect_database("Airbnb")
+                if self.databaseConnection is not None:
+                    statusLabel["text"] = "Connected to Airbnb DB"
+                    connectionButton["text"] = "Disconnect from Airbnb DB"
+            else:
+                db.disconnect(self.databaseConnection)
+                self.databaseConnection = None
+
+                if self.databaseConnection is None:
+                    statusLabel["text"] = "Disconnected"
+                    connectionButton["text"] = "Connect to Airbnb DB"
