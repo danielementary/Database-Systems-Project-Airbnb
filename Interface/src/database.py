@@ -2,27 +2,29 @@ import mysql.connector
 
 def connect_database(database_name):
     try:
-        print(0)
         connection = mysql.connector.connect(
             user    ="Group32",
             password="1234",
             database=database_name
         )
+        print("Connected to {} database".format(database_name))
         return connection
     except:
-        print(1)
-        connection = mysql.connector.connect(
-            user    ="Group32",
-            password="1234"
-        )
-        cursor = connection.cursor()
-        cursor.execute("CREATE DATABASE {};".format(database_name))
-        cursor.close()
-        connect_database(database_name)
+        print("Connection to {} database failed".format(database_name))
+        return
 
 def disconnect(database):
-    database.close()
-    return
+    if database is not None:
+        database.close()
+        print("Closing database...")
+    else:
+        print("Database is already closed...")
+
+def create_database(db_connection, database_name):
+    cursor = db_connection.cursor()
+    cursor.execute("CREATE DATABASE {};".format(database_name))
+    cursor.close()
+    connect_database(database_name)
 
 def execute_sql(db_connection, sql):
     cursor = db_connection.cursor()
@@ -30,8 +32,3 @@ def execute_sql(db_connection, sql):
     for x in cursor:
         print(x)
     cursor.close()
-    return
-
-db = connect_database("Airbnb")
-execute_sql(db, "SHOW DATABASES;")
-disconnect(db)
