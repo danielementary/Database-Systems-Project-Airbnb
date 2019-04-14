@@ -26,5 +26,4 @@ https://www.w3schools.com/python/python_mysql_getstarted.asp
 - Start server with `sudo service mysql start`
 - Make sure user `Group32` with password `1234` has all privileges
 - Make sure `Airbnb` database exists and is filled with parsed data
-- Once the program is started, you need to connect to the database
-- Enjoy!
+- Once the program is started with `python main.py`, you need to connect to the database
