@@ -15,7 +15,7 @@ https://git-lfs.github.com/
 - Stop : `sudo service mysql stop`
 - Status : `sudo service mysql status`
 
-### Python MySQL
+### Python MySQL (with Python 3.7)
 #### Installation
 `python -m pip install mysql-connector`
 
