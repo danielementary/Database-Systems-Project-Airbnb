@@ -19,7 +19,6 @@ CREATE TABLE Listing (
   listing_neighbourhood_overview TEXT,
 
   -- House_properties
-
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
@@ -46,9 +45,7 @@ CREATE TABLE Listing (
   property_type_id        INT,
   room_type_id            INT,
   bed_type_id             INT,
-  amenities_id            INT,
   cancellation_policy_id  INT,
-  host_verifications_id   INT,
 
   -- Review_scores
   review_scores_rating        FLOAT,
@@ -199,13 +196,22 @@ CREATE TABLE Bed_type(
   PRIMARY KEY(bed_type_id)
 );
 
-CREATE TABLE Amenities(
+CREATE TABLE Amenity(
   ---------attributes---------
-  amenities_id INT,
-  amenities    TEXT,
+  amenity_id INT,
+  amenity    TEXT,
 
   ---------keys---------------
-  PRIMARY KEY(amenities_id)
+  PRIMARY KEY(amenity_id)
+);
+
+CREATE TABLE Amenity_listing_map(
+  ---------attributes---------
+  amenity_id INT,
+  listing_id    INT,
+
+  ---------keys---------------
+  PRIMARY KEY(amenity_id, listing_id)
 );
 
 CREATE TABLE Cancellation_policy(
@@ -217,11 +223,20 @@ CREATE TABLE Cancellation_policy(
   PRIMARY KEY(cancellation_policy_id)
 );
 
-CREATE TABLE Host_verifications TEXT,(
+CREATE TABLE Host_verification(
   ---------attributes---------
-  host_verifications_id INT,
-  host_verifications    TEXT,
+  host_verification_id INT,
+  host_verification    TEXT,
 
   ---------keys---------------
-  PRIMARY KEY(host_verifications_id)
+  PRIMARY KEY(host_verification_id)
+);
+
+CREATE TABLE Host_verification_listing_map(
+  ---------attributes---------
+  host_verification_id INT,
+  listing_id    INT,
+
+  ---------keys---------------
+  PRIMARY KEY(host_verification_id, listing_id)
 );
