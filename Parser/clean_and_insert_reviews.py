@@ -60,6 +60,9 @@ def cleanString(string):
 
         #add surrounding quotes
         string = "'" + string.strip() + "'"
+
+    if string.lower() == "'nan'":
+        string = "''"
     return string
 
 
