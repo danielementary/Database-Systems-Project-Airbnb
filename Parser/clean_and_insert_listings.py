@@ -5,7 +5,7 @@ import math
 
 def clean_listings_data(filename):
 
-    string_attributes = ['listing_url', 'name', 'summary',"space", "description", "notes",\
+    string_attributes = ['listing_url', 'name', 'summary', "space", "description", "notes",\
                         "transit","access","interaction","picture_url","neighbourhood_overview", "neighbourhood",\
                         "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", \
                         "host_verifications", "property_type", "room_type", "bed_type",\
@@ -54,6 +54,9 @@ def cleanString(string):
 
         #add surrounding quotes
         string = "'" + string.strip() + "'"
+
+    if string == "'nan'":
+        string = "''"
     return string
 
 def replace_f_t_by_bit(obj):
@@ -149,7 +152,7 @@ def create_insert_queries(filename):
         query = """INSERT INTO Country VALUES ({}, {});""".format(countries_dict[ctry], ctry)
 
 
-    #insert city
+    # insert city
     cities = df[["city", "country_code"]]
     cities = cities.drop_duplicates("country_code")
     cleaned = [(cleanString(city), cleanString(j)) for (i,j) in cities.values]
@@ -158,7 +161,17 @@ def create_insert_queries(filename):
     cities_dict = dict(list(zip(cleaned_city, range(len(cleaned)))))
     for city in cities_dict.keys():
         query = """INSERT INTO City VALUES ({}, {}, {});""".format(cities_dict[city], city, countries_dict[city_to_country[city]])
-        print(query)
+
+    # insert Neighbourhood
+    neighbourhoods = df["neighbourhood"]
+    neighbourhoods = neighbourhoods.drop_duplicates()
+    cleaned = [cleanString(i) for i in neighbourhoods.tolist()]
+    neighbourhoods_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for n in neighbourhoods_dict.keys():
+        query = """INSERT INTO Neighbourhood VALUES ({}, {}, {});""".format(neighbourhoods_dict[n], n, cities_dict[city])
+
+    
+
 
 
 
