@@ -7,7 +7,7 @@ def clean_listings_data(filename):
 
     string_attributes = ['listing_url', 'name', 'summary', "space", "description", "notes",\
                         "transit","access","interaction","picture_url","neighbourhood_overview", "neighbourhood",\
-                        "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", \
+                        "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", "host_response_time", \
                         "host_verifications", "property_type", "room_type", "bed_type",\
                         "amenities", "house_rules", "cancellation_policy", "city", "country"]
     bit_attributes = ['is_business_travel_ready', 'require_guest_profile_picture', 'require_guest_phone_verification']
@@ -55,7 +55,7 @@ def cleanString(string):
         #add surrounding quotes
         string = "'" + string.strip() + "'"
 
-    if string == "'nan'":
+    if string.lower() == "'nan'":
         string = "''"
     return string
 
@@ -170,7 +170,7 @@ def create_insert_queries(filename):
     for n in neighbourhoods_dict.keys():
         query = """INSERT INTO Neighbourhood VALUES ({}, {}, {});""".format(neighbourhoods_dict[n], n, cities_dict[city])
 
-    
+
 
 
 
