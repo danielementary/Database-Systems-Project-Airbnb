@@ -37,10 +37,28 @@ def clean_listings_data(filename):
     for a in bit_attributes:
         df[a] = df[a].apply(replace_f_t_by_bit)
 
-
-
-
     return df
+
+def cleanString(string):
+    string = str(string)
+
+    #remove ' if surrounding the string
+    if string[0] == "'":
+        string = string[1:]
+    if string[-1] == "'":
+        string = string[:-1]
+    #put a quote before every quotes appearing in the string to escape it
+    string = string.replace("'", "''")
+
+    #add surrounding quotes
+    string = "'" + string.strip() + "'"
+    return string
+
+def replace_f_t_by_bit(obj):
+    f_t = str(obj)
+    if(f_t == 't'):
+        return 1
+    return 0
 
 
 def create_insert_queries(filename):
@@ -72,35 +90,59 @@ def create_insert_queries(filename):
 
     df = clean_listings_data(filename)
 
-    # in these store the primary key of the corresponding row
-    added_city = []
-    added_neighbourhood = []
-    added_host = []
+    norm_tables = {}
+    #First add all distincts normalization's tables' elements
+    property_types = df["property_type"]
+    property_types = property_types.drop_duplicates()
+    cleaned = [cleanString(i) for i in property_types.tolist()]
+    property_types_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for typ in property_types_dict.keys():
+        query = """INSERT INTO Property_type VALUES ({}, {});""".format(property_types_dict[typ], typ)
+
+    room_types = df["room_type"]
+    room_types = room_types.drop_duplicates()
+    cleaned = [cleanString(i) for i in room_types.tolist()]
+    room_types_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for typ in room_types_dict.keys():
+        query = """INSERT INTO Room_type VALUES ({}, {});""".format(room_types_dict[typ], typ)
+
+    bed_types = df["bed_type"]
+    bed_types = bed_types.drop_duplicates()
+    cleaned = [cleanString(i) for i in bed_types.tolist()]
+    bed_types_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for typ in bed_types_dict.keys():
+        query = """INSERT INTO Bed_type VALUES ({}, {});""".format(bed_types_dict[typ], typ)
+
+    amenities = df["amenities"]
+    amenities = amenities.drop_duplicates()
+    amenities_list = extract_amenities(amenities)
+    print(amenities_list)
+    amenities_dict = dict(list(zip(amenities_list, range(len(amenities_list)))))
+    for amenity in amenities_dict.keys():
+        query = """INSERT INTO Amenities VALUES ({}, {});""".format(amenities_dict[amenity], amenity)
+
+    
 
 
-    for index, row in df.iterrows():
-        # first let
+def extract_amenities(amns):
+    res = []
+    for ams_str in amns:
+        ams_str = str(ams_str)
+        ams = ams_str.split(",")
+        ams = [a.replace("{", "") for a in ams]
+        ams = [a.replace("}", "") for a in ams]
+        ams = [a.replace('"', "") for a in ams]
+        ams = [cleanString(i) for i in ams]
+        res += ams
+    res = list(set(res))
+    cleaned = []
+    for am in res:
+        if "translation missing:" not in am and am != "":
+            cleaned.append(am)
+
+    return cleaned
 
 
-def cleanString(string):
-    string = str(string)
 
-    #remove ' if surrounding the string
-    if string[0] == "'":
-        string = string[1:]
-    if string[-1] == "'":
-        string = string[:-1]
-    #put a quote before every quotes appearing in the string to escape it
-    string = string.replace("'", "''")
 
-    #add surrounding quotes
-    string = "'" + string + "'"
-    return string
-
-def replace_f_t_by_bit(obj):
-    f_t = str(obj)
-    if(f_t == 't'):
-        return 1
-    return 0
-
-clean_listings_data("../Dataset/barcelona_listings.csv")
+create_insert_queries("../Dataset/barcelona_listings.csv")
