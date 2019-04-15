@@ -31,17 +31,12 @@ def clean_listings_data(filename):
 
     # add quotes arround every string typed attributes
     for a in string_attributes:
-        df[a] = df[a].apply(addQuotes)
+        df[a] = df[a].apply(cleanString)
 
     # replace f or t for Bit typed attributes
     for a in bit_attributes:
         df[a] = df[a].apply(replace_f_t_by_bit)
 
-    # NEXT THINGS TO DO
-
-    # replace " by '
-    # remove $
-    # when there is a ' in a string, put another before to escape
 
 
 
@@ -51,23 +46,23 @@ def clean_listings_data(filename):
 def create_insert_queries(filename):
 
 
-    tables = ["Listing", "Host", "Neighbourhood", "House_properties",\
-                "Economic_properties", "Administrative_properties",\
-                "Review_scores", "City", "Location"]
+    tables = ["Listing", "Host", "Neighbourhood", "City", "Country", "Property_type",\
+        "Room_type", "Bed_type", "Amenities", "Cancellation_policy", "Host_verifications"]
 
     #city of host_neighbourhood: say for now that is the same as the listing's
     # don't forget to add neighbourhood to the Table when insert host and listing
     # need to keeps tracks of neighbourhood already added
     #NEIGHBOURHOOD is special so does NOT have a dictionary
     tables_to_attributes = \
-        {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview", "host_id": "host_id"},\
+        {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview", "host_id": "host_id",\
+         "price": "price", "weekly_price": "weekly_price", "monthly_price": "monthly_price", "security_deposit": "security_deposit", "cleaning_fee": "cleaning_fee", "guests_included": "guests_included", "extra_people": "extra_people",\
+         "accomodates": "accomodates", "bathrooms": "bathrooms", "bedrooms": "bedrooms", "beds": "beds", "square_feet": "square_feet",\
+         "rules": "house_rules", "minimum_nights": "minimum_nights", "maximum_nights": "maximum_nights", "is_business_travel_ready": "is_business_travel_ready", "require_guest_profile_picture": "require_guest_profile_picture", "require_guest_phone_verification": "require_guest_phone_verification",\
+         "review_scores_rating": "review_scores_rating", "review_scores_accuracy": "review_scores_accuracy", "review_scores_cleanliness": "review_scores_cleanliness", "review_scores_checkin": "review_scores_checkin", "review_scores_communication": "review_scores_communication", "review_scores_location": "review_scores_location", "review_scores_value": "review_scores_value",\
+         "latitude": "latitude", "longitude": "longitude"},\
          "Host": {"host_id" : "host_id", "host_url" : "host_url", "host_name" : "host_name", "host_since" : "host_since", "host_about" : "host_about", "host_response_time" : "host_response_time", "host_response_rate" : "host_response_rate", "host_thumbnail_url" : "host_thumbnail_url", "host_picture_url" : "host_picture_url", "host_verifications" : "host_verifications", "neighbourhood_name": "host_neighbourhood", "city_name": "city"},\
          "Neighbourhood": ["neighbourhood_name", "city_name", "country_code"],\
-         "House_properties": {"property_type": "property_type", "room_type": "room_type", "accomodates": "accomodates", "bathrooms": "bathrooms", "bedrooms": "bedrooms", "beds": "beds", "bed_type": "bed_type", "amenities":  "amenities", "square_feet": "square_feet", "listing_id": "id"}, \
-         "Economic_properties": {"price": "price", "weekly_price": "weekly_price", "monthly_price": "monthly_price", "security_deposit": "security_deposit", "cleaning_fee": "cleaning_fee", "guests_included": "guests_included", "extra_people": "extra_people", "listing_id": "id"},\
-         "Administrative_properties": {"rules": "house_rules", "minimum_nights": "minimum_nights", "maximum_nights": "maximum_nights", "is_business_travel_ready": "is_business_travel_ready", "cancellation_policy":  "cancellation_policy", "require_guest_profile_picture": "require_guest_profile_picture", "require_guest_phone_verification": "require_guest_phone_verification", "listing_id": "id"},\
-         "Review_scores": {"review_scores_rating": "review_scores_rating", "review_scores_accuracy": "review_scores_accuracy", "review_scores_cleanliness": "review_scores_cleanliness", "review_scores_checkin": "review_scores_checkin", "review_scores_communication": "review_scores_communication", "review_scores_location": "review_scores_location", "review_scores_value": "review_scores_value", "listing_id": "id"},\
-         "City": {"city_name": "city", "country_code": "country_code", "country": "country",\
+         "City": {"city_name": "city", "country_id": "country_id",\
          "Location": {"latitude": "latitude", "longitude": "longitude", "listing_id": "id", "neighbourhood_name": "neighbourhood", "city_name": "city"}}}
 
     # use something like INSERT INTO `BITTESTTABLE` VALUES('XYZ', b'0');
@@ -87,8 +82,19 @@ def create_insert_queries(filename):
         # first let
 
 
-def addQuotes(string):
+def cleanString(string):
     string = str(string)
+
+    #remove ' if surrounding the string
+    if string[0] == "'":
+        string = string[1:]
+    if string[-1] == "'":
+        string = string[:-1]
+    #put a quote before every quotes appearing in the string to escape it
+    string = string.replace("'", "''")
+
+    #add surrounding quotes
+    string = "'" + string + "'"
     return string
 
 def replace_f_t_by_bit(obj):
