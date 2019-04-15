@@ -1,1 +1,1 @@
-sql = "CREATE DATABASE Airbnb;"
+create_database_sql = "CREATE DATABASE Airbnb;"
