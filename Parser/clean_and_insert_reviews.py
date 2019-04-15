@@ -11,7 +11,7 @@ def clean_reviews_data(filename):
     data_frame = pd.read_csv(filename, dtype={'listing_id': int, 'id': int, 'reviewer_id': int, 'reviewer_name': str, 'comments': str})
 
     #add double quotes surrounding every comments
-    data_frame['comments'] = data_frame['comments'].apply(addQuotes)
+    data_frame['comments'] = data_frame['comments'].apply(cleanString)
 
     #remove \n from comments replacing them by a space
     data_frame['comments'] = data_frame['comments'].str.replace('\n', ' ')
@@ -45,8 +45,21 @@ def clean_reviews_data(filename):
 
     return (review_df, reviewer_df)
 
-def addQuotes(string):
+def cleanString(string):
     string = str(string)
+
+    #remove ' if surrounding the string
+    if string != "":
+        if string[0] == "'":
+            string = string[1:]
+        if string[-1] == "'":
+            string = string[:-1]
+        #put a quote before every quotes appearing in the string to escape it
+        string = string.replace("''", "'")
+        string = string.replace("'", "''")
+
+        #add surrounding quotes
+        string = "'" + string.strip() + "'"
     return string
 
 
@@ -63,7 +76,7 @@ def insert_reviews_reviewers(filename):
     for index, row in review_df.iterrows():
         #here get columns and create sql query
         #columns are in order: review_id, review_date, review_comments, reviewer_id, listing_id
-        sql_query = """INSERT INTO Review VALUES ({}, {}, {}, {}, {})""".format(
+        sql_query = """INSERT INTO Review VALUES ({}, {}, {}, {}, {});""".format(
                 row['id'],
                 row['date'],
                 '"' + str(row['comments']) + '"',
@@ -75,7 +88,7 @@ def insert_reviews_reviewers(filename):
 
     for index, row in reviewer_df.iterrows():
         #insert reviewer in reviewer table
-        sql_query = """INSERT INTO Reviewer VALUES ({}, {})""".format(
+        sql_query = """INSERT INTO Reviewer VALUES ({}, {});""".format(
                 row['reviewer_id'],
                 row['reviewer_name']
         )
