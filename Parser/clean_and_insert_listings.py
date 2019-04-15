@@ -71,8 +71,7 @@ def create_insert_queries(filename):
     city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
     print(city)
 
-    tables = ["Listing", "Host", "Neighbourhood", "City", "Country", "Property_type",\
-        "Room_type", "Bed_type", "Amenities", "Cancellation_policy", "Host_verifications"]
+    country_code_to_country_name = {"'ES'": "'Spain'", "'DE'":"'Germany'"}
 
     #city of host_neighbourhood: say for now that is the same as the listing's
     # don't forget to add neighbourhood to the Table when insert host and listing
@@ -149,8 +148,8 @@ def create_insert_queries(filename):
     cleaned = [cleanString(i) for i in countries.tolist()]
     countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for ctry in countries_dict.keys():
-        query = """INSERT INTO Country VALUES ({}, {});""".format(countries_dict[ctry], ctry)
-
+        query = """INSERT INTO Country VALUES ({}, {}, {});""".format(countries_dict[ctry], ctry, country_code_to_country_name[ctry])
+        print(query)
 
     # insert city
     cities = df[["city", "country_code"]]
@@ -170,10 +169,55 @@ def create_insert_queries(filename):
     for n in neighbourhoods_dict.keys():
         query = """INSERT INTO Neighbourhood VALUES ({}, {}, {});""".format(neighbourhoods_dict[n], n, cities_dict[city])
 
+    # insert Hosts
+    hosts = df[list(tables_to_attributes["Host"].values())]
+    hosts = remove_duplicated_hosts(hosts)
+
+    dup = hosts.duplicated("host_id").tolist()
+
+    dup = [i for (i, b) in zip(range(len(dup)), dup) if b]
+    print(dup)
 
 
 
+def remove_duplicated_hosts(hosts):
+    """
+    hosts is a DataFrame containing Host's table columns
+    """
+    hosts = hosts.drop_duplicates()
+    duplicates = hosts.duplicated("host_id", keep=False).tolist()
+    duplicates = list(zip(range(len(duplicates)), duplicates))
+    duplicates = [i for (i,j) in duplicates if j]
+    duplicates_with_host_id = [(hosts[idx:idx+1]["host_id"].tolist()[0], idx) for idx in duplicates]
 
+    duplicates_with_host_id.sort(key=lambda tup: tup[0])
+    dupli_dict = {}
+    for (id, i) in duplicates_with_host_id:
+        if id not in dupli_dict:
+            dupli_dict[id] = [i]
+        else:
+            dupli_dict[id] += [i]
+
+    print(dupli_dict.keys())
+    for id in dupli_dict.keys():
+        indexes = dupli_dict[id]
+        i1 = indexes[0]
+        h1 = hosts[["host_id", "host_response_time", "host_response_rate"]][i1:i1+1]
+        i2 = indexes[0]
+        h2 = hosts[["host_id", "host_response_time", "host_response_rate"]][i2:i2+1]
+
+
+        if h1["host_response_time"].tolist()[0] == '' or\
+            h1["host_response_rate"].tolist()[0] == 'nan':
+            print("i1   ",i1)
+            to_drop = i1
+        else:
+            print("i2   ",i2)
+            to_drop = i2
+
+        hosts.drop(hosts.index[[to_drop, to_drop+1]])
+
+    return hosts
 
 def extract_amenities(amns):
     res = []
