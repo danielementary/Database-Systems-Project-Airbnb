@@ -17,11 +17,11 @@ CREATE TABLE Listing (
   listing_neighbourhood_overview TEXT,
 
   ------House_properties------
-  accommodates  TINYINT,
-  bathrooms     TINYINT,
-  bedrooms      TINYINT,
-  beds          TINYINT,
-  square_feet   SMALLINT,
+  accommodates TINYINT,
+  bathrooms    TINYINT,
+  bedrooms     TINYINT,
+  beds         TINYINT,
+  square_feet  SMALLINT,
 
   ----Economic_properties-----
   price            FLOAT,
@@ -50,17 +50,17 @@ CREATE TABLE Listing (
   review_scores_value         FLOAT,
 
   ----------Location----------
-  latitude         FLOAT,
-  longitude        FLOAT,
+  latitude  FLOAT,
+  longitude FLOAT,
 
   -----relation attributes----
-  host_id           INT NOT NULL,
-  neighbourhood_id  INT NOT NULL,
+  host_id          INT NOT NULL,
+  neighbourhood_id INT NOT NULL,
 
-  property_type_id        INT,
-  room_type_id            INT,
-  bed_type_id             INT,
-  cancellation_policy_id  INT,
+  property_type_id       INT,
+  room_type_id           INT,
+  bed_type_id            INT,
+  cancellation_policy_id INT,
 
   ------------keys------------
   PRIMARY KEY(id),
@@ -111,7 +111,7 @@ CREATE TABLE Property_type(
 
   ---------attributes---------
   property_type_id   INT,
-  property_type_name TINYTEXT,
+  property_type_name TINYTEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(property_type_id)
@@ -121,7 +121,7 @@ CREATE TABLE Room_type(
 
   ---------attributes---------
   room_type_id   INT,
-  room_type_name TINYTEXT,
+  room_type_name TINYTEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(room_type_id)
@@ -131,7 +131,7 @@ CREATE TABLE Bed_type(
 
   ---------attributes---------
   bed_type_id   INT,
-  bed_type_name TINYTEXT,
+  bed_type_name TINYTEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(bed_type_id)
@@ -141,7 +141,7 @@ CREATE TABLE Cancellation_policy(
 
   ---------attributes---------
   cancellation_policy_id          INT,
-  cancellation_policy_description TEXT,
+  cancellation_policy_description TEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(cancellation_policy_id)
@@ -150,8 +150,8 @@ CREATE TABLE Cancellation_policy(
 CREATE TABLE City (
 
   ---------attributes---------
-  city_id    INT,
-  city_name  TINYTEXT,
+  city_id   INT,
+  city_name TINYTEXT NOT NULL,
 
   -----relation attributes----
   country_id INT NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE Country(
 
   ---------attributes---------
   country_id   INT,
-  country_code VARCHAR(2),
+  country_code VARCHAR(2) NOT NULL,
   country_name TINYTEXT;
 
   ------------keys------------
@@ -202,15 +202,16 @@ CREATE TABLE Reviewer (
 CREATE TABLE Calendar (
 
   ---------attributes---------
-  calendar_date      DATE,
-  calendar_available BIT,
-  calendar_price     FLOAT,
+  calendar_id        INT,
+  calendar_date      DATE  NOT NULL,
+  calendar_available BIT   NOT NULL,
+  calendar_price     FLOAT NOT NULL,
 
   -----relation attributes----
   listing_id INT NOT NULL,
 
   ------------keys------------
-  PRIMARY KEY(listing_id, date),
+  PRIMARY KEY(calendar_id),
   FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
@@ -218,7 +219,7 @@ CREATE TABLE Amenity(
 
   ---------attributes---------
   amenity_id   INT,
-  amenity_name TEXT,
+  amenity_name TEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(amenity_id)
@@ -228,7 +229,7 @@ CREATE TABLE Host_verification(
 
   ---------attributes---------
   host_verification_id          INT,
-  host_verification_description TEXT,
+  host_verification_description TEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(host_verification_id)
