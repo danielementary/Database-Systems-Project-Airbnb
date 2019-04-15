@@ -65,6 +65,8 @@ def replace_f_t_by_bit(obj):
 
 def create_insert_queries(filename):
 
+    city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
+    print(city)
 
     tables = ["Listing", "Host", "Neighbourhood", "City", "Country", "Property_type",\
         "Room_type", "Bed_type", "Amenities", "Cancellation_policy", "Host_verifications"]
@@ -149,8 +151,8 @@ def create_insert_queries(filename):
 
     #insert city
     cities = df[["city", "country_code"]]
-    cities = cities.drop_duplicates("city")
-    cleaned = [(cleanString(i), cleanString(j)) for (i,j) in cities.values]
+    cities = cities.drop_duplicates("country_code")
+    cleaned = [(cleanString(city), cleanString(j)) for (i,j) in cities.values]
     cleaned_city = [i for (i,j) in cleaned]
     city_to_country = dict(cleaned)
     cities_dict = dict(list(zip(cleaned_city, range(len(cleaned)))))
