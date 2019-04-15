@@ -57,7 +57,7 @@ def cleanString(string):
     string = string.replace("'", "''")
 
     #add surrounding quotes
-    string = "'" + string + "'"
+    string = "'" + string.strip() + "'"
     return string
 
 
