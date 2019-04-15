@@ -49,6 +49,7 @@ def cleanString(string):
         if string[-1] == "'":
             string = string[:-1]
         #put a quote before every quotes appearing in the string to escape it
+        string = string.replace("''", "'")
         string = string.replace("'", "''")
 
         #add surrounding quotes
@@ -144,6 +145,18 @@ def create_insert_queries(filename):
     countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for ctry in countries_dict.keys():
         query = """INSERT INTO Country VALUES ({}, {});""".format(countries_dict[ctry], ctry)
+
+
+    #insert city
+    cities = df[["city", "country_code"]]
+    cities = cities.drop_duplicates("city")
+    cleaned = [(cleanString(i), cleanString(j)) for (i,j) in cities.values]
+    cleaned_city = [i for (i,j) in cleaned]
+    city_to_country = dict(cleaned)
+    cities_dict = dict(list(zip(cleaned_city, range(len(cleaned)))))
+    for city in cities_dict.keys():
+        query = """INSERT INTO City VALUES ({}, {}, {});""".format(cities_dict[city], city, countries_dict[city_to_country[city]])
+        print(query)
 
 
 

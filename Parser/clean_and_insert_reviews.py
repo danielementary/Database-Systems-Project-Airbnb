@@ -49,15 +49,17 @@ def cleanString(string):
     string = str(string)
 
     #remove ' if surrounding the string
-    if string[0] == "'":
-        string = string[1:]
-    if string[-1] == "'":
-        string = string[:-1]
-    #put a quote before every quotes appearing in the string to escape it
-    string = string.replace("'", "''")
+    if string != "":
+        if string[0] == "'":
+            string = string[1:]
+        if string[-1] == "'":
+            string = string[:-1]
+        #put a quote before every quotes appearing in the string to escape it
+        string = string.replace("''", "'")
+        string = string.replace("'", "''")
 
-    #add surrounding quotes
-    string = "'" + string.strip() + "'"
+        #add surrounding quotes
+        string = "'" + string.strip() + "'"
     return string
 
 
