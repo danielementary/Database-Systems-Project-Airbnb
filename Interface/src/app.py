@@ -7,7 +7,7 @@ class App(Tk):
     def __init__(self):
         super(App, self).__init__()
         self.title("DBS-Project Group32")
-        self.geometry("720x480")
+        self.geometry("1280x720")
         self.resizable(width=False, height=False)
         self.databaseConnection = None
 
