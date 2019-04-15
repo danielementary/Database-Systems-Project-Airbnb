@@ -43,15 +43,16 @@ def cleanString(string):
     string = str(string)
 
     #remove ' if surrounding the string
-    if string[0] == "'":
-        string = string[1:]
-    if string[-1] == "'":
-        string = string[:-1]
-    #put a quote before every quotes appearing in the string to escape it
-    string = string.replace("'", "''")
+    if string != "":
+        if string[0] == "'":
+            string = string[1:]
+        if string[-1] == "'":
+            string = string[:-1]
+        #put a quote before every quotes appearing in the string to escape it
+        string = string.replace("'", "''")
 
-    #add surrounding quotes
-    string = "'" + string.strip() + "'"
+        #add surrounding quotes
+        string = "'" + string.strip() + "'"
     return string
 
 def replace_f_t_by_bit(obj):
@@ -116,13 +117,29 @@ def create_insert_queries(filename):
     amenities = df["amenities"]
     amenities = amenities.drop_duplicates()
     amenities_list = extract_amenities(amenities)
-    print(amenities_list)
     amenities_dict = dict(list(zip(amenities_list, range(len(amenities_list)))))
     for amenity in amenities_dict.keys():
-        query = """INSERT INTO Amenities VALUES ({}, {});""".format(amenities_dict[amenity], amenity)
+        query = """INSERT INTO Amenity VALUES ({}, {});""".format(amenities_dict[amenity], amenity)
+
+    cancellation_policy = df["cancellation_policy"]
+    cancellation_policy = cancellation_policy.drop_duplicates()
+    cleaned = [cleanString(i) for i in cancellation_policy.tolist()]
+    cancellation_policy_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for typ in cancellation_policy_dict.keys():
+        query = """INSERT INTO Cancellation_policy VALUES ({}, {});""".format(cancellation_policy_dict[typ], typ)
+
+    host_verifications = df["host_verifications"]
+    host_verifications = host_verifications.drop_duplicates()
+    host_verifications_list = extract_host_verifications(host_verifications)
+    print(host_verifications_list)
+    host_verifications_dict = dict(list(zip(host_verifications_list, range(len(host_verifications_list)))))
+    for typ in host_verifications_dict.keys():
+        query = """INSERT INTO Host_verification VALUES ({}, {});""".format(host_verifications_dict[typ], typ)
+
+
+
 
     
-
 
 def extract_amenities(amns):
     res = []
@@ -142,6 +159,23 @@ def extract_amenities(amns):
 
     return cleaned
 
+def extract_host_verifications(hvers):
+    res = []
+    for hvers_str in hvers:
+        hvers_str = str(hvers_str)
+        hverfs = hvers_str.split(",")
+        hverfs = [a.replace("[", "") for a in hverfs]
+        hverfs = [a.replace("]", "") for a in hverfs]
+        hverfs = [a.replace("'", "") for a in hverfs]
+        hverfs = [cleanString(i) for i in hverfs]
+        res += hverfs
+    res = list(set(res))
+    cleaned = []
+    for hverf in res:
+        if hverf != "":
+            cleaned.append(hverf)
+
+    return cleaned
 
 
 
