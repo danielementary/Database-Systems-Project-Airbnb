@@ -198,13 +198,13 @@ CREATE TABLE Bed_type(
   PRIMARY KEY(bed_type_id)
 );
 
-CREATE TABLE Amenities(
+CREATE TABLE Amenity(
   ---------attributes---------
-  amenities_id INT,
-  amenities    TEXT,
+  amenity_id INT,
+  amenity    TEXT,
 
   ---------keys---------------
-  PRIMARY KEY(amenities_id)
+  PRIMARY KEY(amenity_id)
 );
 
 CREATE TABLE Cancellation_policy(
@@ -216,11 +216,11 @@ CREATE TABLE Cancellation_policy(
   PRIMARY KEY(cancellation_policy_id)
 );
 
-CREATE TABLE Host_verifications TEXT,(
+CREATE TABLE Host_verification TEXT,(
   ---------attributes---------
-  host_verifications_id INT,
-  host_verifications    TEXT,
+  host_verification_id INT,
+  host_verification    TEXT,
 
   ---------keys---------------
-  PRIMARY KEY(host_verifications_id)
+  PRIMARY KEY(host_verification_id)
 );
