@@ -91,8 +91,8 @@ def create_insert_queries(filename):
 
     df = clean_listings_data(filename)
 
-    norm_tables = {}
     #First add all distincts normalization's tables' elements
+
     property_types = df["property_type"]
     property_types = property_types.drop_duplicates()
     cleaned = [cleanString(i) for i in property_types.tolist()]
@@ -131,15 +131,21 @@ def create_insert_queries(filename):
     host_verifications = df["host_verifications"]
     host_verifications = host_verifications.drop_duplicates()
     host_verifications_list = extract_host_verifications(host_verifications)
-    print(host_verifications_list)
     host_verifications_dict = dict(list(zip(host_verifications_list, range(len(host_verifications_list)))))
     for typ in host_verifications_dict.keys():
         query = """INSERT INTO Host_verification VALUES ({}, {});""".format(host_verifications_dict[typ], typ)
 
 
 
+    # insert country
+    countries = df["country_code"]
+    countries = countries.drop_duplicates()
+    cleaned = [cleanString(i) for i in countries.tolist()]
+    countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
+    for ctry in countries_dict.keys():
+        query = """INSERT INTO Country VALUES ({}, {});""".format(countries_dict[ctry], ctry)
 
-    
+
 
 def extract_amenities(amns):
     res = []
