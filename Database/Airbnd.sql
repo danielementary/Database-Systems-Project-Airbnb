@@ -19,7 +19,6 @@ CREATE TABLE Listing (
   listing_neighbourhood_overview TEXT,
 
   -- House_properties
-
   accommodates  TINYINT,
   bathrooms     TINYINT,
   bedrooms      TINYINT,
