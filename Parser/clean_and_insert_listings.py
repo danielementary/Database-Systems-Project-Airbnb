@@ -6,7 +6,7 @@ import math
 tables_to_attributes = \
     {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview", "host_id": "host_id",\
      "price": "price", "weekly_price": "weekly_price", "monthly_price": "monthly_price", "security_deposit": "security_deposit", "cleaning_fee": "cleaning_fee", "guests_included": "guests_included", "extra_people": "extra_people",\
-     "accomodates": "accomodates", "bathrooms": "bathrooms", "bedrooms": "bedrooms", "beds": "beds", "square_feet": "square_feet",\
+     "accommodates": "accommodates", "bathrooms": "bathrooms", "bedrooms": "bedrooms", "beds": "beds", "square_feet": "square_feet",\
      "rules": "house_rules", "minimum_nights": "minimum_nights", "maximum_nights": "maximum_nights", "is_business_travel_ready": "is_business_travel_ready", "require_guest_profile_picture": "require_guest_profile_picture", "require_guest_phone_verification": "require_guest_phone_verification",\
      "review_scores_rating": "review_scores_rating", "review_scores_accuracy": "review_scores_accuracy", "review_scores_cleanliness": "review_scores_cleanliness", "review_scores_checkin": "review_scores_checkin", "review_scores_communication": "review_scores_communication", "review_scores_location": "review_scores_location", "review_scores_value": "review_scores_value",\
      "latitude": "latitude", "longitude": "longitude"},\
@@ -235,6 +235,20 @@ def create_insert_queries(filename):
                     host_picture_url,\
                     neighbourhood_id)
         output_file.write(csv_line)
+
+
+    # insert Listing
+    output_file = output_files["Listing"]
+    listings = df[list(tables_to_attributes["Listing"].values())]
+    listings = listings.drop_duplicates()
+
+    automatic_attributes = list(tables_to_attributes["Listing"].keys())
+    normalized_attr = ["property_type", "room_type", "bed_type", "cancellation_policy"]
+    automatic_attributes.remove(normalized_attr)
+
+    for idx, row in hosts.iterrows():
+        csv_line = ""
+        
 
 
 
