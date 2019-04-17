@@ -63,6 +63,8 @@ def clean_listings_data(filename):
 def cleanString(string):
     string = str(string)
 
+    string = string.replace('\n', " ")
+
     #remove ' if surrounding the string
     if string != "":
         if string[0] == "'":
