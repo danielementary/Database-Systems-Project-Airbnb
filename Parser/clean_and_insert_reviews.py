@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+outputfile_reviews_name = "insert/insert_reviews.csv"
+outputfile_reviewers_name = "insert/insert_reviewers.csv"
 
 def clean_reviews_data(filename):
     """
@@ -38,10 +40,10 @@ def clean_reviews_data(filename):
     file.close()
 
     # not directly useful but for checks if needed
-    splited_original_name = filename.split('/')
-    newname = '/'.join(splited_original_name[:-1]) + "/cleaned/cleaned_" + splited_original_name[-1:][0]
-    data_frame.to_csv(newname, encoding='utf8')
-    print("new cleaned version of the file has been saved under name : " + newname)
+    # splited_original_name = filename.split('/')
+    # newname = '/'.join(splited_original_name[:-1]) + "/cleaned/cleaned_" + splited_original_name[-1:][0]
+    # data_frame.to_csv(newname, encoding='utf8')
+    # print("new cleaned version of the file has been saved under name : " + newname)
 
     return (review_df, reviewer_df)
 
@@ -49,7 +51,7 @@ def cleanString(string):
     string = str(string)
 
     #remove ' if surrounding the string
-    if string != "":
+    if string != "" and len(string) > 1:
         if string[0] == "'":
             string = string[1:]
         if string[-1] == "'":
@@ -68,37 +70,63 @@ def cleanString(string):
 
 def insert_reviews_reviewers(filename):
     """
-    write a .sql file containing INSERT statements required to insert data contained in filename
+    write a .csv files containing columns names for inserting reviewers and reviews and all values
     """
     (review_df, reviewer_df) = clean_reviews_data(filename)
 
-    splited_original_name = filename.split('/')
-    outname = '/'.join(splited_original_name[:-1]) + '/' + splited_original_name[-1:][0].split('.')[0] + "_insert_queries.sql"
-    outputfile = open(outname, 'w')
+    create_output_csvs_if_not_exist()
 
+    outputfile_reviews = open(outputfile_reviews_name, 'a')
+    outputfile_reviewers = open(outputfile_reviewers_name, 'a')
+
+    outputfile = outputfile_reviews
     for index, row in review_df.iterrows():
         #here get columns and create sql query
         #columns are in order: review_id, review_date, review_comments, reviewer_id, listing_id
-        sql_query = """INSERT INTO Review VALUES ({}, {}, {}, {}, {});""".format(
+        csv_line = """{},{},{},{},{}""".format(
                 row['id'],
                 row['date'],
-                '"' + str(row['comments']) + '"',
+                str(row['comments']),
                 row['reviewer_id'],
                 row['listing_id']
         )
-        outputfile.write(sql_query + '\n')
+        outputfile.write(csv_line + '\n')
 
 
+    outputfile = outputfile_reviewers
     for index, row in reviewer_df.iterrows():
         #insert reviewer in reviewer table
-        sql_query = """INSERT INTO Reviewer VALUES ({}, {});""".format(
+        csv_line = """{},{}""".format(
                 row['reviewer_id'],
                 row['reviewer_name']
         )
-        outputfile.write(sql_query + '\n')
+        outputfile.write(csv_line + '\n')
 
-    print("insert queries have been written for (", filename, ") in : ", outname)
-    outputfile.close()
+    print("insert queries have been written for (", filename)
+
+    outputfile_reviews.close()
+    outputfile_reviewers.close()
+
+
+def create_output_csvs_if_not_exist():
+    try:
+        file = open(outputfile_reviews_name, 'r')
+    except:
+        file = open(outputfile_reviews_name, 'w')
+        file.write("review_id,review_date,review_comments,reviewer_id,listing_id\n")
+        file.close()
+    else:
+        file.close()
+
+    try:
+        file = open(outputfile_reviewers_name, 'r')
+    except:
+        file = open(outputfile_reviewers_name, 'w')
+        file.write("reviewer_id,reviewer_name\n")
+        file.close()
+    else:
+        file.close()
+
 
 reviews_files = ["barcelona_reviews.csv", "berlin_reviews.csv", "madrid_reviews.csv"]
 
