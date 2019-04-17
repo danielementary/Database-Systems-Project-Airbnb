@@ -50,6 +50,8 @@ def clean_reviews_data(filename):
 def cleanString(string):
     string = str(string)
 
+    string = string.replace('\n', ' ')
+
     #remove ' if surrounding the string
     if string != "" and len(string) > 1:
         if string[0] == "'":
