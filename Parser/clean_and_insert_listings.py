@@ -171,15 +171,16 @@ def create_insert_queries(filename):
 
 
     # insert country
+    output_file = output_files["Country"]
     countries = df["country_code"]
     countries = countries.drop_duplicates()
     cleaned = [cleanString(i) for i in countries.tolist()]
     countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for ctry in countries_dict.keys():
         csv_line = """{},{},{}\n""".format(countries_dict[ctry], ctry, country_code_to_country_name[ctry])
-        print(query)
         output_file.write(csv_line)
     # insert city
+    output_file = output_files["City"]
     cities = df[["city", "country_code"]]
     cities = cities.drop_duplicates("country_code")
     cleaned = [(cleanString(city), cleanString(j)) for (i,j) in cities.values]
@@ -189,18 +190,55 @@ def create_insert_queries(filename):
     for city in cities_dict.keys():
         csv_line = """{},{},{}\n""".format(cities_dict[city], city, countries_dict[city_to_country[city]])
         output_file.write(csv_line)
+
     # insert Neighbourhood
-    neighbourhoods = df["neighbourhood"]
+    output_file = output_files["Neighbourhood"]
+    neighbourhoods = df["neighbourhood"].append(df["host_neighbourhood"])
     neighbourhoods = neighbourhoods.drop_duplicates()
     cleaned = [cleanString(i) for i in neighbourhoods.tolist()]
     neighbourhoods_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for n in neighbourhoods_dict.keys():
         csv_line = """{},{},{}\n""".format(neighbourhoods_dict[n], n, cities_dict[city])
         output_file.write(csv_line)
+
+
     # insert Hosts
+    output_file = output_files["Host"]
     hosts = df[list(tables_to_attributes["Host"].values())]
     hosts = remove_duplicated_hosts(hosts, tables_to_attributes)
+    attr = tables_to_attributes["Host"]
 
+    print(neighbourhoods_dict)
+
+    for idx, row in hosts.iterrows():
+        host_id = row[attr["host_id"]]
+        host_url = row[attr["host_url"]]
+        host_name = row[attr["host_name"]]
+        host_since = row[attr["host_since"]]
+        host_about = row[attr["host_about"]]
+        host_response_time = row[attr["host_response_time"]]
+        host_response_rate = row[attr["host_response_rate"]]
+        host_thumbnail_url = row[attr["host_thumbnail_url"]]
+        host_picture_url = row[attr["host_picture_url"]]
+        neighbourhood_id = neighbourhoods_dict[cleanString(row[attr["neighbourhood_name"]])]
+
+
+        csv_line = """{},{},{},{},{},{},{},{},{},{}\n""".format(\
+                    host_id,\
+                    host_url,\
+                    host_name,\
+                    host_since,\
+                    host_about,\
+                    host_response_time,\
+                    host_response_rate,\
+                    host_thumbnail_url,\
+                    host_picture_url,\
+                    neighbourhood_id)
+        output_file.write(csv_line)
+
+
+
+    close_files(list(output_files.values()))
 
 
 def remove_duplicated_hosts(hosts, tables_to_attributes):
@@ -226,7 +264,6 @@ def remove_duplicated_hosts(hosts, tables_to_attributes):
         else:
             dupli_dict[id] += [i]
 
-    print(dupli_dict.keys())
     for id in dupli_dict.keys():
         indexes = dupli_dict[id]
         i1 = indexes[0]
@@ -312,5 +349,4 @@ def close_files(files):
         f.close()
 
 
-#create_insert_queries("../Dataset/barcelona_listings.csv")
-create_output_csvs_if_not_exist(tables_to_attributes)
+create_insert_queries("../Dataset/barcelona_listings.csv")
