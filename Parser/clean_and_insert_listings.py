@@ -208,8 +208,6 @@ def create_insert_queries(filename):
     hosts = remove_duplicated_hosts(hosts, tables_to_attributes)
     attr = tables_to_attributes["Host"]
 
-    print(neighbourhoods_dict)
-
     for idx, row in hosts.iterrows():
         host_id = row[attr["host_id"]]
         host_url = row[attr["host_url"]]
