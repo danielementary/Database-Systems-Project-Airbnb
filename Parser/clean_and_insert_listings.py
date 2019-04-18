@@ -290,8 +290,10 @@ def create_insert_queries(filename):
     attributes = tables_to_attributes["Listing"]
 
     for idx, row in listings.iterrows():
+        output_file = output_files["Listing"]
         csv_line = ""
-        csv_line += str(row["id"]) + ","
+        listing_id = str(row["id"])
+        csv_line += listing_id + ","
 
         for att in ["listing_url", "listing_name", "listing_summary", "listing_space", \
                     "listing_description", "listing_notes", "listing_transit", "listing_access", \
@@ -360,6 +362,15 @@ def create_insert_queries(filename):
 
         output_file.write(csv_line)
 
+        # amenities
+        output_file = output_files["Listing_amenity_map"]
+
+        amenities = extract_amenities_from_string(row['amenities'])
+        for a in amenities:
+            csv_line = """{},{}\n""".format(listing_id, amenities_dict[a])
+            output_file.write(csv_line)
+
+
 
 
 
@@ -407,19 +418,27 @@ def remove_duplicated_hosts(hosts, tables_to_attributes, hosts_attributes):
 def extract_amenities(amns):
     res = []
     for ams_str in amns:
-        ams_str = str(ams_str)
-        ams = ams_str.split(",")
-        ams = [a.replace("{", "") for a in ams]
-        ams = [a.replace("}", "") for a in ams]
-        ams = [a.replace('"', "") for a in ams]
-        ams = [cleanString(i) for i in ams]
-        res += ams
+        res += extract_amenities_from_string(ams_str)
     res = list(set(res))
     cleaned = []
     for am in res:
         if "translation missing:" not in am and am != "":
             cleaned.append(am)
 
+    return cleaned
+
+def extract_amenities_from_string(ams_str):
+    ams_str = str(ams_str)
+    ams = ams_str.split(",")
+    ams = [a.replace("{", "") for a in ams]
+    ams = [a.replace("}", "") for a in ams]
+    ams = [a.replace('"', "") for a in ams]
+    ams = [cleanString(i) for i in ams]
+    ams = list(set(ams))
+    cleaned = []
+    for am in res:
+        if "translation missing:" not in am and am != "":
+            cleaned.append(am)
     return cleaned
 
 def extract_host_verifications(hvers):
