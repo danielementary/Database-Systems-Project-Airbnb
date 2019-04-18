@@ -10,7 +10,7 @@ tables_to_attributes = \
      "rules": "house_rules", "minimum_nights": "minimum_nights", "maximum_nights": "maximum_nights", "is_business_travel_ready": "is_business_travel_ready", "require_guest_profile_picture": "require_guest_profile_picture", "require_guest_phone_verification": "require_guest_phone_verification",\
      "review_scores_rating": "review_scores_rating", "review_scores_accuracy": "review_scores_accuracy", "review_scores_cleanliness": "review_scores_cleanliness", "review_scores_checkin": "review_scores_checkin", "review_scores_communication": "review_scores_communication", "review_scores_location": "review_scores_location", "review_scores_value": "review_scores_value",\
      "latitude": "latitude", "longitude": "longitude",\
-     "host_id": "host_id", "neighbourhood_id": "neighbourhood_id", "property_type_id": "property_type_id", "room_type_id": "room_type_id", "bed_type_id", "cancellation_policy_id": "cancellation_policy_id"},\
+     "host_id": "host_id", "neighbourhood_id": "neighbourhood_id", "property_type_id": "property_type_id", "room_type_id": "room_type_id", "bed_type_id": "bed_type_id", "cancellation_policy_id": "cancellation_policy_id"},\
      "Host": {"host_id" : "host_id", "host_url" : "host_url", "host_name" : "host_name", "host_since" : "host_since", "host_about" : "host_about", "host_response_time" : "host_response_time", "host_response_rate" : "host_response_rate", "host_thumbnail_url" : "host_thumbnail_url", "host_picture_url" : "host_picture_url", "neighbourhood_id": "neighbourhood_id"},\
      "Neighbourhood": {"neighbourhood_id":"neighbourhood_id", "neighbourhood_name":"neighbourhood_name","city_id": "city_id"},\
      "City": {"city_id": "city_id", "city_name": "city", "country_id": "country_id"},\
@@ -166,6 +166,7 @@ def create_insert_queries(filename):
     host_verifications = df["host_verifications"]
     host_verifications = host_verifications.drop_duplicates()
     host_verifications_list = extract_host_verifications(host_verifications)
+    print(host_verifications_list)
     host_verifications_dict = dict(list(zip(host_verifications_list, range(len(host_verifications_list)))))
     for typ in host_verifications_dict.keys():
         csv_line = """{},{}\n""".format(host_verifications_dict[typ], typ)
@@ -206,8 +207,12 @@ def create_insert_queries(filename):
 
     # insert Hosts
     output_file = output_files["Host"]
-    hosts = df[list(tables_to_attributes["Host"].values())]
-    hosts = remove_duplicated_hosts(hosts, tables_to_attributes)
+    hosts_attributes = list(tables_to_attributes["Host"].values())
+    hosts_attributes.append("host_verifications")
+    hosts_attributes.append("host_neighbourhood")
+    hosts_attributes.remove("neighbourhood_id")
+    hosts = df[hosts_attributes]
+    hosts = remove_duplicated_hosts(hosts, tables_to_attributes, list(tables_to_attributes["Host"].values()))
     attr = tables_to_attributes["Host"]
 
     for idx, row in hosts.iterrows():
@@ -220,9 +225,12 @@ def create_insert_queries(filename):
         host_response_rate = row[attr["host_response_rate"]]
         host_thumbnail_url = row[attr["host_thumbnail_url"]]
         host_picture_url = row[attr["host_picture_url"]]
-        neighbourhood_id = neighbourhoods_dict[cleanString(row[attr["neighbourhood_name"]])]
+        neighbourhood_id = neighbourhoods_dict[cleanString(row["host_neighbourhood"])]
 
+        host_verifications = row["host_verifications"]
+        host_verifications = extract_host_verifications_from_string(host_verifications)
 
+        output_file = output_files["Host"]
         csv_line = """{},{},{},{},{},{},{},{},{},{}\n""".format(\
                     host_id,\
                     host_url,\
@@ -236,10 +244,17 @@ def create_insert_queries(filename):
                     neighbourhood_id)
         output_file.write(csv_line)
 
+        output_file = output_files["Host_verification_map"]
+        for hverf in host_verifications:
+            csv_line = """{},{}""".format(host_id, host_verifications_dict[hverf])
+
 
     # insert Listing
     output_file = output_files["Listing"]
-    listings = df[list(tables_to_attributes["Listing"].values())]
+
+    listings_atttributes = list(tables_to_attributes["Listing"].values())
+
+    listings = df[listings_atttributes]
     listings = listings.drop_duplicates()
 
     automatic_attributes = list(tables_to_attributes["Listing"].keys())
@@ -255,15 +270,13 @@ def create_insert_queries(filename):
     close_files(list(output_files.values()))
 
 
-def remove_duplicated_hosts(hosts, tables_to_attributes):
+def remove_duplicated_hosts(hosts, tables_to_attributes, hosts_attributes):
     """
     hosts is a DataFrame containing Host's table columns
     """
-    without_city = list(tables_to_attributes["Host"].values())
-    without_city.remove('city')
 
-    # don't look at city, it is completly fucked up
-    hosts = hosts.drop_duplicates(without_city)
+
+    hosts = hosts.drop_duplicates()
 
     duplicates = hosts.duplicated("host_id", keep=False).tolist()
     duplicates = list(zip(range(len(duplicates)), duplicates))
@@ -316,13 +329,7 @@ def extract_amenities(amns):
 def extract_host_verifications(hvers):
     res = []
     for hvers_str in hvers:
-        hvers_str = str(hvers_str)
-        hverfs = hvers_str.split(",")
-        hverfs = [a.replace("[", "") for a in hverfs]
-        hverfs = [a.replace("]", "") for a in hverfs]
-        hverfs = [a.replace("'", "") for a in hverfs]
-        hverfs = [cleanString(i) for i in hverfs]
-        res += hverfs
+        res += extract_host_verifications_from_string(hvers_str)
     res = list(set(res))
     cleaned = []
     for hverf in res:
@@ -331,6 +338,20 @@ def extract_host_verifications(hvers):
 
     return cleaned
 
+def extract_host_verifications_from_string(hvers_str):
+    hvers_str = str(hvers_str)
+    hverfs = hvers_str.split(",")
+    hverfs = [a.replace("[", "") for a in hverfs]
+    hverfs = [a.replace("]", "") for a in hverfs]
+    hverfs = [a.replace("'", "") for a in hverfs]
+    hverfs = [cleanString(i) for i in hverfs]
+
+    hverfs = list(set(hverfs))
+    cleaned = []
+    for hverf in hverfs:
+        if hverf != "":
+            cleaned.append(hverf)
+    return cleaned
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
     for table in tables_to_attributes.keys():
