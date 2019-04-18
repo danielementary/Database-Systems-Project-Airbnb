@@ -128,13 +128,3 @@ def create_output_csvs_if_not_exist():
         file.close()
     else:
         file.close()
-
-
-reviews_files = ["barcelona_reviews.csv", "berlin_reviews.csv", "madrid_reviews.csv"]
-
-reviews_files = ["../Dataset/" + file for file in reviews_files]
-
-cleaned_files = []
-
-for file in reviews_files:
-    insert_reviews_reviewers(file)

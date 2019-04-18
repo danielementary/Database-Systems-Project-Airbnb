@@ -177,7 +177,6 @@ def create_insert_queries(filename):
     host_verifications = df["host_verifications"]
     host_verifications = host_verifications.drop_duplicates()
     host_verifications_list = extract_host_verifications(host_verifications)
-    print(host_verifications_list)
     host_verifications_dict = dict(list(zip(host_verifications_list, range(len(host_verifications_list)))))
     for typ in host_verifications_dict.keys():
         csv_line = """{},{}\n""".format(host_verifications_dict[typ], typ)
@@ -277,9 +276,9 @@ def create_insert_queries(filename):
     normalized_attr.append("room_type")
     normalized_attr.append("bed_type")
     normalized_attr.append("cancellation_policy")
+    normalized_attr.append("amenities")
 
     listings_atttributes += normalized_attr
-    print(listings_atttributes)
 
     listings = df[listings_atttributes]
     listings = listings.drop_duplicates()
@@ -436,7 +435,7 @@ def extract_amenities_from_string(ams_str):
     ams = [cleanString(i) for i in ams]
     ams = list(set(ams))
     cleaned = []
-    for am in res:
+    for am in ams:
         if "translation missing:" not in am and am != "":
             cleaned.append(am)
     return cleaned
@@ -497,6 +496,3 @@ def open_output_files(tables_to_attributes):
 def close_files(files):
     for f in files:
         f.close()
-
-
-create_insert_queries("../Dataset/barcelona_listings.csv")
