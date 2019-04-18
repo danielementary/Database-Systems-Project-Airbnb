@@ -4,16 +4,16 @@ import math
 
 
 tables_to_attributes = \
-    {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview", "host_id": "host_id",\
-     "price": "price", "weekly_price": "weekly_price", "monthly_price": "monthly_price", "security_deposit": "security_deposit", "cleaning_fee": "cleaning_fee", "guests_included": "guests_included", "extra_people": "extra_people",\
+    {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview",\
      "accommodates": "accommodates", "bathrooms": "bathrooms", "bedrooms": "bedrooms", "beds": "beds", "square_feet": "square_feet",\
+     "price": "price", "weekly_price": "weekly_price", "monthly_price": "monthly_price", "security_deposit": "security_deposit", "cleaning_fee": "cleaning_fee", "guests_included": "guests_included", "extra_people": "extra_people",\
      "rules": "house_rules", "minimum_nights": "minimum_nights", "maximum_nights": "maximum_nights", "is_business_travel_ready": "is_business_travel_ready", "require_guest_profile_picture": "require_guest_profile_picture", "require_guest_phone_verification": "require_guest_phone_verification",\
      "review_scores_rating": "review_scores_rating", "review_scores_accuracy": "review_scores_accuracy", "review_scores_cleanliness": "review_scores_cleanliness", "review_scores_checkin": "review_scores_checkin", "review_scores_communication": "review_scores_communication", "review_scores_location": "review_scores_location", "review_scores_value": "review_scores_value",\
-     "latitude": "latitude", "longitude": "longitude"},\
-     "Host": {"host_id" : "host_id", "host_url" : "host_url", "host_name" : "host_name", "host_since" : "host_since", "host_about" : "host_about", "host_response_time" : "host_response_time", "host_response_rate" : "host_response_rate", "host_thumbnail_url" : "host_thumbnail_url", "host_picture_url" : "host_picture_url", "host_verifications" : "host_verifications", "neighbourhood_name": "host_neighbourhood", "city_name": "city"},\
-     "Neighbourhood": {"neighbourhood_id":"neighbourhood_id","neighbourhood_name":"neighbourhood_name","city_id":"city_id"},\
-     "City": {"city_name": "city", "country_id": "country_id"},\
-     "Location": {"latitude": "latitude", "longitude": "longitude", "listing_id": "id", "neighbourhood_name": "neighbourhood", "city_name": "city"},\
+     "latitude": "latitude", "longitude": "longitude",\
+     "host_id": "host_id", "neighbourhood_id": "neighbourhood_id", "property_type_id": "property_type_id", "room_type_id": "room_type_id", "bed_type_id", "cancellation_policy_id": "cancellation_policy_id"},\
+     "Host": {"host_id" : "host_id", "host_url" : "host_url", "host_name" : "host_name", "host_since" : "host_since", "host_about" : "host_about", "host_response_time" : "host_response_time", "host_response_rate" : "host_response_rate", "host_thumbnail_url" : "host_thumbnail_url", "host_picture_url" : "host_picture_url", "neighbourhood_id": "neighbourhood_id"},\
+     "Neighbourhood": {"neighbourhood_id":"neighbourhood_id", "neighbourhood_name":"neighbourhood_name","city_id": "city_id"},\
+     "City": {"city_id": "city_id", "city_name": "city", "country_id": "country_id"},\
      "Property_type": {"property_type_id": "property_type_id", "property_type_name": "property_type_name"}, \
      "Room_type" : {"room_type_id": "room_type_id", "room_type_name": "room_type_name"},\
      "Bed_type": {"bed_type_id": "bed_type_id", "bed_type_name": "bed_type_name"},\
@@ -248,7 +248,7 @@ def create_insert_queries(filename):
 
     for idx, row in hosts.iterrows():
         csv_line = ""
-        
+
 
 
 
