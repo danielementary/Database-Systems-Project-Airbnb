@@ -27,7 +27,7 @@ tables_to_attributes = \
 def clean_listings_data(filename):
 
     string_attributes = ['listing_url', 'name', 'summary', "space", "description", "notes",\
-                        "transit","access","interaction","picture_url","neighbourhood_overview", "neighbourhood",\
+                        "transit", "access", "interaction","picture_url", "neighbourhood_overview", "neighbourhood",\
                         "host_url", "host_name", "host_about", "host_thumbnail_url", "host_picture_url", "host_response_time", \
                         "host_verifications", "property_type", "room_type", "bed_type",\
                         "amenities", "house_rules", "cancellation_policy", "city", "country"]
@@ -96,10 +96,6 @@ def create_insert_queries(filename):
 
     country_code_to_country_name = {"'ES'": "'Spain'", "'DE'":"'Germany'"}
 
-    #city of host_neighbourhood: say for now that is the same as the listing's
-    # don't forget to add neighbourhood to the Table when insert host and listing
-    # need to keeps tracks of neighbourhood already added
-    #NEIGHBOURHOOD is special so does NOT have a dictionary
 
     output_files = open_output_files(tables_to_attributes)
 
@@ -246,23 +242,48 @@ def create_insert_queries(filename):
 
         output_file = output_files["Host_verification_map"]
         for hverf in host_verifications:
-            csv_line = """{},{}""".format(host_id, host_verifications_dict[hverf])
-
+            csv_line = """{},{}\n""".format(host_id, host_verifications_dict[hverf])
+            output_file.write(csv_line)
 
     # insert Listing
     output_file = output_files["Listing"]
 
     listings_atttributes = list(tables_to_attributes["Listing"].values())
 
+    listings_atttributes.remove("neighbourhood_id")
+    listings_atttributes.remove("property_type_id")
+    listings_atttributes.remove("room_type_id")
+    listings_atttributes.remove("bed_type_id")
+    listings_atttributes.remove("cancellation_policy_id")
+
+    normalized_attr = []
+    normalized_attr.append("neighbourhood")
+    normalized_attr.append("property_type")
+    normalized_attr.append("room_type")
+    normalized_attr.append("bed_type")
+    normalized_attr.append("cancellation_policy")
+
+    listings_atttributes += normalized_attr
+    print(listings_atttributes)
+
     listings = df[listings_atttributes]
     listings = listings.drop_duplicates()
 
-    automatic_attributes = list(tables_to_attributes["Listing"].keys())
-    normalized_attr = ["property_type", "room_type", "bed_type", "cancellation_policy"]
-    automatic_attributes.remove(normalized_attr)
+    automatic_attributes = listings_atttributes
+    # automatic_attributes -= normalized_attr
 
-    for idx, row in hosts.iterrows():
+    attributes = tables_to_attributes["Listing"]
+
+    for idx, row in listings.iterrows():
         csv_line = ""
+        csv_line += str(row["id"]) + ","
+
+        for att in ["listing_url", "listing_name", "listing_summary", "listing_space", \
+                    "listing_description", "listing_notes", "listing_transit", "listing_access", \
+                    "listing_interaction", "listing_picture_url", "listing_neighbourhood_overview"]:
+            csv_line += row[attributes[att]] + ","
+
+        print(csv_line)
 
 
 
