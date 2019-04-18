@@ -36,11 +36,17 @@ def clean_listings_data(filename):
     date_attributes = ["review_date", "host_since"]
 
     int_attributes = ['id', 'host_id', 'accommodates', 'bathrooms', 'bedrooms', 'beds', 'square_feet', 'guests_included',\
-                        'minimum_nights', 'maximum_nights']
+                        "extra_people", 'minimum_nights', 'maximum_nights']
+    float_attributes = ["price","weekly_price","monthly_price","security_deposit",\
+                        "cleaning_fee","review_scores_rating","review_scores_accuracy",\
+                        "review_scores_cleanliness","review_scores_checkin",\
+                        "review_scores_communication","review_scores_location",\
+                        "review_scores_value", "latitude", "longitude"]
 
     data_types = {}
     for a in string_attributes:
         data_types[a] = str
+
 
     file = open(filename, newline='')
     df = pd.read_csv(filename, dtype=data_types)
@@ -57,6 +63,9 @@ def clean_listings_data(filename):
     # replace f or t for Bit typed attributes
     for a in bit_attributes:
         df[a] = df[a].apply(replace_f_t_by_bit)
+
+    for a in float_attributes + int_attributes:
+        df[a] = df[a].apply(clean_float_and_int)
 
     return df
 
@@ -87,6 +96,12 @@ def replace_f_t_by_bit(obj):
     if(f_t == 't'):
         return 1
     return 0
+
+def clean_float_and_int(a):
+    a = str(a)
+    a = a.replace("$", "")
+    a = a.replace(",", "")
+    return float(a)
 
 
 def create_insert_queries(filename):
@@ -283,7 +298,67 @@ def create_insert_queries(filename):
                     "listing_interaction", "listing_picture_url", "listing_neighbourhood_overview"]:
             csv_line += row[attributes[att]] + ","
 
-        print(csv_line)
+        for att in ["accommodates", "bathrooms", "bedrooms", "beds", "square_feet"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += str(int(a)) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        for att in ["price", "weekly_price", "monthly_price", "security_deposit", "cleaning_fee"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += str(a) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        for att in ["guests_included", "extra_people"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += str(int(a)) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        csv_line += row[attributes["rules"]] + ','
+
+        for att in ["minimum_nights", "maximum_nights"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += str(int(a)) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        for att in ["is_business_travel_ready", "require_guest_profile_picture", "require_guest_phone_verification"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += "b" + str(int(a)) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        for att in ["review_scores_rating","review_scores_accuracy","review_scores_cleanliness",\
+                    "review_scores_checkin","review_scores_communication","review_scores_location",\
+                    "review_scores_value", "latitude", "longitude"]:
+            a = row[attributes[att]]
+            if not math.isnan(a):
+                csv_line += str(a) + ","
+            else:
+                csv_line += "NULL" + ","
+
+        csv_line += str(row[attributes["host_id"]]) + ","
+
+        neighbourhood_id = neighbourhoods_dict[cleanString(row["neighbourhood"])]
+        csv_line += str(neighbourhood_id) + ","
+
+        property_type_id = property_types_dict[cleanString(row["property_type"])]
+        csv_line += str(property_type_id) + ","
+
+        bed_type_id = bed_types_dict[cleanString(row["bed_type"])]
+        csv_line += str(bed_type_id) + ","
+
+        cancellation_policy_id = cancellation_policy_dict[cleanString(row["cancellation_policy"])]
+        csv_line += str(cancellation_policy_id) + "\n"
+
+        output_file.write(csv_line)
 
 
 
