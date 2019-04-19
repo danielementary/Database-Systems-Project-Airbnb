@@ -2,21 +2,25 @@
 # it follows our rules so is absolutely not general purpose
 
 def tokenize(filename):
+    """
+    take a filename, read the csv and outputs a tuple containing in first position
+        the list of columns (in string)
+    in second position
+        the list of list containing each line values as String
+    """
     file = open(filename, 'r')
 
     lines = file.readlines()
 
     # first extracts columns name:
     columns = tokenize_line(lines[0])
-    print(columns, "  len = ", len(columns))
-
+    values_list = []
     for i in range(1, len(lines)):
         values = tokenize_line(lines[i])
-
-        # DO SOMETHING WITH EACH LINE HERE
-        print(len(values))
+        values_list.append(values)
 
 
+    return (columns, values_list)
 
 def tokenize_line(string):
     string_len = len(string)
