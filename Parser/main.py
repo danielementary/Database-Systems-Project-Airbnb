@@ -3,6 +3,8 @@ import clean_and_insert_listings as listings
 import pandas as pd
 import os
 
+import csv_tokenizer as tok
+
 reviews_files = ["barcelona_reviews.csv", "berlin_reviews.csv", "madrid_reviews.csv"]
 reviews_files = ["../Dataset/" + file for file in reviews_files]
 
@@ -16,12 +18,12 @@ for filename in reviews_files :
 
 listings.create_insert_queries(listings_files)
 
-print("begin main checks")
+# print("begin main checks")
 # for filename in os.listdir('insert'):
 #     filename = "insert/" + filename
-#     print("check for duplicates in : " + filename)
-#     df = pd.read_csv(filename)
-#     dup = df.duplicated()
+#     print("check for duplicates in id in : " + filename)
+#     tokenized = tok.tokenize(filename)
+#     col = tokenized[0]
 #     for i in dup:
 #         if i:
 #             print("MAIN : there were duplicates in : " + filename)
