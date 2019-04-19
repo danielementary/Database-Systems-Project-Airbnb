@@ -24,7 +24,7 @@ tables_to_attributes = \
      "Listing_amenity_map": {"listing_id": "listing_id", "amenity_id": "amenity_id"},\
      "Host_verification_map" :{"host_id": "host_id", "host_verification_id": "host_verification_id"}}
 
-def clean_listings_data(filename):
+def clean_listings_data(filenames_list):
 
     string_attributes = ['listing_url', 'name', 'summary', "space", "description", "notes",\
                         "transit", "access", "interaction","picture_url", "neighbourhood_overview", "neighbourhood",\
@@ -47,9 +47,18 @@ def clean_listings_data(filename):
     for a in string_attributes:
         data_types[a] = str
 
+    dfs_list = []
+    df = pd.DataFrame()
+    for filename in filenames_list:
+        city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
+        print(city)
 
-    file = open(filename, newline='')
-    df = pd.read_csv(filename, dtype=data_types)
+        file = open(filename, newline='')
+        df_per_city = pd.read_csv(filename, dtype=data_types)
+        df_per_city["city"] = city
+
+        df = df.append(df_per_city)
+        file.close()
 
     #rename neighborhood_overview to neighboUrhood_overview to be consistent
     df = df.rename(columns = {'neighborhood_overview': 'neighbourhood_overview'})
@@ -104,13 +113,12 @@ def clean_float_and_int(a):
     return float(a)
 
 
-def create_insert_queries(filename):
+def create_insert_queries(filenames_list):
 
-    city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
-    print(city)
+    # city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
+    # print(city)
 
-    country_code_to_country_name = {"'ES'": "'Spain'", "'DE'":"'Germany'"}
-
+    country_code_to_country_name_id = {"'ES'": "'Spain'", "'DE'": "'Germany'"}
 
     output_files = open_output_files(tables_to_attributes)
 
@@ -119,7 +127,7 @@ def create_insert_queries(filename):
 
     # use math.isnan(x) to check if float is NaN value before convert to int
 
-    df = clean_listings_data(filename)
+    df = clean_listings_data(filenames_list)
 
     #First add all distincts normalization's tables' elements
     output_file = output_files["Property_type"]
@@ -190,13 +198,15 @@ def create_insert_queries(filename):
     cleaned = [cleanString(i) for i in countries.tolist()]
     countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for ctry in countries_dict.keys():
-        csv_line = """{},{},{}\n""".format(countries_dict[ctry], ctry, country_code_to_country_name[ctry])
+        countries_dict[ctry] = country_code_to_country_name_id[ctry][1]
+        csv_line = """{},{},{}\n""".format(countries_dict[ctry], ctry, country_code_to_country_name_id[ctry][0])
         output_file.write(csv_line)
+
     # insert city
     output_file = output_files["City"]
     cities = df[["city", "country_code"]]
-    cities = cities.drop_duplicates("country_code")
-    cleaned = [(cleanString(city), cleanString(j)) for (i,j) in cities.values]
+    cities = cities.drop_duplicates()
+    cleaned = [(cleanString(i), cleanString(j)) for (i,j) in cities.values]
     cleaned_city = [i for (i,j) in cleaned]
     city_to_country = dict(cleaned)
     cities_dict = dict(list(zip(cleaned_city, range(len(cleaned)))))
@@ -206,12 +216,16 @@ def create_insert_queries(filename):
 
     # insert Neighbourhood
     output_file = output_files["Neighbourhood"]
-    neighbourhoods = df["neighbourhood"].append(df["host_neighbourhood"])
+    neighbourhoods = df[["neighbourhood", "city"]].append(df[["host_neighbourhood", "city"]].rename(columns={"host_neighbourhood": "neighbourhood"}))
     neighbourhoods = neighbourhoods.drop_duplicates()
-    cleaned = [cleanString(i) for i in neighbourhoods.tolist()]
+    cleaned = []
+    for id, row in neighbourhoods.iterrows():
+        new_pair = (cleanString(row["neighbourhood"]), cleanString(row["city"]))
+        if(new_pair[0] != ''):
+            cleaned.append(new_pair)
     neighbourhoods_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for n in neighbourhoods_dict.keys():
-        csv_line = """{},{},{}\n""".format(neighbourhoods_dict[n], n, cities_dict[city])
+        csv_line = """{},{},{}\n""".format(neighbourhoods_dict[n], n[0], cities_dict[n[1]])
         output_file.write(csv_line)
 
 
@@ -220,13 +234,14 @@ def create_insert_queries(filename):
     hosts_attributes = list(tables_to_attributes["Host"].values())
     hosts_attributes.append("host_verifications")
     hosts_attributes.append("host_neighbourhood")
+    hosts_attributes.append("city")
     hosts_attributes.remove("neighbourhood_id")
     hosts = df[hosts_attributes]
     hosts = remove_duplicated_hosts(hosts, tables_to_attributes, list(tables_to_attributes["Host"].values()))
     attr = tables_to_attributes["Host"]
 
     for idx, row in hosts.iterrows():
-        host_id = row[attr["host_id"]]
+        host_id = int(row[attr["host_id"]])
         host_url = row[attr["host_url"]]
         host_name = row[attr["host_name"]]
         host_since = row[attr["host_since"]]
@@ -235,7 +250,7 @@ def create_insert_queries(filename):
         host_response_rate = row[attr["host_response_rate"]]
         host_thumbnail_url = row[attr["host_thumbnail_url"]]
         host_picture_url = row[attr["host_picture_url"]]
-        neighbourhood_id = neighbourhoods_dict[cleanString(row["host_neighbourhood"])]
+        neighbourhood_id = neighbourhoods_dict[(cleanString(row["host_neighbourhood"]), cleanString(row["city"]))]
 
         host_verifications = row["host_verifications"]
         host_verifications = extract_host_verifications_from_string(host_verifications)
@@ -280,6 +295,7 @@ def create_insert_queries(filename):
 
     listings_atttributes += normalized_attr
 
+    listings_atttributes.append("city")
     listings = df[listings_atttributes]
     listings = listings.drop_duplicates()
 
@@ -347,7 +363,7 @@ def create_insert_queries(filename):
 
         csv_line += str(row[attributes["host_id"]]) + ","
 
-        neighbourhood_id = neighbourhoods_dict[cleanString(row["neighbourhood"])]
+        neighbourhood_id = neighbourhoods_dict[(cleanString(row["neighbourhood"]), cleanString(row["city"]))]
         csv_line += str(neighbourhood_id) + ","
 
         property_type_id = property_types_dict[cleanString(row["property_type"])]
@@ -475,7 +491,7 @@ def create_output_csvs_if_not_exist(tables_to_attributes):
         except:
             file = open(filename, 'w')
             s = ""
-            for att in list(tables_to_attributes[table].values()):
+            for att in list(tables_to_attributes[table].keys()):
                 s += att + ","
             s = s[:-1]
             s += "\n"

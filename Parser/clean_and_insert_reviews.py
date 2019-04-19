@@ -36,7 +36,6 @@ def clean_reviews_data(filename):
 
     print("duplicated reviewers : ", duplicated_reviewer)
 
-
     file.close()
 
     # not directly useful but for checks if needed
