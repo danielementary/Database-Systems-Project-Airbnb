@@ -14,6 +14,7 @@ def clean_reviews_data(filename):
 
     #add double quotes surrounding every comments
     data_frame['comments'] = data_frame['comments'].apply(cleanString)
+    data_frame['reviewer_name'] = data_frame["reviewer_name"].apply(cleanString)
 
     #remove \n from comments replacing them by a space
     data_frame['comments'] = data_frame['comments'].str.replace('\n', ' ')
