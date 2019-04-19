@@ -366,6 +366,9 @@ def create_insert_queries(filenames_list):
         neighbourhood_id = neighbourhoods_dict[(cleanString(row["neighbourhood"]), cleanString(row["city"]))]
         csv_line += str(neighbourhood_id) + ","
 
+        room_type_id = room_types_dict[cleanString(row["room_type"])]
+        csv_line += str(room_type_id) + ","
+
         property_type_id = property_types_dict[cleanString(row["property_type"])]
         csv_line += str(property_type_id) + ","
 
