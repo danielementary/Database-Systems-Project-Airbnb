@@ -190,7 +190,7 @@ special case of the theta-join : condition *c* contains only conjunction of equa
 *example :*<br>
 good way of finding all pairs of sailors in $S_1\times S_2$ who have the same age : <br>
 $$
-  \sigma_{sid_1 < sid_2}(S_1 \Join_{age = age_2}\rho _{age \rightarrow age2, sid \rightarrow sid2}(S_2))
+  \sigma_{sid_1 < sid_2}(S_1 \Join_{age = age_2}\rho_{age \rightarrow age2, sid \rightarrow sid2}(S_2))
 $$
 
 ######4.4.3 Division
@@ -258,11 +258,11 @@ Alt. 1 is a dense indexing
 ![class](images/index_classification.png "class")
 
 ######5.3.5 Index data structure
-1) hash-based indexing :
-    - hash function:
+1) hash-based indexing (see **week 8**):
+    - hash function:<br>
       $$
         r = record  \\
-        h(r.searchKey) = bucket \ for \ record \ r
+        h(r.searchKey)=bucket \ for \ record \r
       $$
     - the records in a file are grouped in **buckets**, where a bucket consists of a **primary page** and, possibly, additional pages linked in a chain.
     - The bucket to which a record belongs can be determined by applying a special function, called a *hash* function, to the search key.
@@ -317,3 +317,48 @@ Assumptions :
 
 ######6.2.3 Adjacent blocks
 ![storage](images/adjacent_block.png "storage")
+
+
+
+---------
+###Lecture 8 : Hashing
+#####8.1 Pros
+Hash-based index are best for equality selections. **Cannot** support range searches.
+- Can be beneficial if you have only equality selections
+- Very useful in join implementation
+
+#####8.2 Static hashing
+- Hash file is a collection of buckets.
+- To search for a data entry, we apply a hash function h to identify the bucket to which it belongs and then search this bucket.
+- Let $N$ be the number of buckets, the following hash function works well :
+$h(key) = (a * key + b)\mod N$, where $a, b$ are constants to adjust $h$.
+- Problems : <br>
+Since the number of buckets in a static hashing file is known when the file is created, the primary pages can be stored on successive disk pages. Hence, a search ideally requires just one disk I/O, and insert and delete operations require two I/Os (read and write the page), although the cost could be higher in the presence of overflow pages.
+
+
+#####8.3 Extendible hashing
+Use a directory of pointers to bucket.s, and double t.he size of the number of buckets by doubling just the directory and splitting only the bucket that overflowed.
+
+* *Example* :
+
+![hash](images/buckets_extendible_hash.png "hash")
+The directory is an array of size 4, where each element points to a bucket.
+* **Global depth** (of a directory): <br>
+Max # of bits needed to tell which
+bucket an entry belongs to.
+* **Local depth** (of a bucket): <br>
+ The # of bits used to determine if an entry
+belongs to this bucket.
+* **Locate a data entry** : <br>
+Apply the hash function $h$. <br>
+Pick the LSB to get a number of the size of directory. <br>
+Follow the pointer to the pointed bucket.
+* **Insert a data entry** : <br>
+Apply the hash function $h$.  <br>
+Find the pointed bucket with the LSB.  <br>
+If the bucket is *non-full*, just insert the new page.  <br>
+If the bucket is *full*, allocate a new bucket A2 and redistribute the contents across the old bucket and the new bucket (split image).  <br>
+**Splitting** : look at the bit preceding global depth bit to discriminate between the two buckets.<br>
+Splitting a bucket does not imply to double the directory. It is only the case if local depth > global depth
+
+![hash](images/buckets_insert.png "hash")
