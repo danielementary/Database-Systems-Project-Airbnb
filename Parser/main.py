@@ -18,14 +18,11 @@ for filename in reviews_files :
 
 listings.create_insert_queries(listings_files)
 
-# print("begin main checks")
-# for filename in os.listdir('insert'):
-#     filename = "insert/" + filename
-#     print("check for duplicates in id in : " + filename)
-#     tokenized = tok.tokenize(filename)
-#     col = tokenized[0]
-#     for i in dup:
-#         if i:
-#             print("MAIN : there were duplicates in : " + filename)
-#     df.drop_duplicates()
-#     df.to_csv(filename)
+print("begin main checks")
+for filename in os.listdir('insert'):
+    if filename != ".DS_Store":
+        filename = "insert/" + filename
+        print("check if columns size equal values line size for : " + filename)
+        columns, values = tok.tokenize(filename)
+        if len(columns) != len(values[0]):
+            print("# columns = ", len(columns), " and values first line size = ", len(values[0]), " for file : ", filename)
