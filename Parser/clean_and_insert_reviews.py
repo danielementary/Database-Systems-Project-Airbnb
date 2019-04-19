@@ -4,11 +4,12 @@ import numpy as np
 outputfile_reviews_name = "insert/insert_reviews.csv"
 outputfile_reviewers_name = "insert/insert_reviewers.csv"
 
-def clean_reviews_data(filename):
+def clean_reviews_data(filenames_list):
     """
     clean data in reviews files. return a data_frame containing reviews data and
     one containing reviewers data.
     """
+    
     file = open(filename, newline='')
     data_frame = pd.read_csv(filename, dtype={'listing_id': int, 'id': int, 'reviewer_id': int, 'reviewer_name': str, 'comments': str})
 
