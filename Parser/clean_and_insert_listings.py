@@ -198,8 +198,7 @@ def create_insert_queries(filenames_list):
     cleaned = [cleanString(i) for i in countries.tolist()]
     countries_dict = dict(list(zip(cleaned, range(len(cleaned)))))
     for ctry in countries_dict.keys():
-        countries_dict[ctry] = country_code_to_country_name_id[ctry][1]
-        csv_line = """{},{},{}\n""".format(countries_dict[ctry], ctry, country_code_to_country_name_id[ctry][0])
+        csv_line = """{},{},{}\n""".format(countries_dict[ctry], ctry, country_code_to_country_name_id[ctry])
         output_file.write(csv_line)
 
     # insert city
@@ -307,7 +306,7 @@ def create_insert_queries(filenames_list):
     for idx, row in listings.iterrows():
         output_file = output_files["Listing"]
         csv_line = ""
-        listing_id = str(row["id"])
+        listing_id = str(int(row["id"]))
         csv_line += listing_id + ","
 
         for att in ["listing_url", "listing_name", "listing_summary", "listing_space", \
@@ -361,7 +360,7 @@ def create_insert_queries(filenames_list):
             else:
                 csv_line += "NULL" + ","
 
-        csv_line += str(row[attributes["host_id"]]) + ","
+        csv_line += str(int(row[attributes["host_id"]])) + ","
 
         neighbourhood_id = neighbourhoods_dict[(cleanString(row["neighbourhood"]), cleanString(row["city"]))]
         csv_line += str(neighbourhood_id) + ","
