@@ -161,7 +161,7 @@ CREATE TABLE City (
   FOREIGN KEY(country_id) REFERENCES Country(country_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Country(
+CREATE TABLE Country (
 
   ---------attributes---------
   country_id   INT,
@@ -215,7 +215,7 @@ CREATE TABLE Calendar (
   FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Amenity(
+CREATE TABLE Amenity (
 
   ---------attributes---------
   amenity_id   INT,
@@ -225,7 +225,7 @@ CREATE TABLE Amenity(
   PRIMARY KEY(amenity_id)
 );
 
-CREATE TABLE Host_verification(
+CREATE TABLE Host_verification (
 
   ---------attributes---------
   host_verification_id          INT,
@@ -235,7 +235,7 @@ CREATE TABLE Host_verification(
   PRIMARY KEY(host_verification_id)
 );
 
-CREATE TABLE Listing_amenity_map(
+CREATE TABLE Listing_amenity_map (
 
   ---------attributes---------
   -----relation attributes----
@@ -248,7 +248,7 @@ CREATE TABLE Listing_amenity_map(
   FOREIGN KEY(amenity_id) REFERENCES Amenity(amenity_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Host_verification_map(
+CREATE TABLE Host_verification_map (
 
   ---------attributes---------
   -----relation attributes----
