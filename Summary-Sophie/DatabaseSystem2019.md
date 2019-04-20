@@ -362,3 +362,30 @@ If the bucket is *full*, allocate a new bucket A2 and redistribute the contents 
 Splitting a bucket does not imply to double the directory. It is only the case if local depth > global depth
 
 ![hash](images/buckets_insert.png "hash")
+
+#####8.4 Linear hashing
+######8.4.1 Introduction
+* no directory <br>
+* suppose they are $N$ initial buckets
+* many hash functions $h_1, h_2, ...$ where $h_i = h(key) mod(2^i N)$. <br>
+$d_0 :=$ number of bits needed to represent N <br>
+$d_i := d_0 + i$ 
+
+* if $h_i$ maps to $M$ buckets, $h_{i+1}$ maps to $2M$ buckets <br>
+
+* *example :*<br>
+$$
+  h_0(key) = h(key) mod(4) \\
+  h_1(key) = h(key) mod(8) \\
+  h_2(key) = h(key) mod(16) \\
+  ...
+$$
+
+######8.4.2 Rounds
+Current round number : $Level$ <br>
+number of buckets at the beginning of a round = $N_{level} = N * 2^{Level}$
+![hash](images/linear_hashing.png "hash")
+
+---------
+###Lecture 8bis : Sorting
+#####8.1
