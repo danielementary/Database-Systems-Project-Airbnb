@@ -107,7 +107,7 @@ CREATE TABLE Neighbourhood (
   FOREIGN KEY(city_id) REFERENCES City(city_id) ON DELETE CASCADE
 );
 
-CREATE TABLE Property_type(
+CREATE TABLE Property_type (
 
   ---------attributes---------
   property_type_id   INT,
@@ -117,7 +117,7 @@ CREATE TABLE Property_type(
   PRIMARY KEY(property_type_id)
 );
 
-CREATE TABLE Room_type(
+CREATE TABLE Room_type (
 
   ---------attributes---------
   room_type_id   INT,
@@ -127,7 +127,7 @@ CREATE TABLE Room_type(
   PRIMARY KEY(room_type_id)
 );
 
-CREATE TABLE Bed_type(
+CREATE TABLE Bed_type (
 
   ---------attributes---------
   bed_type_id   INT,
@@ -137,7 +137,7 @@ CREATE TABLE Bed_type(
   PRIMARY KEY(bed_type_id)
 );
 
-CREATE TABLE Cancellation_policy(
+CREATE TABLE Cancellation_policy (
 
   ---------attributes---------
   cancellation_policy_id          INT,
