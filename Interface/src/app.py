@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 import src.database as db
+import database.select_tables as st
 
 class App(Tk):
     def __init__(self):
@@ -19,7 +20,7 @@ class App(Tk):
         self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
         self.statusLabel.pack(side=LEFT, padx=5, pady=5)
 
-        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=lambda : self.connectDatabase())
+        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
 
         self.tabControl = ttk.Notebook(self)
 
@@ -34,14 +35,27 @@ class App(Tk):
         self.tabControl.pack(fill=BOTH, expand=1)
 
         #search tab
-        #search label
-        Label(self.searchFrame, text="Search Box").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        #search search box
-        self.searchBox = Entry(self.searchFrame)
-        self.searchBox.grid(row=0, column=1, padx=5, pady=5)
+
+        #table label
+        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        #pool of fields labels
+        for i in range(1, 11):
+            label = Label(self.searchFrame, text="")
+            label.grid(row=i, column=0, sticky=W, padx=5, pady=5)
+
+        #option menu for table selection
+        self.table = StringVar(self.searchFrame)
+        temp = list(st.search_fields.keys())[0]
+        self.table.set(temp)
+        self.previousTable = None
+        self.updateSearchFields(temp)
+        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_fields.keys()), command=self.updateSearchFields)
+        self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
+        
         #search button
-        self.searchButton = Button(self.searchFrame, text="Search", state=DISABLED)
-        self.searchButton.grid(row=0, column=2, padx=5, pady=5)
+        # self.searchButton = Button(self.searchFrame, text="Search", state=DISABLED)
+        # self.searchButton.grid(row=0, column=2, padx=5, pady=5)
 
         #queries tab
         Label(self.queriesFrame, text="This will be implemented later on.").pack()
@@ -60,3 +74,17 @@ class App(Tk):
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
                 self.connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+
+    def updateSearchFields(self, value):
+        if (self.previousTable != value):
+            self.previousTable = value
+            print(1)
+            searchFieldList = st.search_fields[value]
+            rowForm = 1
+
+            for i in range(1, 11):
+                self.searchFrame.grid_slaves(row=i, column=0)[0]["text"] = ""
+
+            for sf in searchFieldList:
+                Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
+                rowForm += 1
