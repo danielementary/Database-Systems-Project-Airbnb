@@ -36,17 +36,30 @@ def create_database(db_connection, database_name):
     cursor.close()
     print("Creating {} database".format(database_name))
 
-def execute_sql(db_connection, sql):
+def execute_sql(db_connection, sql, description):
     cursor = db_connection.cursor()
-    cursor.execute(sql)
-    for x in cursor:
-        print(x)
+    try:
+        cursor.execute(sql)
+        print("{} executed successfully".format(description))
+    except:
+        print("{} failed miserably".format(description))
     cursor.close()
 
-def execute_sql_list(db_connection, sql_list):
+def execute_sql_list(db_connection, sql_list, description):
     cursor = db_connection.cursor()
-    for sql in sql_list:
-        cursor.execute(sql)
-        for x in cursor:
-            print(x)
+    try:
+        for sql in sql_list:
+            cursor.execute(sql)
+        print("{} executed successfully".format(description))
+    except:
+        print("{} failed miserably".format(description))
     cursor.close()
+
+def count_tables(db_connection, database_name):
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'Airbnb';")
+    count = None
+    for x in cursor:
+        count = x[0]
+    cursor.close()
+    return count
