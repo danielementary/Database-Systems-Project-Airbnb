@@ -190,5 +190,5 @@ create_statements_ordered = [create_table_Country, create_table_City, create_tab
                              create_table_Host, create_table_Property_type, create_table_Room_type,
                              create_table_Bed_type, create_table_Cancellation_policy,
                              create_table_Listing, create_table_Reviewer, create_table_Review,
-                             create_table_Calendar, create_table_Amenity,
+                             create_table_Calendar, create_table_Amenity, create_table_Host_verification,
                              create_table_Listing_amenity_map, create_table_Host_verification_map]
