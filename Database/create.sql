@@ -63,7 +63,7 @@ CREATE TABLE Listing (
   cancellation_policy_id INT,
 
   ------------keys------------
-  PRIMARY KEY(id),
+  PRIMARY KEY(listing_id),
   FOREIGN KEY(host_id)                REFERENCES Host(host_id)                   ON DELETE CASCADE,
   FOREIGN KEY(neighbourhood_id)       REFERENCES Neighbourhood(neighbourhood_id) ON DELETE CASCADE,
   FOREIGN KEY(property_type_id)       REFERENCES Property_type(property_type_id),
@@ -166,7 +166,7 @@ CREATE TABLE Country (
   ---------attributes---------
   country_id   INT,
   country_code VARCHAR(2) NOT NULL,
-  country_name TINYTEXT;
+  country_name TINYTEXT,
 
   ------------keys------------
   PRIMARY KEY(country_id)
