@@ -16,13 +16,16 @@ class App(Tk):
         self.resizable(width=False, height=False)
 
         #database variables
-        self.databaseConnection          = None
+        self.databaseConnection           = None
 
-        self.property_type_id_list       = None
-        self.cancellation_policy_id_list = None
-        self.city_id_list                = None
-        self.reviewer_id_list            = None
-        self.listing_id_list             = None
+        self.accommodates_min_max         = None
+        self.square_feet_min_max          = None
+        self.price_min_max                = None
+        self.review_scores_rating_min_max = None
+        self.property_type_id_list        = None
+        self.cancellation_policy_id_list  = None
+        self.host_since_oldest            = None
+        self.city_id_list                 = None
 
         #top frame for connection status
         self.databaseSettingsFrame = ttk.Frame(self)
