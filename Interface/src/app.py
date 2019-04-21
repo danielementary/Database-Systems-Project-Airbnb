@@ -55,11 +55,6 @@ class App(Tk):
         #table label
         Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        #pool of fields labels
-        for i in range(1, 11):
-            label = Label(self.searchFrame, text="")
-            label.grid(row=i, column=0, sticky=W, padx=5, pady=5)
-
         #option menu for table selection
         self.table = StringVar(self.searchFrame)
         temp = list(st.search_fields.keys())[0]
@@ -96,14 +91,32 @@ class App(Tk):
         if (self.previousTable != value):
             self.previousTable = value
             searchFieldList = st.search_fields[value]
-            rowForm = 1
 
             for i in range(1, 11):
-                self.searchFrame.grid_slaves(row=i, column=0)[0]["text"] = ""
+                try:
+                    self.searchFrame.grid_slaves(row=i, column=0)[0].grid_forget()
+                    self.searchFrame.grid_slaves(row=i, column=1)[0].grid_forget()
+                except:
+                    #BAD !!!
+                    break
 
+            rowForm = 1
             for sf in searchFieldList:
                 Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
-                rowForm += 1
 
-    def getNormalizedEntitiesValues(self):
-        return
+                input_type = st.map_fields_input[sf]
+                input = None
+
+                if (input_type == 0):
+                    input = Entry(self.searchFrame)
+                elif (input_type == 1):
+                    input = Entry(self.searchFrame)
+                elif (input_type == 2):
+                    input = Entry(self.searchFrame)
+                elif (input_type == 3):
+                    input = Entry(self.searchFrame)
+                elif (input_type == 4):
+                    input = Entry(self.searchFrame)
+
+                input.grid(row=rowForm, column=1, sticky=W, padx=5, pady=5)
+                rowForm += 1
