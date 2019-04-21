@@ -4,6 +4,10 @@ from tkinter import ttk
 import src.database as db
 import database.select_tables as st
 
+from database.create_tables import create_statements_ordered
+
+DB_NAME = "Airbnb"
+
 class App(Tk):
     def __init__(self):
         super(App, self).__init__()
@@ -28,6 +32,8 @@ class App(Tk):
 
         self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
         self.statusLabel.pack(side=LEFT, padx=5, pady=5)
+
+        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
 
         #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
@@ -69,15 +75,19 @@ class App(Tk):
 
     def connectDatabase(self):
         if self.databaseConnection is None:
-            self.databaseConnection = db.connect_database("Airbnb")
+            self.databaseConnection = db.connect_database(DB_NAME)
 
             if self.databaseConnection is not None:
-                self.statusLabel["text"] = "Connected to Airbnb DB"
+                self.statusLabel["text"] = "Connected to {} DB".format(DB_NAME)
                 self.connectionButton.pack_forget()
+                if (db.count_tables(self.databaseConnection, DB_NAME) <= 0):
+                    self.createTables()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
-                self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
                 self.connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+
+    def createTables(self):
+        db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -93,3 +103,4 @@ class App(Tk):
                 rowForm += 1
 
     def getNormalizedEntitiesValues(self):
+        return
