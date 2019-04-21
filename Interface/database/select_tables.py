@@ -4,8 +4,7 @@ search_fields = {"Listing": ("listing_name", "accommodates", "square_feet",
                              "review_scores_rating", "property_type_id",
                              "cancellation_policy_id"),
                  "Host" : ("host_name", "host_since"),
-                 "Neighbourhood" : ("neighbourhood_name", "city_id"),
-                 "Review" : ("reviewer_id", "listing_id"),
+                 "Neighbourhood" : ("neighbourhood_name", "city_id")
                  }
 
 #mapping from field to input type : 0 text, 1 number, 2 range, 3 boolean,
@@ -21,6 +20,4 @@ map_fields_input = {"listing_name": 0,
                     "host_name"  : 0,
                     "host_since" : 1,
                     "neighbourhood_name" : 0,
-                    "city_id"     : 4,
-                    "reviewer_id" : 4,
-                    "listing_id"  : 4}
+                    "city_id"     : 4}
