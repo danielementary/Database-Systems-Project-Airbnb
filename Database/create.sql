@@ -256,7 +256,7 @@ CREATE TABLE Host_verification_map (
   host_verification_id INT NOT NULL,
 
   ---------keys---------------
-  PRIMARY KEY(host_id, host_verification_id)
+  PRIMARY KEY(host_id, host_verification_id),
   FOREIGN KEY(host_id)              REFERENCES Host(host_id)                           ON DELETE CASCADE,
   FOREIGN KEY(host_verification_id) REFERENCES Host_verification(host_verification_id) ON DELETE CASCADE
 );
