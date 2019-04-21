@@ -11,55 +11,52 @@ class App(Tk):
         self.resizable(width=False, height=False)
         self.databaseConnection = None
 
-        databaseSettingsFrame = ttk.Frame(self)
-        databaseSettingsFrame.pack(fill=X)
+        self.databaseSettingsFrame = ttk.Frame(self)
+        self.databaseSettingsFrame.pack(fill=X)
 
-        Label(databaseSettingsFrame, text="Status").pack(side=LEFT, padx=5, pady=5)
+        Label(self.databaseSettingsFrame, text="Status").pack(side=LEFT, padx=5, pady=5)
 
-        statusLabel = Label(databaseSettingsFrame, text="Not Connected")
-        statusLabel.pack(side=LEFT, padx=5, pady=5)
+        self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
+        self.statusLabel.pack(side=LEFT, padx=5, pady=5)
 
-        connectionButton = Button(databaseSettingsFrame, text="Connect to Airbnb DB", command=lambda : connectDatabase(self))
-        connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=lambda : self.connectDatabase())
 
-        tabControl = ttk.Notebook(self)
+        self.tabControl = ttk.Notebook(self)
 
-        searchFrame        = ttk.Frame(tabControl)
-        queriesFrame       = ttk.Frame(tabControl)
-        modificationsFrame = ttk.Frame(tabControl)
+        self.searchFrame        = ttk.Frame(self.tabControl)
+        self.queriesFrame       = ttk.Frame(self.tabControl)
+        self.modificationsFrame = ttk.Frame(self.tabControl)
 
-        tabControl.add(searchFrame,        text="Search")
-        tabControl.add(queriesFrame,       text="Predefined Queries")
-        tabControl.add(modificationsFrame, text="Insert/Delete")
+        self.tabControl.add(self.searchFrame,        text="Search")
+        self.tabControl.add(self.queriesFrame,       text="Predefined Queries")
+        self.tabControl.add(self.modificationsFrame, text="Insert/Delete")
 
-        tabControl.pack(fill=BOTH, expand=1)
+        self.tabControl.pack(fill=BOTH, expand=1)
 
         #search tab
         #search label
-        Label(searchFrame, text="Search Box").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        Label(self.searchFrame, text="Search Box").grid(row=0, column=0, sticky=W, padx=5, pady=5)
         #search search box
-        searchBox = Entry(searchFrame)
-        searchBox.grid(row=0, column=1, padx=5, pady=5)
+        self.searchBox = Entry(self.searchFrame)
+        self.searchBox.grid(row=0, column=1, padx=5, pady=5)
         #search button
-        searchButton = Button(searchFrame, text="Search", state=DISABLED)
-        searchButton.grid(row=0, column=2, padx=5, pady=5)
+        self.searchButton = Button(self.searchFrame, text="Search", state=DISABLED)
+        self.searchButton.grid(row=0, column=2, padx=5, pady=5)
 
         #queries tab
-        Label(queriesFrame, text="This will be implemented later on.").pack()
+        Label(self.queriesFrame, text="This will be implemented later on.").pack()
 
         #modifications tab
-        Label(modificationsFrame, text="This will be implemented later on.").pack()
+        Label(self.modificationsFrame, text="This will be implemented later on.").pack()
+        self.connectDatabase()
 
-        def connectDatabase(self):
-            if self.databaseConnection is None:
-                self.databaseConnection = db.connect_database("Airbnb")
-                if self.databaseConnection is not None:
-                    statusLabel["text"] = "Connected to Airbnb DB"
-                    connectionButton["text"] = "Disconnect from Airbnb DB"
+    def connectDatabase(self):
+        if self.databaseConnection is None:
+            self.databaseConnection = db.connect_database("Airbnb")
+
+            if self.databaseConnection is not None:
+                self.statusLabel["text"] = "Connected to Airbnb DB"
+                self.connectionButton.pack_forget()
             else:
-                db.disconnect(self.databaseConnection)
-                self.databaseConnection = None
-
-                if self.databaseConnection is None:
-                    statusLabel["text"] = "Disconnected"
-                    connectionButton["text"] = "Connect to Airbnb DB"
+                self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
+                self.connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)

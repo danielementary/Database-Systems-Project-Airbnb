@@ -11,6 +11,17 @@ def connect_database(database_name):
         return connection
     except:
         print("Connection to {} database failed".format(database_name))
+        try:
+            connection = mysql.connector.connect(
+                user    ="Group32",
+                password="1234"
+            )
+            create_database(connection, database_name)
+            disconnect(connection)
+            return connect_database(database_name)
+        except:
+            print("Unable to create {} database".format(database_name),
+                  "Please check that your MySQL is running and configured", sep="\n")
 
 def disconnect(database):
     if database is not None:
@@ -23,13 +34,13 @@ def create_database(db_connection, database_name):
     cursor = db_connection.cursor()
     cursor.execute("CREATE DATABASE {};".format(database_name))
     cursor.close()
-    print("Creating database : {}".format(database_name))
+    print("Creating {} database".format(database_name))
 
 def drop_database(db_connection, database_name):
     cursor = db_connection.cursor()
     cursor.execute("DROP DATABASE {};".format(database_name))
     cursor.close()
-    print("Dropping database : {}".format(database_name))
+    print("Dropping {} database".format(database_name))
 
 def create_table(db_connection, table_name, fields):
     cursor = db.connection.cursor()
