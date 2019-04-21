@@ -10,8 +10,17 @@ class App(Tk):
         self.title("DBS-Project Group32")
         self.geometry("1280x720")
         self.resizable(width=False, height=False)
-        self.databaseConnection = None
 
+        #database variables
+        self.databaseConnection          = None
+
+        self.property_type_id_list       = None
+        self.cancellation_policy_id_list = None
+        self.city_id_list                = None
+        self.reviewer_id_list            = None
+        self.listing_id_list             = None
+
+        #top frame for connection status
         self.databaseSettingsFrame = ttk.Frame(self)
         self.databaseSettingsFrame.pack(fill=X)
 
@@ -20,8 +29,7 @@ class App(Tk):
         self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
         self.statusLabel.pack(side=LEFT, padx=5, pady=5)
 
-        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
-
+        #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
 
         self.searchFrame        = ttk.Frame(self.tabControl)
@@ -35,7 +43,6 @@ class App(Tk):
         self.tabControl.pack(fill=BOTH, expand=1)
 
         #search tab
-
         #table label
         Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
@@ -52,10 +59,6 @@ class App(Tk):
         self.updateSearchFields(temp)
         self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_fields.keys()), command=self.updateSearchFields)
         self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
-        
-        #search button
-        # self.searchButton = Button(self.searchFrame, text="Search", state=DISABLED)
-        # self.searchButton.grid(row=0, column=2, padx=5, pady=5)
 
         #queries tab
         Label(self.queriesFrame, text="This will be implemented later on.").pack()
@@ -73,12 +76,12 @@ class App(Tk):
                 self.connectionButton.pack_forget()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
+                self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
                 self.connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
             self.previousTable = value
-            print(1)
             searchFieldList = st.search_fields[value]
             rowForm = 1
 
@@ -88,3 +91,5 @@ class App(Tk):
             for sf in searchFieldList:
                 Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
                 rowForm += 1
+
+    def getNormalizedEntitiesValues(self):
