@@ -15,10 +15,10 @@ def tokenize(filename):
     # first extracts columns name:
     columns = tokenize_line(lines[0])
     values_list = []
+    
     for i in range(1, len(lines)):
         values = tokenize_line(lines[i])
         values_list.append(values)
-
 
     return (columns, values_list)
 
@@ -28,6 +28,7 @@ def tokenize_line(string):
     in_string = False
     cur_elmt = ""
     i = 0
+
     while i < string_len:
         c = string[i]
         if (c == "," or c== "\n") and not in_string:
@@ -45,4 +46,5 @@ def tokenize_line(string):
                 in_string = True
             cur_elmt += c
         i += 1
+
     return result
