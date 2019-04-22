@@ -1,6 +1,5 @@
 import mysql.connector
-
-from src.csv_tokenizer import tokenize_line
+import csv
 
 def connect_database(database_name):
     try:
@@ -70,7 +69,21 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
     cursor = db_connection.cursor()
 
     for table_name in tables_to_populate:
-        file = open(path_to_csv_dir+table_name+".csv", 'r')
+        file = open(path_to_csv_dir+table_name+".csv", 'r', encoding='utf-8')
+        reader = csv.reader(file, delimiter=",", quotechar="'")
+        columns =  tuple(next(reader))
+
+        sql = "INSERT INTO {} {} VALUES {}".format(table_name, columns, tuple(["%s" for _ in range(len(columns))])).replace("'", "")
+
+        values = []
+        for row in reader:
+            values.append(tuple(row))
+
+        cursor.executemany(sql, values)
+
+        db_connection.commit()
+        print(table_name, cursor.rowcount, "record(s) inserted.")
+
         file.close()
 
-    print("populate...")
+    cursor.close()
