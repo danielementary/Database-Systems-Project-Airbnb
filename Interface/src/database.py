@@ -65,3 +65,6 @@ def count_tables(db_connection, database_name):
         count = x[0]
     cursor.close()
     return count
+
+def populate_tables(db_connection, table_to_populate, path_to_csv_dir):
+    return

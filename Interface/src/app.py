@@ -5,8 +5,10 @@ import src.database as db
 import database.select_tables as st
 
 from database.create_tables import create_statements_ordered
+from database.insert_tables import insert_tables_names_ordered
 
 DB_NAME = "Airbnb"
+DATASET_PATH = "../../Dataset/Final"
 
 class App(Tk):
     def __init__(self):
@@ -86,6 +88,7 @@ class App(Tk):
 
     def createTables(self):
         db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
+        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
