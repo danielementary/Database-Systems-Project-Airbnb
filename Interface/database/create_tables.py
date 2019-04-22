@@ -62,7 +62,7 @@ CREATE TABLE Host (
   host_since DATE,
   host_about TEXT,
   host_response_time TINYTEXT,
-  host_response_rate FLOAT,
+  host_response_rate TINYTEXT,
   host_thumbnail_url TINYTEXT,
   host_picture_url   TINYTEXT,
   neighbourhood_id INT,
