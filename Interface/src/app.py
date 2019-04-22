@@ -22,6 +22,7 @@ class App(Tk):
         #database variables
         self.databaseConnection           = None
 
+        ## TODO: complete 
         self.accommodates_min_max         = None
         self.square_feet_min_max          = None
         self.price_min_max                = None
@@ -42,9 +43,11 @@ class App(Tk):
 
         self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
 
+        #these buttons will be removed for final version
         Button(self.databaseSettingsFrame, text="Delete DB", command=self.deleteDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
         Button(self.databaseSettingsFrame, text="Connect DB", command=self.connectDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
         Button(self.databaseSettingsFrame, text="Populate DB", command=self.populateDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        #end buttons
 
         #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
@@ -97,6 +100,7 @@ class App(Tk):
         # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def updateSearchFields(self, value):
+        ## TODO: complete
         if (self.previousTable != value):
             self.previousTable = value
             searchFieldList = st.search_fields[value]
