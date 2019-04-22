@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
+import os
+
 import src.database as db
 import database.select_tables as st
 
@@ -8,7 +10,7 @@ from database.create_tables import create_statements_ordered
 from database.insert_tables import insert_tables_names_ordered
 
 DB_NAME = "Airbnb"
-DATASET_PATH = "../../Dataset/Final"
+DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../Dataset/Final/")
 
 class App(Tk):
     def __init__(self):
@@ -20,6 +22,7 @@ class App(Tk):
         #database variables
         self.databaseConnection           = None
 
+        ## TODO: complete 
         self.accommodates_min_max         = None
         self.square_feet_min_max          = None
         self.price_min_max                = None
@@ -39,6 +42,12 @@ class App(Tk):
         self.statusLabel.pack(side=LEFT, padx=5, pady=5)
 
         self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
+
+        #these buttons will be removed for final version
+        Button(self.databaseSettingsFrame, text="Delete DB", command=self.deleteDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        Button(self.databaseSettingsFrame, text="Connect DB", command=self.connectDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        Button(self.databaseSettingsFrame, text="Populate DB", command=self.populateDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        #end buttons
 
         #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
@@ -88,9 +97,10 @@ class App(Tk):
 
     def createTables(self):
         db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
-        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+        # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def updateSearchFields(self, value):
+        ## TODO: complete
         if (self.previousTable != value):
             self.previousTable = value
             searchFieldList = st.search_fields[value]
@@ -107,19 +117,15 @@ class App(Tk):
             for sf in searchFieldList:
                 Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
 
-                input_type = st.map_fields_input[sf]
-                input = None
-
-                if (input_type == 0):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 1):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 2):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 3):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 4):
-                    input = Entry(self.searchFrame)
+                input = Entry(self.searchFrame)
 
                 input.grid(row=rowForm, column=1, sticky=W, padx=5, pady=5)
                 rowForm += 1
+
+    def deleteDatabase(self):
+        db.execute_sql(self.databaseConnection, "DROP DATABASE Airbnb;", "Airbnb drop")
+        db.disconnect(self.databaseConnection)
+        self.databaseConnection = None
+
+    def populateDatabase(self):
+        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)

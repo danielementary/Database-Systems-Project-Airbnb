@@ -1,6 +1,5 @@
 import mysql.connector
-
-from src.csv_tokenizer import tokenize_line
+import csv
 
 def connect_database(database_name):
     try:
@@ -25,16 +24,16 @@ def connect_database(database_name):
             print("Unable to create {} database".format(database_name),
                   "Please check that your MySQL is running and configured", sep="\n")
 
-def disconnect(database):
-    if database is not None:
-        database.close()
+def disconnect(db_connection):
+    if db_connection is not None:
+        db_connection.close()
         print("Closing database...")
     else:
         print("Database is already closed...")
 
 def create_database(db_connection, database_name):
     cursor = db_connection.cursor()
-    cursor.execute("CREATE DATABASE {};".format(database_name))
+    cursor.execute("CREATE DATABASE {} CHARACTER SET utf8;".format(database_name))
     cursor.close()
     print("Creating {} database".format(database_name))
 
@@ -66,5 +65,25 @@ def count_tables(db_connection, database_name):
     cursor.close()
     return count
 
-def populate_tables(db_connection, table_to_populate, path_to_csv_dir):
-    return
+def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
+    cursor = db_connection.cursor()
+
+    for table_name in tables_to_populate:
+        file = open(path_to_csv_dir+table_name+".csv", 'r', encoding='utf-8')
+        reader = csv.reader(file, delimiter=",", quotechar="'")
+        columns =  tuple(next(reader))
+
+        sql = "INSERT INTO {} {} VALUES {}".format(table_name, columns, tuple(["%s" for _ in range(len(columns))])).replace("'", "")
+
+        values = []
+        for row in reader:
+            values.append(tuple(row))
+
+        cursor.executemany(sql, values)
+
+        db_connection.commit()
+        print(table_name, cursor.rowcount, "record(s) inserted.")
+
+        file.close()
+
+    cursor.close()
