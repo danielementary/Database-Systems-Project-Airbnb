@@ -1,5 +1,7 @@
 import mysql.connector
 
+from src.csv_tokenizer import tokenize_line
+
 def connect_database(database_name):
     try:
         connection = mysql.connector.connect(
