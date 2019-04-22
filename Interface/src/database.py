@@ -25,9 +25,9 @@ def connect_database(database_name):
             print("Unable to create {} database".format(database_name),
                   "Please check that your MySQL is running and configured", sep="\n")
 
-def disconnect(database):
-    if database is not None:
-        database.close()
+def disconnect(db_connection):
+    if db_connection is not None:
+        db_connection.close()
         print("Closing database...")
     else:
         print("Database is already closed...")
@@ -67,4 +67,4 @@ def count_tables(db_connection, database_name):
     return count
 
 def populate_tables(db_connection, table_to_populate, path_to_csv_dir):
-    return
+    print("populate...")

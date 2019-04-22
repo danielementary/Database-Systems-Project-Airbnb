@@ -40,6 +40,10 @@ class App(Tk):
 
         self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
 
+        Button(self.databaseSettingsFrame, text="Delete DB", command=self.deleteDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        Button(self.databaseSettingsFrame, text="Connect DB", command=self.connectDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+        Button(self.databaseSettingsFrame, text="Populate DB", command=self.populateDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
+
         #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
 
@@ -88,7 +92,7 @@ class App(Tk):
 
     def createTables(self):
         db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
-        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+        # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -107,19 +111,15 @@ class App(Tk):
             for sf in searchFieldList:
                 Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
 
-                input_type = st.map_fields_input[sf]
-                input = None
-
-                if (input_type == 0):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 1):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 2):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 3):
-                    input = Entry(self.searchFrame)
-                elif (input_type == 4):
-                    input = Entry(self.searchFrame)
+                input = Entry(self.searchFrame)
 
                 input.grid(row=rowForm, column=1, sticky=W, padx=5, pady=5)
                 rowForm += 1
+
+    def deleteDatabase(self):
+        db.execute_sql(self.databaseConnection, "DROP DATABASE Airbnb;", "Airbnb drop")
+        db.disconnect(self.databaseConnection)
+        self.databaseConnection = None
+
+    def populateDatabase(self):
+        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
