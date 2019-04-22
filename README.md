@@ -25,3 +25,4 @@ https://www.w3schools.com/python/python_mysql_getstarted.asp
 ## Interface
 - Start server with `sudo service mysql start`
 - Make sure user `Group32` with password `1234` has all privileges
+- Launch app with `python3 main.py` in `Interface/`
