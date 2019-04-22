@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 
+import os
+
 import src.database as db
 import database.select_tables as st
 
@@ -8,7 +10,7 @@ from database.create_tables import create_statements_ordered
 from database.insert_tables import insert_tables_names_ordered
 
 DB_NAME = "Airbnb"
-DATASET_PATH = "../../Dataset/Final"
+DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../Dataset/Final/")
 
 class App(Tk):
     def __init__(self):
