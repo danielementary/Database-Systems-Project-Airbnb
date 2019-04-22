@@ -15,10 +15,12 @@ def tokenize(filename):
     # first extracts columns name:
     columns = tokenize_line(lines[0])
     values_list = []
-    
+
     for i in range(1, len(lines)):
         values = tokenize_line(lines[i])
         values_list.append(values)
+
+    file.close()
 
     return (columns, values_list)
 
