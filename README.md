@@ -11,9 +11,14 @@ https://git-lfs.github.com/
 - Create a new user with `GRANT ALL PRIVILEGES ON *.* TO 'Group32'@'localhost' IDENTIFIED BY '1234';` in mysql-server shell
 
 #### Commands
+##### Linux
 - Start : `sudo service mysql start`
 - Stop : `sudo service mysql stop`
 - Status : `sudo service mysql status`
+##### MacOS
+- Start : `sudo launchctl load -F /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist`
+- Stop : `sudo launchctl unload -F /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist`
+- Status : `sudo launchctl list | grep mysql`
 
 ### Python MySQL (with Python 3.7)
 #### Installation
