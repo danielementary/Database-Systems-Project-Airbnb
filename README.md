@@ -7,7 +7,7 @@ https://git-lfs.github.com/
 ### MySQL
 #### Configuration
 - Install mysql-server
-- Run mysql-server as root with `sudo mysql -u root`
+- Run mysql-server as root with `sudo mysql -u root` (MacOS : `mysql -u root -p` and tap pwd you chose at configuration time)
 - Create a new user with `GRANT ALL PRIVILEGES ON *.* TO 'Group32'@'localhost' IDENTIFIED BY '1234';` in mysql-server shell
 
 #### Commands
