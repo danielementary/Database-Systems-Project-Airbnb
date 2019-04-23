@@ -5,18 +5,20 @@ import os
 
 import csv_tokenizer as tok
 
-reviews_files = ["barcelona_reviews.csv", "berlin_reviews.csv", "madrid_reviews.csv"]
-reviews_files = ["../Dataset/" + file for file in reviews_files]
+reviews_files = ["barcelona.csv", "berlin.csv", "madrid.csv"]
+reviews_files = ["temp/temp_reviews_" + file for file in reviews_files]
 
 listings_files = ["barcelona_listings.csv", "madrid_listings_filtered.csv", "berlin_listings_filtered.csv"]
-listings_files = ["../Dataset/" + file for file in listings_files]
+listings_files = ["../Dataset/Provided/" + file for file in listings_files]
 
 
+
+
+
+listings.create_insert_queries(listings_files)
 
 for filename in reviews_files :
     reviews.insert_reviews_reviewers(filename)
-
-listings.create_insert_queries(listings_files)
 
 print("begin main checks")
 for filename in os.listdir('insert'):
@@ -26,3 +28,26 @@ for filename in os.listdir('insert'):
         columns, values = tok.tokenize(filename)
         if len(columns) != len(values[0]):
             print("# columns = ", len(columns), " and values first line size = ", len(values[0]), " for file : ", filename)
+        if "listing." in filename.lower():
+            print("check duplicates in listing id for : " + filename)
+            seen = set([])
+            duplicated = []
+            for v in values:
+                if v[0] in seen:
+                    duplicated.append(v[0])
+                else:
+                    seen.add(v[0])
+
+            print("duplicates : ", duplicated )
+
+        if "host." in filename.lower():
+            print("check duplicates in host id for : " + filename)
+            seen = set([])
+            duplicated = []
+            for v in values:
+                if v[0] in seen:
+                    duplicated.append(v[0])
+                else:
+                    seen.add(v[0])
+
+            print("duplicates : ", duplicated)
