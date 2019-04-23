@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 
+temp_review_file = "temp/temp_reviews_"
 
 tables_to_attributes = \
     {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview",\
@@ -46,19 +47,44 @@ def clean_listings_data(filenames_list):
     data_types = {}
     for a in string_attributes:
         data_types[a] = str
-
-    dfs_list = []
     df = pd.DataFrame()
+
+    offset_listing_id = 0
+    offset_hosts_id = 0
+
     for filename in filenames_list:
         city = filename.split(".")[-2].split("/")[-1].split("_")[0].lower().capitalize()
         print(city)
 
-        file = open(filename, newline='')
         df_per_city = pd.read_csv(filename, dtype=data_types)
         df_per_city["city"] = city
 
+        # replace all listing_ids by new ones
+        all_list_id = df_per_city["id"].tolist()
+        new_listing_id_dict = dict(zip(all_list_id, range(len(all_list_id))))
+        for i in list(new_listing_id_dict.keys()):
+            new_listing_id_dict[i] += offset_listing_id
+
+        # now change them and in reviews file too
+        df_per_city["id"] = df_per_city["id"].apply(lambda x: replace_elements(x, new_listing_id_dict))
+
+        reviews_df = pd.read_csv("../Dataset/Provided/"+city.lower()+"_reviews.csv")
+        reviews_df["listing_id"] = reviews_df["listing_id"].apply(lambda x: replace_elements(x, new_listing_id_dict))
+        reviews_df.to_csv(temp_review_file + city + ".csv")
+        offset_listing_id += len(all_list_id) + 1
+
+        #replace all host_ids by new ones
+        all_hosts_id = df_per_city["host_id"].tolist()
+        new_hosts_id_dict = dict(zip(all_hosts_id, range(len(all_hosts_id))))
+        for i in list(new_hosts_id_dict.keys()):
+            new_hosts_id_dict[i] += offset_hosts_id
+
+        df_per_city["host_id"] = df_per_city["host_id"].apply(lambda x: replace_elements(x, new_hosts_id_dict))
+
+        offset_hosts_id += len(all_hosts_id) + 1
+
+
         df = df.append(df_per_city)
-        file.close()
 
     #rename neighborhood_overview to neighboUrhood_overview to be consistent
     df = df.rename(columns = {'neighborhood_overview': 'neighbourhood_overview'})
@@ -484,6 +510,9 @@ def extract_host_verifications_from_string(hvers_str):
         if hverf != "":
             cleaned.append(hverf)
     return cleaned
+
+def replace_elements(elmt, new_elmt_dict):
+    return new_elmt_dict[elmt]
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
     for table in tables_to_attributes.keys():

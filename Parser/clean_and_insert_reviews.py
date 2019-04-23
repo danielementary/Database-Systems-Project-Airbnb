@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-outputfile_reviews_name = "insert/insert_reviews.csv"
-outputfile_reviewers_name = "insert/insert_reviewers.csv"
+outputfile_reviews_name = "insert/Reviews.csv"
+outputfile_reviewers_name = "insert/Reviewers.csv"
 
 def clean_reviews_data(filename):
     """
