@@ -18,6 +18,7 @@ def clean_calendar_data(filenames_list):
     df["price"] = df["price"].apply(clean_float_and_int)
 
     df = df.drop_duplicates()
+    print("there are ", df.shape[0] ," lines in Calendar csvs")
 
     return df
 
@@ -45,18 +46,42 @@ def insert_calendar(filenames_list):
     dates_string = dates_string.drop_duplicates()
     dates_string = dates_string.apply(parse_date)
     dates_string = dates_string.tolist()
-    dates_with_id = zip(dates_string, range(dates_string))
+    dates_with_id = list(zip(dates_string, range(len(dates_string))))
     days_dict = dict(dates_with_id)
 
     output_file = output_files["Day"]
 
     for day, id in dates_with_id:
-        csv_line = "{},{}".format(id, day)
+        csv_line = "{},{}\n".format(id, day)
         output_file.write(csv_line)
 
 
+    cal_id = 0
+    output_file = output_files["Calendar"]
+
     # insert calendar
-    df
+    for id, row in df.iterrows():
+
+        available = row["available"]
+        price = row["price"]
+        if math.isnan(price):
+            price = "NULL"
+        day_id = days_dict[parse_date(row["date"])]
+        listing_id = row["listing_id"]
+
+        csv_line = "{},{},{},{},{}\n".format(\
+                    cal_id,\
+                    available,\
+                    price,\
+                    listing_id,\
+                    day_id)
+        cal_id += 1
+        if cal_id % 1000 == 0:
+            print(cal_id)
+
+        output_file.write(csv_line)
+
+    close_files(output_files.values())
 
 
 
@@ -69,7 +94,7 @@ def parse_date(string_date):
     return "date({},{},{})".format(year, mounth, day)
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
-    for table in [tables_to_attributes.keys()]:
+    for table in list(tables_to_attributes.keys()):
         filename = "insert/"+table+".csv"
         try:
             file = open(filename, 'r')
