@@ -26,8 +26,6 @@ def clean_reviews_data(filename):
     data_frame['comments'] = data_frame['comments'].apply(cleanString)
     data_frame['reviewer_name'] = data_frame["reviewer_name"].apply(cleanString)
 
-    #remove \n from comments replacing them by a space
-    data_frame['comments'] = data_frame['comments'].str.replace('\n', ' ')
 
     du = data_frame.duplicated(['id']).tolist()
     duplicated_id = True in du
@@ -62,6 +60,8 @@ def cleanString(string):
 
     string = string.replace('\n', ' ')
 
+    if len(string) == 1:
+        string = ""
     #remove ' if surrounding the string
     if string != "" and len(string) > 1:
         if string[0] == "'":
