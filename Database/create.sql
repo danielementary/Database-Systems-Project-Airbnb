@@ -204,7 +204,7 @@ CREATE TABLE Calendar (
   ---------attributes---------
   calendar_id        INT,
   calendar_available BIT   NOT NULL,
-  calendar_price     FLOAT NOT NULL,
+  calendar_price     FLOAT,
 
   -----relation attributes----
   listing_id INT NOT NULL,
