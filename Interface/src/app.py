@@ -62,15 +62,6 @@ class App(Tk):
 
         #search tab
 
-        #label and option menu for table selection
-        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        self.table = StringVar(self.searchFrame)
-        temp = list(st.search_fields.keys())[0]
-        self.table.set(temp)
-        self.previousTable = None
-        self.updateSearchFields(temp)
-        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_fields.keys()), command=self.updateSearchFields)
-        self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
 
         #inputs
 
@@ -111,6 +102,16 @@ class App(Tk):
         self.cityId = StringVar(self.searchFrame)
         self.cityId.set(self.cityIdList[0])
         self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *self.cityIdList)
+
+        #label and option menu for table selection
+        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.table = StringVar(self.searchFrame)
+        temp = list(st.search_fields.keys())[0]
+        self.table.set(temp)
+        self.previousTable = None
+        self.updateSearchFields(temp)
+        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_fields.keys()), command=self.updateSearchFields)
+        self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
 
         #queries tab
         Label(self.queriesFrame, text="This will be implemented later on.").pack()
