@@ -89,7 +89,7 @@ def parse_date(string_date):
     mounth = string_date[5:7]
     day = string_date[8:10]
 
-    return "date({},{},{})".format(year, mounth, day)
+    return "'date({},{},{})'".format(year, mounth, day)
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
     for table in list(tables_to_attributes.keys()):
