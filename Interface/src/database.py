@@ -34,6 +34,7 @@ def disconnect(db_connection):
 def create_database(db_connection, database_name):
     cursor = db_connection.cursor()
     cursor.execute("CREATE DATABASE {} CHARACTER SET utf8;".format(database_name))
+    cursor.execute("set global max_allowed_packet=500000000;".format(database_name))
     cursor.close()
     print("Creating {} database".format(database_name))
 
