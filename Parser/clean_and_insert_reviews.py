@@ -61,7 +61,7 @@ def cleanString(string):
     string = string.replace('\n', ' ')
 
     if len(string) == 1:
-        string = ""
+        string = "''"
     #remove ' if surrounding the string
     if string != "" and len(string) > 1:
         if string[0] == "'":
