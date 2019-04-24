@@ -92,17 +92,14 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
         values = []
         for row in reader:
             temp = [None if x == "NULL" else x for x in row]
-            temp = [0 if x == "b0" else x for x in temp]
-            temp = [1 if x == "b1" else x for x in temp]
+            temp = [0 if x == "0" else x for x in temp]
+            temp = [1 if x == "1" else x for x in temp]
             values.append(tuple(temp))
 
         # cursor.executemany(sql, values)
 
         for v in values:
             i = 0
-            # for a in v:
-            #     if a == "NULL":
-            #         a = None
             if (table_name == "Listing"):
                 for a in v:
                     print("###", xyz, columns[i], a)
