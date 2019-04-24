@@ -80,12 +80,14 @@ class App(Tk):
         self.priceScale        = Scale(self.searchFrame, from_=self.priceMinMax[0],
                                                             to=self.priceMinMax[1],
                                                         orient=HORIZONTAL)
+
         self.isBusinessTravelReady = IntVar(self.searchFrame)
         self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
 
         self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
                                                                  to=self.reviewScoresRatingMinMax[1],
                                                              orient=HORIZONTAL)
+                                                             
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
         self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
