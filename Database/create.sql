@@ -223,7 +223,7 @@ CREATE TABLE Day (
   day_date DATE NOT NULL,
 
   PRIMARY KEY(day_id)
-)
+);
 
 CREATE TABLE Amenity (
 

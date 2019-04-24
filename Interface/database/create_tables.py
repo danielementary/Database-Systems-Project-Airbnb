@@ -146,12 +146,20 @@ CREATE TABLE Reviewer (
 create_table_Calendar = """
 CREATE TABLE Calendar (
   calendar_id        INT,
-  calendar_date      DATE  NOT NULL,
-  calendar_available BIT   NOT NULL,
-  calendar_price     FLOAT NOT NULL,
-  listing_id INT NOT NULL,
+  calendar_available BIT NOT NULL,
+  calendar_price     FLOAT,
+  listing_id      INT NOT NULL,
+  calendar_day_id INT NOT NULL,
   PRIMARY KEY(calendar_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE
+  FOREIGN KEY(listing_id)      REFERENCES Listing(listing_id) ON DELETE CASCADE,
+  FOREIGN KEY(calendar_day_id) REFERENCES Day(day_id)         ON DELETE CASCADE
+);"""
+
+create_table_Day = """
+CREATE TABLE Day (
+  day_id   INT,
+  day_date DATE NOT NULL,
+  PRIMARY KEY(day_id)
 );"""
 
 create_table_Amenity = """
@@ -190,5 +198,6 @@ create_statements_ordered = [create_table_Country, create_table_City, create_tab
                              create_table_Host, create_table_Property_type, create_table_Room_type,
                              create_table_Bed_type, create_table_Cancellation_policy,
                              create_table_Listing, create_table_Reviewer, create_table_Review,
-                             create_table_Calendar, create_table_Amenity, create_table_Host_verification,
-                             create_table_Listing_amenity_map, create_table_Host_verification_map]
+                             create_table_Day, create_table_Calendar, create_table_Amenity,
+                             create_table_Host_verification, create_table_Listing_amenity_map,
+                             create_table_Host_verification_map]
