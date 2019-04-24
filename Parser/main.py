@@ -17,12 +17,12 @@ calendar_files = ["temp/temp_calendar_"+file for file in calendar_files]
 
 
 
-
+# comment this to not generate listing et related tables
 listings.create_insert_queries(listings_files)
 
 # comment this to not generate review and reviewer
-for filename in reviews_files :
-    reviews.insert_reviews_reviewers(filename)
+# for filename in reviews_files :
+#     reviews.insert_reviews_reviewers(filename)
 #################
 
 # comment this to not generate calendar

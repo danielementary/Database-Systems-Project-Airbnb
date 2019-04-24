@@ -52,10 +52,12 @@ def insert_calendar(filenames_list):
     output_file = output_files["Day"]
 
     for day, id in dates_with_id:
-        csv_line = "{},{}\n".format(id, day)
+        tup = parse_date_string(day)
+        csv_line = "{},{}-{}-{}\n".format(id, tup[0], tup[1], tup[2])
         output_file.write(csv_line)
 
 
+    print("Day.csv DONE !!!!!")
     cal_id = 0
     output_file = output_files["Calendar"]
 
@@ -89,7 +91,13 @@ def parse_date(string_date):
     mounth = string_date[5:7]
     day = string_date[8:10]
 
-    return "'date({},{},{})'".format(year, mounth, day)
+    return "date({},{},{})".format(year, mounth, day)
+
+def parse_date_string(date_str):
+  year = int(date_str[5:9])
+  month = int(date_str[10:12])
+  day = int(date_str[13:15])
+  return (year, month, day)
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
     for table in list(tables_to_attributes.keys()):
