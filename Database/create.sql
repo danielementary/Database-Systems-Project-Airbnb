@@ -203,23 +203,26 @@ CREATE TABLE Calendar (
 
   ---------attributes---------
   calendar_id        INT,
-  calendar_available BIT   NOT NULL,
+  calendar_available BIT NOT NULL,
   calendar_price     FLOAT,
 
   -----relation attributes----
-  listing_id INT NOT NULL,
-  calendar_day_id      INT  NOT NULL,
+  listing_id      INT NOT NULL,
+  calendar_day_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(calendar_id),
-  FOREIGN KEY(listing_id) REFERENCES Listing(listing_id) ON DELETE CASCADE,
-  FOREIGN KEY(calendar_day_id) REFERENCES Day(day_id)
+  FOREIGN KEY(listing_id)      REFERENCES Listing(listing_id) ON DELETE CASCADE,
+  FOREIGN KEY(calendar_day_id) REFERENCES Day(day_id)         ON DELETE CASCADE
 );
 
 CREATE TABLE Day (
+
   ---------attributes---------
-  day_id        INT,
-  day_date      DATE  NOT NULL,
+  day_id   INT,
+  day_date DATE NOT NULL,
+
+  PRIMARY KEY(day_id)
 )
 
 CREATE TABLE Amenity (
