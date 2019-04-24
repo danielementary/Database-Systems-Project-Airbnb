@@ -61,10 +61,9 @@ class App(Tk):
         self.tabControl.pack(fill=BOTH, expand=1)
 
         #search tab
-        #table label
-        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        #option menu for table selection
+        #label and option menu for table selection
+        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
         self.table = StringVar(self.searchFrame)
         temp = list(st.search_fields.keys())[0]
         self.table.set(temp)
@@ -73,11 +72,52 @@ class App(Tk):
         self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_fields.keys()), command=self.updateSearchFields)
         self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
 
+        #inputs
+
+        #listing
+        self.listingNameEntry  = Entry(self.searchFrame)
+
+        self.accommodatesScale = Scale(self.searchFrame, from_=self.accommodatesMinMax[0],
+                                                            to=self.accommodatesMinMax[1],
+                                                        orient=HORIZONTAL)
+
+        self.squareFeetScale   = Scale(self.searchFrame, from_=self.squareFeetMinMax[0],
+                                                            to=self.squareFeetMinMax[1],
+                                                        orient=HORIZONTAL)
+
+        self.priceScale        = Scale(self.searchFrame, from_=self.priceMinMax[0],
+                                                            to=self.priceMinMax[1],
+                                                        orient=HORIZONTAL)
+        self.isBusinessTravelReady = IntVar(self.searchFrame)
+        self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
+
+        self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
+                                                                 to=self.reviewScoresRatingMinMax[1],
+                                                             orient=HORIZONTAL)
+        self.propertyTypeId = StringVar(self.searchFrame)
+        self.propertyTypeId.set(self.propertyTypeIdList[0])
+        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *self.propertyTypeIdList)
+
+        self.cancellationPolicyId = StringVar(self.searchFrame)
+        self.cancellationPolicyId.set(self.cancellationPolicyIdList[0])
+        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *self.cancellationPolicyIdList)
+
+        #host
+        self.hostNameEntry = Entry(self.searchFrame)
+
+        #neighbourhood
+        self.NeighbourhoodNameEntry = Entry(self.searchFrame)
+
+        self.cityId = StringVar(self.searchFrame)
+        self.cityId.set(self.cityIdList[0])
+        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *self.cityIdList)
+
         #queries tab
         Label(self.queriesFrame, text="This will be implemented later on.").pack()
 
         #modifications tab
         Label(self.modificationsFrame, text="This will be implemented later on.").pack()
+
         self.connectDatabase()
 
     def connectDatabase(self):
@@ -98,7 +138,6 @@ class App(Tk):
         # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def updateSearchFields(self, value):
-        ## TODO: complete
         if (self.previousTable != value):
             self.previousTable = value
             searchFieldList = st.search_fields[value]
@@ -113,11 +152,11 @@ class App(Tk):
 
             rowForm = 1
             for sf in searchFieldList:
-                Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
-
-                input = Entry(self.searchFrame)
-
-                input.grid(row=rowForm, column=1, sticky=W, padx=5, pady=5)
+                # Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
+                #
+                # input = Entry(self.searchFrame)
+                #
+                # input.grid(row=rowForm, column=1, sticky=W, padx=5, pady=5)
                 rowForm += 1
 
     def deleteDatabase(self):
