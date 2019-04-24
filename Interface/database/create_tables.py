@@ -102,8 +102,8 @@ CREATE TABLE Bed_type (
 
 create_table_Cancellation_policy = """
 CREATE TABLE Cancellation_policy (
-  cancellation_policy_id          INT,
-  cancellation_policy_description TEXT NOT NULL,
+  cancellation_policy_id   INT,
+  cancellation_policy_name TEXT NOT NULL,
   PRIMARY KEY(cancellation_policy_id)
 );"""
 
@@ -148,8 +148,8 @@ CREATE TABLE Calendar (
   calendar_id        INT,
   calendar_available BIT NOT NULL,
   calendar_price     FLOAT,
-  listing_id      INT NOT NULL,
-  calendar_day_id INT NOT NULL,
+  listing_id         INT NOT NULL,
+  calendar_day_id    INT NOT NULL,
   PRIMARY KEY(calendar_id),
   FOREIGN KEY(listing_id)      REFERENCES Listing(listing_id) ON DELETE CASCADE,
   FOREIGN KEY(calendar_day_id) REFERENCES Day(day_id)         ON DELETE CASCADE

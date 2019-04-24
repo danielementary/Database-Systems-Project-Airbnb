@@ -140,8 +140,8 @@ CREATE TABLE Bed_type (
 CREATE TABLE Cancellation_policy (
 
   ---------attributes---------
-  cancellation_policy_id          INT,
-  cancellation_policy_description TEXT NOT NULL,
+  cancellation_policy_id   INT,
+  cancellation_policy_name TEXT NOT NULL,
 
   ---------keys---------------
   PRIMARY KEY(cancellation_policy_id)
