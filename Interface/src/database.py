@@ -82,34 +82,28 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
     cursor = db_connection.cursor()
 
     for table_name in tables_to_populate:
-        xyz = 0
+        print("Populating table {}".format(table_name))
+
         file = open(path_to_csv_dir+table_name+".csv", 'r', encoding='utf-8')
         reader = csv.reader(file, delimiter=",", quotechar="'")
         columns =  tuple(next(reader))
 
         sql = "INSERT INTO {} {} VALUES {}".format(table_name, columns, tuple(["%s" for _ in range(len(columns))])).replace("'", "")
 
+        portion = 0
         values = []
         for row in reader:
-            temp = [None if x == "NULL" else x for x in row]
-            temp = [0 if x == "0" else x for x in temp]
-            temp = [1 if x == "1" else x for x in temp]
+            if (portion % 150000 == 0):
+                cursor.executemany(sql, values)
+                values = []
+            portion += 1
+            temp = [None if x == "NULL" else 0 if x == "0" else 1 if x == "1" else x for x in row]
             values.append(tuple(temp))
 
-        # cursor.executemany(sql, values)
-
-        for v in values:
-            i = 0
-            if (table_name == "Listing"):
-                for a in v:
-                    print("###", xyz, columns[i], a)
-                    i += 1
-            xyz += 1
-            cursor.execute(sql, v)
+        cursor.executemany(sql, values)
 
         db_connection.commit()
-        print(table_name, cursor.rowcount, "record(s) inserted.")
-
         file.close()
+        print("Table {} has been successfully populated".format(table_name))
 
     cursor.close()
