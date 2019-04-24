@@ -20,11 +20,15 @@ calendar_files = ["temp/temp_calendar_"+file for file in calendar_files]
 
 listings.create_insert_queries(listings_files)
 
+# comment this to not generate review and reviewer
 for filename in reviews_files :
     reviews.insert_reviews_reviewers(filename)
+#################
 
-# print("calendars ")
-# calendar.insert_calendar(calendar_files)
+# comment this to not generate calendar
+print("calendars ")
+calendar.insert_calendar(calendar_files)
+#####################
 #
 # print("begin main checks")
 # for filename in os.listdir('insert'):
