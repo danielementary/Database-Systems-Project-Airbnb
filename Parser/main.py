@@ -1,5 +1,6 @@
 import clean_and_insert_reviews as reviews
 import clean_and_insert_listings as listings
+import clean_and_insert_calendar as calendar
 import pandas as pd
 import os
 
@@ -11,6 +12,8 @@ reviews_files = ["temp/temp_reviews_" + file for file in reviews_files]
 listings_files = ["barcelona_listings.csv", "madrid_listings_filtered.csv", "berlin_listings_filtered.csv"]
 listings_files = ["../Dataset/Provided/" + file for file in listings_files]
 
+calendar_files = ["Barcelona.csv", "Madrid.csv", "Berlin.csv"]
+calendar_files = ["temp/temp_calendar_"+file for file in calendar_files]
 
 
 
@@ -19,6 +22,9 @@ listings.create_insert_queries(listings_files)
 
 for filename in reviews_files :
     reviews.insert_reviews_reviewers(filename)
+
+print("calendars ")
+calendar.insert_calendar(calendar_files)
 
 print("begin main checks")
 for filename in os.listdir('insert'):
