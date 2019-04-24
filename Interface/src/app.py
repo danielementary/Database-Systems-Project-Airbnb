@@ -87,7 +87,7 @@ class App(Tk):
         self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
                                                                  to=self.reviewScoresRatingMinMax[1],
                                                              orient=HORIZONTAL)
-                                                             
+
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
         self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
@@ -234,4 +234,9 @@ class App(Tk):
         return {"d":0, "e":1, "f":2}
 
     def getcityIdDict(self):
-        return dict(db.select_sql(self.databaseConnection, st.select_city_names_statements, "Select City names and ids"))
+        temp = dict(db.select_sql(self.databaseConnection, st.select_city_names_statements, "Select City names and ids"))
+
+        if (len(temp) <= 0):
+            return {"None":0}
+        else:
+            return temp
