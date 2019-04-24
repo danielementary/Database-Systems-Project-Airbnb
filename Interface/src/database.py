@@ -70,6 +70,7 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
     cursor = db_connection.cursor()
 
     for table_name in tables_to_populate:
+        xyz = 0
         file = open(path_to_csv_dir+table_name+".csv", 'r', encoding='utf-8')
         reader = csv.reader(file, delimiter=",", quotechar="'")
         columns =  tuple(next(reader))
@@ -78,9 +79,24 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
 
         values = []
         for row in reader:
-            values.append(tuple(row))
+            temp = [None if x == "NULL" else x for x in row]
+            temp = [0 if x == "b0" else x for x in temp]
+            temp = [1 if x == "b1" else x for x in temp]
+            values.append(tuple(temp))
 
-        cursor.executemany(sql, values)
+        # cursor.executemany(sql, values)
+
+        for v in values:
+            i = 0
+            # for a in v:
+            #     if a == "NULL":
+            #         a = None
+            if (table_name == "Listing"):
+                for a in v:
+                    print("###", xyz, columns[i], a)
+                    i += 1
+            xyz += 1
+            cursor.execute(sql, v)
 
         db_connection.commit()
         print(table_name, cursor.rowcount, "record(s) inserted.")
