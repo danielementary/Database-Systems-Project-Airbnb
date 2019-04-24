@@ -76,8 +76,6 @@ def insert_calendar(filenames_list):
                     listing_id,\
                     day_id)
         cal_id += 1
-        if cal_id % 1000 == 0:
-            print(cal_id)
 
         output_file.write(csv_line)
 
