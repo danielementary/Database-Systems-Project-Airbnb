@@ -20,40 +20,40 @@ calendar_files = ["temp/temp_calendar_"+file for file in calendar_files]
 
 listings.create_insert_queries(listings_files)
 
-# for filename in reviews_files :
-#     reviews.insert_reviews_reviewers(filename)
+for filename in reviews_files :
+    reviews.insert_reviews_reviewers(filename)
 
 # print("calendars ")
 # calendar.insert_calendar(calendar_files)
-
-print("begin main checks")
-for filename in os.listdir('insert'):
-    if filename != ".DS_Store":
-        filename = "insert/" + filename
-        print("check if columns size equal values line size for : " + filename)
-        columns, values = tok.tokenize(filename)
-        if len(columns) != len(values[0]):
-            print("# columns = ", len(columns), " and values first line size = ", len(values[0]), " for file : ", filename)
-        if "listing." in filename.lower():
-            print("check duplicates in listing id for : " + filename)
-            seen = set([])
-            duplicated = []
-            for v in values:
-                if v[0] in seen:
-                    duplicated.append(v[0])
-                else:
-                    seen.add(v[0])
-
-            print("duplicates : ", duplicated )
-
-        if "host." in filename.lower():
-            print("check duplicates in host id for : " + filename)
-            seen = set([])
-            duplicated = []
-            for v in values:
-                if v[0] in seen:
-                    duplicated.append(v[0])
-                else:
-                    seen.add(v[0])
-
-            print("duplicates : ", duplicated)
+#
+# print("begin main checks")
+# for filename in os.listdir('insert'):
+#     if filename != ".DS_Store":
+#         filename = "insert/" + filename
+#         print("check if columns size equal values line size for : " + filename)
+#         columns, values = tok.tokenize(filename)
+#         if len(columns) != len(values[0]):
+#             print("# columns = ", len(columns), " and values first line size = ", len(values[0]), " for file : ", filename)
+#         if "listing." in filename.lower():
+#             print("check duplicates in listing id for : " + filename)
+#             seen = set([])
+#             duplicated = []
+#             for v in values:
+#                 if v[0] in seen:
+#                     duplicated.append(v[0])
+#                 else:
+#                     seen.add(v[0])
+#
+#             print("duplicates : ", duplicated )
+#
+#         if "host." in filename.lower():
+#             print("check duplicates in host id for : " + filename)
+#             seen = set([])
+#             duplicated = []
+#             for v in values:
+#                 if v[0] in seen:
+#                     duplicated.append(v[0])
+#                 else:
+#                     seen.add(v[0])
+#
+#             print("duplicates : ", duplicated)
