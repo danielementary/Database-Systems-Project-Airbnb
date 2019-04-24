@@ -22,15 +22,13 @@ class App(Tk):
         #database variables
         self.databaseConnection           = None
 
-        ## TODO: complete 
-        self.accommodates_min_max         = None
-        self.square_feet_min_max          = None
-        self.price_min_max                = None
-        self.review_scores_rating_min_max = None
-        self.property_type_id_list        = None
-        self.cancellation_policy_id_list  = None
-        self.host_since_oldest            = None
-        self.city_id_list                 = None
+        self.accommodatesMinMax        = self.getAccommodatesMinMax()
+        self.squareFeetMinMax          = self.getSquareFeetMinMax()
+        self.priceMinMax               = self.getPriceMinMax()
+        self.reviewScoresRatingMinMax  = self.getReviewScoresRatingMinMax()
+        self.propertyTypeIdList        = self.getPropertyTypeIdList()
+        self.cancellationPolicyIdList  = self.getCancellationPolicyIdList()
+        self.cityIdList                = self.getCityIdList()
 
         #top frame for connection status
         self.databaseSettingsFrame = ttk.Frame(self)
@@ -129,3 +127,24 @@ class App(Tk):
 
     def populateDatabase(self):
         db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+
+    def getAccommodatesMinMax(self):
+        return (0, 0)
+
+    def getSquareFeetMinMax(self):
+        return (0, 0)
+
+    def getPriceMinMax(self):
+        return (0, 0)
+
+    def getReviewScoresRatingMinMax(self):
+        return (0, 0)
+
+    def getPropertyTypeIdList(self):
+        return ["a", "b", "c"]
+
+    def getCancellationPolicyIdList(self):
+        return ["d", "e", "f"]
+
+    def getCityIdList(self):
+        return ["g", "h", "i"]
