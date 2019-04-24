@@ -57,6 +57,18 @@ def execute_sql_list(db_connection, sql_list, description):
         print("{} failed miserably".format(description))
     cursor.close()
 
+def select_sql(db_connection, sql, description):
+    cursor = db_connection.cursor()
+    result = None
+    try:
+        cursor.execute(sql)
+        print("{} executed successfully".format(description))
+        result = cursor.fetchall()
+    except:
+        print("{} failed miserably".format(description))
+    cursor.close()
+    return result
+
 def count_tables(db_connection, database_name):
     cursor = db_connection.cursor()
     cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'Airbnb';")
