@@ -151,6 +151,32 @@ class App(Tk):
                     #BAD !!!
                     break
 
+            if (value == "Listing"):
+                Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
+                self.listingNameEntry.grid(row=1, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Accommodates (min)").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+                self.accommodatesScale.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Square Feet (min)").grid(row=3, column=0, sticky=W, padx=5, pady=5)
+                self.squareFeetScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Price (max)").grid(row=4, column=0, sticky=W, padx=5, pady=5)
+                self.priceScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+                self.isBusinessTravelReadyCheckButton.grid(row=5, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Review Scores Rating (min)").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+                self.reviewScoreRatingScale.grid(row=6, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+                self.propertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Cancellation Policy").grid(row=8, column=0, sticky=W, padx=5, pady=5)
+                self.cancellationPolicyIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
+
+
             rowForm = 1
             for sf in searchFieldList:
                 # Label(self.searchFrame, text=sf).grid(row=rowForm, column=0, sticky=W, padx=5, pady=5)
@@ -169,16 +195,16 @@ class App(Tk):
         db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def getAccommodatesMinMax(self):
-        return (0, 0)
+        return (0, 10)
 
     def getSquareFeetMinMax(self):
-        return (0, 0)
+        return (0, 10)
 
     def getPriceMinMax(self):
-        return (0, 0)
+        return (0, 10)
 
     def getReviewScoresRatingMinMax(self):
-        return (0, 0)
+        return (0, 10)
 
     def getPropertyTypeIdList(self):
         return ["a", "b", "c"]
