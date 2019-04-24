@@ -45,9 +45,9 @@ class App(Tk):
         self.squareFeetMinMax         = self.getSquareFeetMinMax()
         self.priceMinMax              = self.getPriceMinMax()
         self.reviewScoresRatingMinMax = self.getReviewScoresRatingMinMax()
-        self.propertyTypeIdList       = self.getPropertyTypeIdList()
-        self.cancellationPolicyIdList = self.getCancellationPolicyIdList()
-        self.cityIdList               = self.getCityIdList()
+        self.propertyTypeIdDict       = self.getpropertyTypeIdDict()
+        self.cancellationPolicyIdDict = self.getcancellationPolicyIdDict()
+        self.cityIdDict               = self.getcityIdDict()
 
         #tabs and conresponding frames
         self.tabControl = ttk.Notebook(self)
@@ -87,12 +87,12 @@ class App(Tk):
                                                                  to=self.reviewScoresRatingMinMax[1],
                                                              orient=HORIZONTAL)
         self.propertyTypeId = StringVar(self.searchFrame)
-        self.propertyTypeId.set(self.propertyTypeIdList[0])
-        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *self.propertyTypeIdList)
+        self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
 
         self.cancellationPolicyId = StringVar(self.searchFrame)
-        self.cancellationPolicyId.set(self.cancellationPolicyIdList[0])
-        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *self.cancellationPolicyIdList)
+        self.cancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
+        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *list(self.cancellationPolicyIdDict.keys()))
 
         #host
         self.hostNameEntry = Entry(self.searchFrame)
@@ -101,8 +101,8 @@ class App(Tk):
         self.NeighbourhoodNameEntry = Entry(self.searchFrame)
 
         self.cityId = StringVar(self.searchFrame)
-        self.cityId.set(list(self.cityIdList.keys())[0])
-        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *list(self.cityIdList.keys()))
+        self.cityId.set(list(self.cityIdDict.keys())[0])
+        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *list(self.cityIdDict.keys()))
 
         #label and option menu for table selection
         Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
@@ -142,7 +142,20 @@ class App(Tk):
         # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
 
     def searchInDatabase(self):
-        print(self.table.get())
+        table = self.table.get()
+
+        if (table == "Listing"):
+            print(self.listingNameEntry.get(), self.accommodatesScale.get(),
+                  self.squareFeetScale.get(), self.priceScale.get(),
+                  self.isBusinessTravelReady.get(), self.reviewScoreRatingScale.get(),
+                  self.propertyTypeIdDict[self.propertyTypeId.get()],
+                  self.cancellationPolicyIdDict[self.cancellationPolicyId.get()])
+
+        elif (table == "Host"):
+            print(self.hostNameEntry.get())
+
+        elif (table == "Neighbourhood"):
+            print(self.NeighbourhoodNameEntry.get(), self.cityIdDict[self.cityId.get()])
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -212,11 +225,11 @@ class App(Tk):
     def getReviewScoresRatingMinMax(self):
         return (0, 10)
 
-    def getPropertyTypeIdList(self):
-        return ["a", "b", "c"]
+    def getpropertyTypeIdDict(self):
+        return {"a":0, "b":1, "c":2}
 
-    def getCancellationPolicyIdList(self):
-        return ["d", "e", "f"]
+    def getcancellationPolicyIdDict(self):
+        return {"d":0, "e":1, "f":2}
 
-    def getCityIdList(self):
+    def getcityIdDict(self):
         return dict(db.select_sql(self.databaseConnection, st.select_city_names_statements, "Select City names and ids"))
