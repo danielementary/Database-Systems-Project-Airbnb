@@ -3,6 +3,8 @@ import numpy as np
 import math
 
 temp_review_file = "temp/temp_reviews_"
+temp_calendar_file = "temp/temp_calendar_"
+
 
 tables_to_attributes = \
     {"Listing": {"listing_id": "id", "listing_url": "listing_url", "listing_name": "name", "listing_summary": "summary", "listing_space": "space", "listing_description": "description", "listing_notes": "notes", "listing_transit": "transit", "listing_access": "access", "listing_interaction": "interaction","listing_picture_url": "picture_url", "listing_neighbourhood_overview" : "neighbourhood_overview",\
@@ -65,12 +67,17 @@ def clean_listings_data(filenames_list):
         for i in list(new_listing_id_dict.keys()):
             new_listing_id_dict[i] += offset_listing_id
 
-        # now change them and in reviews file too
+        # now change them and in reviews and calendar file too
         df_per_city["id"] = df_per_city["id"].apply(lambda x: replace_elements(x, new_listing_id_dict))
 
         reviews_df = pd.read_csv("../Dataset/Provided/"+city.lower()+"_reviews.csv")
         reviews_df["listing_id"] = reviews_df["listing_id"].apply(lambda x: replace_elements(x, new_listing_id_dict))
         reviews_df.to_csv(temp_review_file + city + ".csv")
+
+        reviews_df = pd.read_csv("../Dataset/Provided/"+city.lower()+"_calendar.csv")
+        reviews_df["listing_id"] = reviews_df["listing_id"].apply(lambda x: replace_elements(x, new_listing_id_dict))
+        reviews_df.to_csv(temp_calendar_file + city + ".csv")
+
         offset_listing_id += len(all_list_id) + 1
 
         #replace all host_ids by new ones
@@ -516,7 +523,7 @@ def replace_elements(elmt, new_elmt_dict):
 
 def create_output_csvs_if_not_exist(tables_to_attributes):
     for table in tables_to_attributes.keys():
-        filename = "insert/insert_"+table+".csv"
+        filename = "insert/"+table+".csv"
         try:
             file = open(filename, 'r')
         except:
@@ -535,7 +542,7 @@ def open_output_files(tables_to_attributes):
     create_output_csvs_if_not_exist(tables_to_attributes)
     files = {}
     for table in tables_to_attributes.keys():
-        filename = "insert/insert_"+table+".csv"
+        filename = "insert/"+table+".csv"
         files[table] = open(filename, 'a')
 
     return files
