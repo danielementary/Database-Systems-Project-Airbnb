@@ -9,6 +9,7 @@ https://git-lfs.github.com/
 - Install mysql-server : **Do not** choose `strong password encryption`
 - Run mysql-server as root with `sudo mysql -u root` (MacOS : `mysql -u root -p` with password from configuration)
 - Create a new user with `GRANT ALL PRIVILEGES ON *.* TO 'Group32'@'localhost' IDENTIFIED BY '1234';` in mysql-server shell
+- (On MacOS first create user `CREATE USER 'Group32'@'localhost' IDENTIFIED BY '1234';` then grand it `GRANT ALL PRIVILEGES ON *.* TO 'Group32'@'localhost';`)
 
 #### Commands
 ##### Linux
