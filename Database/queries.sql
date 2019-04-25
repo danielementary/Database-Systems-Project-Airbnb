@@ -2,7 +2,7 @@
 
 ---------------------01-----------------------
 SELECT AVG(L.price)
-FROM  Listing L
+FROM Listing L
 WHERE L.beds = 8;
 
 ---------------------02-----------------------
@@ -23,7 +23,7 @@ WHERE H.host_id = L.host_id
                               WHERE C.calendar_available = '1'
                                     AND C.calendar_date >= 2019-03-01
                                     AND C.calendar_date < 2019-10-01
-                                    --TODO finish this query 
+                                    --TODO finish this query
                             );
 ---------------------04-----------------------
 ---------------------05-----------------------
