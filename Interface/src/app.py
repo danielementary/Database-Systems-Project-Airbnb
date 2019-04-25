@@ -24,11 +24,11 @@ class App(Tk):
         self.drawTop()
         self.drawTabs()
 
-        self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB.\n"
-                                                                    "Please try 'Connect to DB' in 'Settings' tab.")
+        self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
         self.initialSearchFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label(self.queriesFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
+        self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
@@ -55,6 +55,7 @@ class App(Tk):
                     self.dataLabel["text"] = "Loaded"
                     self.updateDatabaseVariables()
                     self.drawForms()
+                    self.drawPredefinedQueries()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
 
@@ -65,6 +66,7 @@ class App(Tk):
         self.dataLabel["text"] = "Loaded"
         self.updateDatabaseVariables()
         self.drawForms()
+        self.drawPredefinedQueries()
 
     def searchInDatabase(self):
         table = self.table.get()
@@ -97,6 +99,13 @@ class App(Tk):
             results = db.select_sql_with_values(self.databaseConnection, st.select_neighbourhood, tuple(values), "Get neighbourhoods")
 
             self.showResults(results)
+
+    def executePredefinedQuery(self):
+        sql = st.predefined_queries[self.predefniedQuery.get()]
+
+        results = db.select_sql(self.databaseConnection, sql, "Execute predefined query")
+
+        self.showResults(results)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -311,6 +320,18 @@ class App(Tk):
             result = {"None": 0}
         finally:
             return result
+
+    def drawPredefinedQueries(self):
+        self.initialQueriesFrameLabel.grid_forget()
+        Label(self.queriesFrame, text="Query").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        self.predefniedQuery = StringVar(self.queriesFrame)
+        self.predefniedQuery.set(list(st.predefined_queries.keys())[0])
+        self.predefniedQueryOptionMenu = OptionMenu(self.queriesFrame, self.predefniedQuery, *list(st.predefined_queries.keys()))
+        self.predefniedQueryOptionMenu.grid(row=0, column=1, sticky=W, padx=5, pady=5)
+
+        self.executeButton = Button(self.queriesFrame, text="Execute", command=self.executePredefinedQuery)
+        self.executeButton.grid(row=0, column=2, padx=5, pady=5)
 
     def showResults(Self, results):
         print(len(results), results)
