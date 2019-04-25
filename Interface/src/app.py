@@ -383,9 +383,14 @@ class Results(Toplevel):
         Label(self, text=sql)   .grid(row=2, column=0, sticky=NW, padx=5, pady=5)
         Label(self, text=values).grid(row=2, column=1, sticky=NW, padx=5, pady=5)
 
-        print(queryResults)
+        Label(self, text="Results ({})".format(len(queryResults))).grid(row=3, column=0, sticky=N, padx=5, pady=5, columnspan=2)
+
+        i = 4
+        for r in queryResults:
+            Label(self, text=r).grid(row=i, column=0, sticky=NW, padx=5, pady=5, columnspan=2)
+            i += 1
 
     def closeResults(self):
-        self.master.searchButton["state"]  =  NORMAL
-        self.master.executeButton["state"] =  NORMAL
+        self.master.searchButton["state"]  = NORMAL
+        self.master.executeButton["state"] = NORMAL
         self.destroy()
