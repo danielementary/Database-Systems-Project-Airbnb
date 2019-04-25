@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import scrolledtext
 
 import os
 
@@ -373,22 +374,30 @@ class Results(Toplevel):
         self.master.searchButton["state"]  =  DISABLED
         self.master.executeButton["state"] =  DISABLED
 
-        sql = " ".join(sql.replace("\n", " ").split()).replace(",", ",\n").replace("and", "and\n")
+        Label(self, text="Please close this windows before next operations.").pack(padx=10, pady=10)
 
-        Label(self, text="Please close this windows before next operations.").grid(row=0, column=0, sticky=W, padx=5, pady=5, columnspan=2)
+        topFrame = Frame(self)
+        topFrame.pack(padx=10, pady=10)
 
-        Label(self, text="MySQL Statement").grid(row=1, column=0, sticky=N, padx=5, pady=5)
-        Label(self, text="Values").grid(row=1, column=1, sticky=N, padx=5, pady=5)
+        Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+        Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+        Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+        Label(topFrame, text=values, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
 
-        Label(self, text=sql)   .grid(row=2, column=0, sticky=NW, padx=5, pady=5)
-        Label(self, text=values).grid(row=2, column=1, sticky=NW, padx=5, pady=5)
+        resultLength = len(queryResults)
+        if (resultLength > 0):
+            scr=scrolledtext.ScrolledText(self)
+            scr.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+            for r in queryResults:
+                for c in r:
+                    scr.insert(END, c)
+                    scr.insert(END, "\t\t\t\t")
+                scr.insert(END, "\n")
+            scr.config(state=DISABLED)
+            Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+        else:
+            Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
 
-        Label(self, text="Results ({})".format(len(queryResults))).grid(row=3, column=0, sticky=N, padx=5, pady=5, columnspan=2)
-
-        i = 4
-        for r in queryResults:
-            Label(self, text=r).grid(row=i, column=0, sticky=NW, padx=5, pady=5, columnspan=2)
-            i += 1
 
     def closeResults(self):
         self.master.searchButton["state"]  = NORMAL
