@@ -70,17 +70,33 @@ class App(Tk):
         table = self.table.get()
 
         if (table == "Listing"):
-            print(self.listingNameEntry.get(), self.accommodatesScale.get(),
-                  self.squareFeetScale.get(), self.priceScale.get(),
-                  self.isBusinessTravelReady.get(), self.reviewScoreRatingScale.get(),
-                  self.propertyTypeIdDict[self.propertyTypeId.get()],
-                  self.cancellationPolicyIdDict[self.cancellationPolicyId.get()])
+            values = ["%"+self.listingNameEntry.get()+"%",
+                      self.accommodatesScale.get(),
+                      self.squareFeetScale.get(),
+                      self.priceScale.get(),
+                      self.isBusinessTravelReady.get(),
+                      self.reviewScoreRatingScale.get(),
+                      self.propertyTypeIdDict[self.propertyTypeId.get()],
+                      self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]]
+
+            results = db.select_sql_with_values(self.databaseConnection, st.select_listing, tuple(values), "Get listings")
+
+            self.showResults(results)
 
         elif (table == "Host"):
-            print(self.hostNameEntry.get())
+            values = ["%"+self.hostNameEntry.get()+"%"]
+
+            results = db.select_sql_with_values(self.databaseConnection, st.select_host, tuple(values), "Get hosts")
+
+            self.showResults(results)
 
         elif (table == "Neighbourhood"):
-            print(self.NeighbourhoodNameEntry.get(), self.cityIdDict[self.cityId.get()])
+            values = ["%"+self.NeighbourhoodNameEntry.get()+"%",
+                      self.cityIdDict[self.cityId.get()]]
+
+            results = db.select_sql_with_values(self.databaseConnection, st.select_neighbourhood, tuple(values), "Get neighbourhoods")
+
+            self.showResults(results)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -295,3 +311,6 @@ class App(Tk):
             result = {"None": 0}
         finally:
             return result
+
+    def showResults(Self, results):
+        print(len(results), results)
