@@ -1,41 +1,67 @@
 search_tables = ("Listing", "Host", "Neighbourhood")
 
-select_property_type_names_ids_statements       = "SELECT property_type_name, property_type_id from Property_type;"
-select_cancellation_policy_names_ids_statements = "SELECT cancellation_policy_name, cancellation_policy_id from Cancellation_policy;"
-select_city_names_ids_statements                = "SELECT city_name, city_id from City;"
+select_property_type_names_ids_statements = """
+SELECT property_type_name,
+       property_type_id
+FROM Property_type;"""
+
+select_cancellation_policy_names_ids_statements = """
+SELECT cancellation_policy_name,
+       cancellation_policy_id
+FROM Cancellation_policy;"""
+
+select_city_names_ids_statements = """
+SELECT city_name,
+       city_id FROM City;
+"""
 
 select_listing_accomodates_min_max = """
-SELECT MIN(accommodates), MAX(accommodates)
-FROM Listing;"""
+SELECT MIN(accommodates),
+       MAX(accommodates)
+FROM Listing;
+"""
+
 select_listing_sqare_feet_min_max = """
-SELECT MIN(square_feet), MAX(square_feet)
-FROM Listing;"""
+SELECT MIN(square_feet),
+       MAX(square_feet)
+FROM Listing;
+"""
+
 select_listing_price_min_max = """
 SELECT MIN(price), MAX(price)
-FROM Listing;"""
+FROM Listing;
+"""
+
 select_listing_review_score_rating_min_max = """
 SELECT MIN(review_scores_rating), MAX(review_scores_rating)
-FROM Listing;"""
+FROM Listing;
+"""
 
 select_listing = """
-SELECT listing_name, listing_url, accommodates, square_feet, price, review_scores_rating
+SELECT listing_name,
+       listing_url,
+       accommodates,
+       square_feet, price,
+       review_scores_rating
 FROM Listing
-WHERE listing_name LIKE %s and accommodates >= %s
-                           and square_feet  >= %s
-                           and price <= %s
-                           and is_business_travel_ready = %s
-                           and review_scores_rating >= %s
-                           and property_type_id = %s
-                           and cancellation_policy_id = %s;"""
+WHERE listing_name LIKE %s AND accommodates >= %s
+                           AND square_feet  >= %s
+                           AND price <= %s
+                           AND is_business_travel_ready = %s
+                           AND review_scores_rating >= %s
+                           AND property_type_id = %s
+                           AND cancellation_policy_id = %s;"""
 select_host = """
-SELECT host_name, host_since
+SELECT host_name,
+       host_since
 FROM Host
-WHERE host_name LIKE %s;"""
+WHERE host_name LIKE %s;
+"""
 
 select_neighbourhood = """
 SELECT neighbourhood_name
 FROM Neighbourhood
-WHERE neighbourhood_name LIKE %s and city_id = %s;"""
+WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
 
 predefned_query_1 = """
 SELECT AVG(price)
@@ -45,16 +71,26 @@ WHERE beds = 8;
 
 predefned_query_2 = """
 SELECT AVG(L.price)
-FROM  Listing L, Listing_amenity_map M
+FROM  Listing L,
+      Listing_amenity_map M
 WHERE L.listing_id = M.listing_id
-      AND L.amenities_id EXISTS ( SELECT A.amenities_id
-                                  FROM Amenities A
-                                  WHERE A.amenities = 'TV'
-                                );
+      AND M.amenity_id = (SELECT A.amenity_id
+                          FROM Amenity A
+                          WHERE A.amenity_name = "TV");
 """
 
 predefned_query_3 = """
-SELECT * FROM City;
+SELECT DISTINCT H.host_name
+FROM Host H,
+     Listing L,
+     Day D,
+     Calendar C
+WHERE H.host_id = L.host_id
+      AND L.listing_id = C.listing_id
+      AND C.calendar_available = 1
+      AND C.calendar_day_id = D.day_id
+      AND D.day_date >= "2019-03-01"
+      AND D.day_date < "2019-10-01";
 """
 
 predefned_query_4 = """
@@ -85,7 +121,13 @@ predefned_query_10 = """
 SELECT * FROM City;
 """
 
-predefined_queries = {"Predefined Query 1" : predefned_query_1, "Predefined Query 2" : predefned_query_2, "Predefined Query 3" : predefned_query_3,
-                      "Predefined Query 4" : predefned_query_4, "Predefined Query 5" : predefned_query_5, "Predefined Query 6" : predefned_query_6,
-                      "Predefined Query 7" : predefned_query_7, "Predefined Query 8" : predefned_query_8, "Predefined Query 9" : predefned_query_9,
+predefined_queries = {"Predefined Query 1"  : predefned_query_1,
+                      "Predefined Query 2"  : predefned_query_2,
+                      "Predefined Query 3"  : predefned_query_3,
+                      "Predefined Query 4"  : predefned_query_4,
+                      "Predefined Query 5"  : predefned_query_5,
+                      "Predefined Query 6"  : predefned_query_6,
+                      "Predefined Query 7"  : predefned_query_7,
+                      "Predefined Query 8"  : predefned_query_8,
+                      "Predefined Query 9"  : predefned_query_9,
                       "Predefined Query 10" : predefned_query_10}
