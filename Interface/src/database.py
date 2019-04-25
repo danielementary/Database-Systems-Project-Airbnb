@@ -69,14 +69,24 @@ def select_sql(db_connection, sql, description):
     cursor.close()
     return result
 
-def count_tables(db_connection, database_name):
+def has_tables(db_connection, database_name):
     cursor = db_connection.cursor()
-    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'Airbnb';")
+    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{}';".format(database_name))
     count = None
     for x in cursor:
         count = x[0]
     cursor.close()
-    return count
+    return (count > 0)
+
+def every_table_has_entries(db_connection, database_name):
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT TABLE_NAME, TABLE_ROWS FROM information_schema.tables WHERE table_schema = '{}';".format(database_name))
+    for x in cursor:
+        if (x[1] <= 0):
+            cursor.close()
+            return False
+    cursor.close()
+    return True
 
 def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
     cursor = db_connection.cursor()
