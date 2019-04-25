@@ -391,6 +391,6 @@ class Results(Toplevel):
             i += 1
 
     def closeResults(self):
-        self.master.searchButton["state"]  =  NORMAL
-        self.master.executeButton["state"] =  NORMAL
+        self.master.searchButton["state"]  = NORMAL
+        self.master.executeButton["state"] = NORMAL
         self.destroy()
