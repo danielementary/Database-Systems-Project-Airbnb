@@ -77,40 +77,46 @@ class App(Tk):
         table = self.table.get()
 
         if (table == "Listing"):
-            values = ["%"+self.listingNameEntry.get()+"%",
-                      self.accommodatesScale.get(),
-                      self.squareFeetScale.get(),
-                      self.priceScale.get(),
-                      self.isBusinessTravelReady.get(),
-                      self.reviewScoreRatingScale.get(),
-                      self.propertyTypeIdDict[self.propertyTypeId.get()],
-                      self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]]
+            values = tuple(["%"+self.listingNameEntry.get()+"%",
+                            self.accommodatesScale.get(),
+                            self.squareFeetScale.get(),
+                            self.priceScale.get(),
+                            self.isBusinessTravelReady.get(),
+                            self.reviewScoreRatingScale.get(),
+                            self.propertyTypeIdDict[self.propertyTypeId.get()],
+                            self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]])
 
-            results = db.select_sql_with_values(self.databaseConnection, st.select_listing, tuple(values), "Get listings")
+            queryResults = db.select_sql_with_values(self.databaseConnection,
+                                                     st.select_listing, values,
+                                                     "Get listings")
 
-            self.showResults(results)
+            self.showResults(queryResults, st.select_listing, values)
 
         elif (table == "Host"):
-            values = ["%"+self.hostNameEntry.get()+"%"]
+            values = tuple(["%"+self.hostNameEntry.get()+"%"])
 
-            results = db.select_sql_with_values(self.databaseConnection, st.select_host, tuple(values), "Get hosts")
+            queryResults = db.select_sql_with_values(self.databaseConnection,
+                                                     st.select_host, values,
+                                                     "Get hosts")
 
-            self.showResults(results)
+            self.showResults(queryResults, st.select_host, values)
 
         elif (table == "Neighbourhood"):
-            values = ["%"+self.NeighbourhoodNameEntry.get()+"%",
-                      self.cityIdDict[self.cityId.get()]]
+            values = tuple(["%"+self.NeighbourhoodNameEntry.get()+"%",
+                            self.cityIdDict[self.cityId.get()]])
 
-            results = db.select_sql_with_values(self.databaseConnection, st.select_neighbourhood, tuple(values), "Get neighbourhoods")
+            queryResults = db.select_sql_with_values(self.databaseConnection,
+                                                     st.select_neighbourhood, values,
+                                                     "Get neighbourhoods")
 
-            self.showResults(results)
+            self.showResults(queryResults, st.select_neighbourhood, values)
 
     def executePredefinedQuery(self):
         sql = st.predefined_queries[self.predefniedQuery.get()]
 
-        results = db.select_sql(self.databaseConnection, sql, "Execute predefined query")
+        queryResults = db.select_sql(self.databaseConnection, sql, "Execute predefined query")
 
-        self.showResults(results)
+        self.showResults(queryResults, sql, None)
 
     def updateSearchFields(self, value):
         if (self.previousTable != value):
@@ -353,12 +359,11 @@ class App(Tk):
         self.executeButton = Button(self.queriesFrame, text="Execute", command=self.executePredefinedQuery)
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
 
-    def showResults(self, results):
-        print(len(results), results)
-        Results(self).focus()
+    def showResults(self, queryResults, sql, values):
+        Results(self, queryResults, sql, values).focus()
 
 class Results(Toplevel):
-    def __init__(self, master, **options):
+    def __init__(self, master, queryResults, sql, values, **options):
         Toplevel.__init__(self, master, **options)
         self.title("DBS-Project Group32 Results")
         self.geometry("1280x720")
@@ -367,6 +372,18 @@ class Results(Toplevel):
 
         self.master.searchButton["state"]  =  DISABLED
         self.master.executeButton["state"] =  DISABLED
+
+        sql = " ".join(sql.replace("\n", " ").split()).replace(",", ",\n").replace("and", "and\n")
+
+        Label(self, text="Please close this windows before next operations.").grid(row=0, column=0, sticky=W, padx=5, pady=5, columnspan=2)
+
+        Label(self, text="MySQL Statement").grid(row=1, column=0, sticky=N, padx=5, pady=5)
+        Label(self, text="Values").grid(row=1, column=1, sticky=N, padx=5, pady=5)
+
+        Label(self, text=sql)   .grid(row=2, column=0, sticky=NW, padx=5, pady=5)
+        Label(self, text=values).grid(row=2, column=1, sticky=NW, padx=5, pady=5)
+
+        print(queryResults)
 
     def closeResults(self):
         self.master.searchButton["state"]  =  NORMAL
