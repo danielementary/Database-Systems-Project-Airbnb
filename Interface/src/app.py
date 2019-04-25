@@ -381,8 +381,10 @@ class Results(Toplevel):
 
         Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
         Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-        Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-        Label(topFrame, text=values, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+
+        if (values is not None):
+            Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+            Label(topFrame, text=values, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
 
         resultLength = len(queryResults)
         if (resultLength > 0):
