@@ -1,9 +1,9 @@
 ----------------SQL_Queries-------------------
 
 ---------------------01-----------------------
-SELECT AVG(L.price)
-FROM Listing L
-WHERE L.beds = 8;
+SELECT AVG(price)
+FROM  Listing
+WHERE beds = 8;
 
 ---------------------02-----------------------
 SELECT AVG(L.price)
