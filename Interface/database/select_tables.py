@@ -38,36 +38,46 @@ FROM Neighbourhood
 WHERE neighbourhood_name LIKE %s and city_id = %s;"""
 
 predefned_query_1 = """
+SELECT * FROM City;
 """
 
 predefned_query_2 = """
+SELECT * FROM City;
 """
 
 predefned_query_3 = """
+SELECT * FROM City;
 """
 
 predefned_query_4 = """
+SELECT * FROM City;
 """
 
 predefned_query_5 = """
+SELECT * FROM City;
 """
 
 predefned_query_6 = """
+SELECT * FROM City;
 """
 
 predefned_query_7 = """
+SELECT * FROM City;
 """
 
 predefned_query_8 = """
+SELECT * FROM City;
 """
 
 predefned_query_9 = """
+SELECT * FROM City;
 """
 
 predefned_query_10 = """
+SELECT * FROM City;
 """
 
-predefined_queries = [predefned_query_1, predefned_query_2, predefned_query_3,
-                      predefned_query_4, predefned_query_5, predefned_query_6,
-                      predefned_query_7, predefned_query_8, predefned_query_9,
-                      predefned_query_10]
+predefined_queries = {"Predefined Query 1" : predefned_query_1, "Predefined Query 2" : predefned_query_2, "Predefined Query 3" : predefned_query_3,
+                      "Predefined Query 4" : predefned_query_4, "Predefined Query 5" : predefned_query_5, "Predefined Query 6" : predefned_query_6,
+                      "Predefined Query 7" : predefned_query_7, "Predefined Query 8" : predefned_query_8, "Predefined Query 9" : predefned_query_9,
+                      "Predefined Query 10" : predefned_query_10}
