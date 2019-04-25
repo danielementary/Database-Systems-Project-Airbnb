@@ -18,6 +18,7 @@ class App(Tk):
         self.title("DBS-Project Group32")
         self.geometry("1280x720")
         self.resizable(width=False, height=False)
+        self.protocol("WM_DELETE_WINDOW", self.disconnectAndClose)
 
         self.databaseConnection = None
 
@@ -58,6 +59,10 @@ class App(Tk):
                     self.drawPredefinedQueries()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
+
+    def disconnectAndClose(self):
+        db.disconnect(self.databaseConnection)
+        self.destroy()
 
     def createAndPopulateTables(self):
         db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
@@ -245,6 +250,7 @@ class App(Tk):
         #label and option menu for table selection
         self.initialSearchFrameLabel.grid_forget()
         Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
         self.table = StringVar(self.searchFrame)
         temp = st.search_tables[0]
         self.table.set(temp)
@@ -267,7 +273,9 @@ class App(Tk):
 
     def getAccommodatesMinMax(self):
         try:
-            result = db.select_sql(self.databaseConnection, st.select_listing_accomodates_min_max, "Select Listing accommodates min and max")[0]
+            result = db.select_sql(self.databaseConnection,
+                          st.select_listing_accomodates_min_max,
+                          "Select Listing accommodates min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -275,7 +283,9 @@ class App(Tk):
 
     def getSquareFeetMinMax(self):
         try:
-            result = db.select_sql(self.databaseConnection, st.select_listing_sqare_feet_min_max, "Select Listing square_feet min and max")[0]
+            result = db.select_sql(self.databaseConnection,
+                          st.select_listing_sqare_feet_min_max,
+                          "Select Listing square_feet min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -283,7 +293,9 @@ class App(Tk):
 
     def getPriceMinMax(self):
         try:
-            result = db.select_sql(self.databaseConnection, st.select_listing_price_min_max, "Select Listing price min and max")[0]
+            result = db.select_sql(self.databaseConnection,
+                          st.select_listing_price_min_max,
+                          "Select Listing price min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -291,7 +303,9 @@ class App(Tk):
 
     def getReviewScoresRatingMinMax(self):
         try:
-            result = db.select_sql(self.databaseConnection, st.select_listing_review_score_rating_min_max, "Select Listing review_scores_rating min and max")[0]
+            result = db.select_sql(self.databaseConnection,
+                          st.select_listing_review_score_rating_min_max,
+                          "Select Listing review_scores_rating min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -299,7 +313,9 @@ class App(Tk):
 
     def getPropertyTypeIdDict(self):
         try:
-            result = dict(db.select_sql(self.databaseConnection, st.select_property_type_names_ids_statements, "Select Property_type names and ids"))
+            result = dict(db.select_sql(self.databaseConnection,
+                          st.select_property_type_names_ids_statements,
+                          "Select Property_type names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -307,7 +323,9 @@ class App(Tk):
 
     def getCancellationPolicyIdDict(self):
         try:
-            result = dict(db.select_sql(self.databaseConnection, st.select_cancellation_policy_names_ids_statements, "Select Cancellation_policy names and ids"))
+            result = dict(db.select_sql(self.databaseConnection,
+                          st.select_cancellation_policy_names_ids_statements,
+                          "Select Cancellation_policy names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -315,7 +333,9 @@ class App(Tk):
 
     def getCityIdDict(self):
         try:
-            result = dict(db.select_sql(self.databaseConnection, st.select_city_names_ids_statements, "Select City names and ids"))
+            result = dict(db.select_sql(self.databaseConnection,
+                          st.select_city_names_ids_statements,
+                          "Select City names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -333,5 +353,22 @@ class App(Tk):
         self.executeButton = Button(self.queriesFrame, text="Execute", command=self.executePredefinedQuery)
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
 
-    def showResults(Self, results):
+    def showResults(self, results):
         print(len(results), results)
+        Results(self).focus()
+
+class Results(Toplevel):
+    def __init__(self, master, **options):
+        Toplevel.__init__(self, master, **options)
+        self.title("DBS-Project Group32 Results")
+        self.geometry("1280x720")
+        self.resizable(width=False, height=False)
+        self.protocol("WM_DELETE_WINDOW", self.closeResults)
+
+        self.master.searchButton["state"]  =  DISABLED
+        self.master.executeButton["state"] =  DISABLED
+
+    def closeResults(self):
+        self.master.searchButton["state"]  =  NORMAL
+        self.master.executeButton["state"] =  NORMAL
+        self.destroy()
