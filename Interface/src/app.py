@@ -19,112 +19,30 @@ class App(Tk):
         self.geometry("1280x720")
         self.resizable(width=False, height=False)
 
-        #database variables
         self.databaseConnection = None
 
-        #top frame for connection status
-        self.databaseSettingsFrame = ttk.Frame(self)
-        self.databaseSettingsFrame.pack(fill=X)
-
-        Label(self.databaseSettingsFrame, text="Status").pack(side=LEFT, padx=5, pady=5)
-
-        self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
-        self.statusLabel.pack(side=LEFT, padx=5, pady=5)
-
-        self.connectionButton = Button(self.databaseSettingsFrame, text="Try again", command=self.connectDatabase)
-
-        #these buttons will be removed for final version
-        Button(self.databaseSettingsFrame, text="Delete DB", command=self.deleteDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
-        Button(self.databaseSettingsFrame, text="Connect DB", command=self.connectDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
-        Button(self.databaseSettingsFrame, text="Populate DB", command=self.populateDatabase).pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
-        #end buttons
+        self.drawTop()
+        self.drawTabs()
 
         self.connectDatabase()
 
-        self.accommodatesMinMax       = self.getAccommodatesMinMax()
-        self.squareFeetMinMax         = self.getSquareFeetMinMax()
-        self.priceMinMax              = self.getPriceMinMax()
-        self.reviewScoresRatingMinMax = self.getReviewScoresRatingMinMax()
-        self.propertyTypeIdDict       = self.getpropertyTypeIdDict()
-        self.cancellationPolicyIdDict = self.getcancellationPolicyIdDict()
-        self.cityIdDict               = self.getcityIdDict()
-
-        #tabs and conresponding frames
-        self.tabControl = ttk.Notebook(self)
-
-        self.searchFrame        = ttk.Frame(self.tabControl)
-        self.queriesFrame       = ttk.Frame(self.tabControl)
-        self.modificationsFrame = ttk.Frame(self.tabControl)
-
-        self.tabControl.add(self.searchFrame,        text="Search")
-        self.tabControl.add(self.queriesFrame,       text="Predefined Queries")
-        self.tabControl.add(self.modificationsFrame, text="Insert/Delete")
-
-        self.tabControl.pack(fill=BOTH, expand=1)
-
         #search tab
-
-        #inputs
-
-        #listing
-        self.listingNameEntry  = Entry(self.searchFrame)
-
-        self.accommodatesScale = Scale(self.searchFrame, from_=self.accommodatesMinMax[0],
-                                                            to=self.accommodatesMinMax[1],
-                                                        orient=HORIZONTAL)
-
-        self.squareFeetScale   = Scale(self.searchFrame, from_=self.squareFeetMinMax[0],
-                                                            to=self.squareFeetMinMax[1],
-                                                        orient=HORIZONTAL)
-
-        self.priceScale        = Scale(self.searchFrame, from_=self.priceMinMax[0],
-                                                            to=self.priceMinMax[1],
-                                                        orient=HORIZONTAL)
-
-        self.isBusinessTravelReady = IntVar(self.searchFrame)
-        self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
-
-        self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
-                                                                 to=self.reviewScoresRatingMinMax[1],
-                                                             orient=HORIZONTAL)
-
-        self.propertyTypeId = StringVar(self.searchFrame)
-        self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
-        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
-
-        self.cancellationPolicyId = StringVar(self.searchFrame)
-        self.cancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
-        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *list(self.cancellationPolicyIdDict.keys()))
-
-        #host
-        self.hostNameEntry = Entry(self.searchFrame)
-
-        #neighbourhood
-        self.NeighbourhoodNameEntry = Entry(self.searchFrame)
-
-        self.cityId = StringVar(self.searchFrame)
-        self.cityId.set(list(self.cityIdDict.keys())[0])
-        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *list(self.cityIdDict.keys()))
-
-        #label and option menu for table selection
-        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        self.table = StringVar(self.searchFrame)
-        temp = st.search_tables[0]
-        self.table.set(temp)
-        self.previousTable = None
-        self.updateSearchFields(temp)
-        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_tables), command=self.updateSearchFields)
-        self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
-
-        self.searchButton = Button(self.searchFrame, text="Search", command=self.searchInDatabase)
-        self.searchButton.grid(row=0, column=2, padx=5, pady=5)
+        self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB.\n"
+                                                                    "Please try 'Connect to DB' in 'Settings' tab.")
+        self.initialSearchFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         #queries tab
-        Label(self.queriesFrame, text="This will be implemented later on.").pack()
+        Label(self.queriesFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         #modifications tab
-        Label(self.modificationsFrame, text="This will be implemented later on.").pack()
+        Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
+        #settings tab
+        Label(self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        Button(self.settingsFrame, text="Connect to DB",          command=self.connectDatabase)        .grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Create and Populate DB", command=self.createAndPopulateTables).grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Delete DB",              command=self.deleteDatabase)         .grid(row=3, column=0, sticky=W, padx=5, pady=5)
 
     def connectDatabase(self):
         if self.databaseConnection is None:
@@ -132,16 +50,26 @@ class App(Tk):
 
             if self.databaseConnection is not None:
                 self.statusLabel["text"] = "Connected to {} DB".format(DB_NAME)
-                self.connectionButton.pack_forget()
-                if (db.count_tables(self.databaseConnection, DB_NAME) <= 0):
-                    self.createTables()
+                if (not db.has_tables(self.databaseConnection, DB_NAME)):
+                    self.createAndPopulateTables()
+                else:
+                    self.tablesLabel["text"] = "Created"
+                if (not db.every_table_has_entries(self.databaseConnection, DB_NAME)):
+                    self.createAndPopulateTables()
+                else:
+                    self.dataLabel["text"] = "Loaded"
+                    self.updateDatabaseVariables()
+                    self.drawForms()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
-                self.connectionButton.pack(side=LEFT, expand=1, anchor=E, padx=5, pady=5)
 
-    def createTables(self):
+    def createAndPopulateTables(self):
         db.execute_sql_list(self.databaseConnection, create_statements_ordered, "Tables creation")
-        # db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+        self.tablesLabel["text"] = "Created"
+        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+        self.dataLabel["text"] = "Loaded"
+        self.updateDatabaseVariables()
+        self.drawForms()
 
     def searchInDatabase(self):
         table = self.table.get()
@@ -212,8 +140,102 @@ class App(Tk):
         db.disconnect(self.databaseConnection)
         self.databaseConnection = None
 
-    def populateDatabase(self):
-        db.populate_tables(self.databaseConnection, insert_tables_names_ordered, DATASET_PATH)
+    def drawTop(self):
+        self.databaseSettingsFrame = ttk.Frame(self)
+        self.databaseSettingsFrame.pack(fill=X)
+
+        Label(self.databaseSettingsFrame, text="Status :").pack(side=LEFT, padx=5, pady=5)
+
+        self.statusLabel = Label(self.databaseSettingsFrame, text="Not Connected")
+        self.statusLabel.pack(side=LEFT, padx=5, pady=5)
+
+        Label(self.databaseSettingsFrame, text="Tables :").pack(side=LEFT, padx=5, pady=5)
+
+        self.tablesLabel = Label(self.databaseSettingsFrame, text="Not Created")
+        self.tablesLabel.pack(side=LEFT, padx=5, pady=5)
+
+        Label(self.databaseSettingsFrame, text="Data :").pack(side=LEFT, padx=5, pady=5)
+
+        self.dataLabel = Label(self.databaseSettingsFrame, text="Not Loaded")
+        self.dataLabel.pack(side=LEFT, padx=5, pady=5)
+
+    def drawTabs(self):
+        self.tabControl = ttk.Notebook(self)
+
+        self.searchFrame        = ttk.Frame(self.tabControl)
+        self.queriesFrame       = ttk.Frame(self.tabControl)
+        self.modificationsFrame = ttk.Frame(self.tabControl)
+        self.settingsFrame      = ttk.Frame(self.tabControl)
+
+        self.tabControl.add(self.searchFrame,        text="Search")
+        self.tabControl.add(self.queriesFrame,       text="Predefined Queries")
+        self.tabControl.add(self.modificationsFrame, text="Insert/Delete")
+        self.tabControl.add(self.settingsFrame,      text="Settings")
+
+        self.tabControl.pack(fill=BOTH, expand=1)
+
+    def drawForms(self):
+        self.listingNameEntry  = Entry(self.searchFrame)
+
+        self.accommodatesScale = Scale(self.searchFrame, from_=self.accommodatesMinMax[0],
+                                                            to=self.accommodatesMinMax[1],
+                                                        orient=HORIZONTAL)
+
+        self.squareFeetScale   = Scale(self.searchFrame, from_=self.squareFeetMinMax[0],
+                                                            to=self.squareFeetMinMax[1],
+                                                        orient=HORIZONTAL)
+
+        self.priceScale        = Scale(self.searchFrame, from_=self.priceMinMax[0],
+                                                            to=self.priceMinMax[1],
+                                                        orient=HORIZONTAL)
+
+        self.isBusinessTravelReady = IntVar(self.searchFrame)
+        self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
+
+        self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
+                                                                 to=self.reviewScoresRatingMinMax[1],
+                                                             orient=HORIZONTAL)
+
+        self.propertyTypeId = StringVar(self.searchFrame)
+        self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
+
+        self.cancellationPolicyId = StringVar(self.searchFrame)
+        self.cancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
+        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *list(self.cancellationPolicyIdDict.keys()))
+
+        #host
+        self.hostNameEntry = Entry(self.searchFrame)
+
+        #neighbourhood
+        self.NeighbourhoodNameEntry = Entry(self.searchFrame)
+
+        self.cityId = StringVar(self.searchFrame)
+        self.cityId.set(list(self.cityIdDict.keys())[0])
+        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *list(self.cityIdDict.keys()))
+
+        #label and option menu for table selection
+        self.initialSearchFrameLabel.grid_forget()
+        Label(self.searchFrame, text="Table").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.table = StringVar(self.searchFrame)
+        temp = st.search_tables[0]
+        self.table.set(temp)
+        self.previousTable = None
+        self.updateSearchFields(temp)
+        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_tables), command=self.updateSearchFields)
+        self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
+
+        self.searchButton = Button(self.searchFrame, text="Search", command=self.searchInDatabase)
+        self.searchButton.grid(row=0, column=2, padx=5, pady=5)
+
+    def updateDatabaseVariables(self):
+        self.accommodatesMinMax       = self.getAccommodatesMinMax()
+        self.squareFeetMinMax         = self.getSquareFeetMinMax()
+        self.priceMinMax              = self.getPriceMinMax()
+        self.reviewScoresRatingMinMax = self.getReviewScoresRatingMinMax()
+        self.propertyTypeIdDict       = self.getPropertyTypeIdDict()
+        self.cancellationPolicyIdDict = self.getCancellationPolicyIdDict()
+        self.cityIdDict               = self.getCityIdDict()
 
     def getAccommodatesMinMax(self):
         return (0, 10)
@@ -227,16 +249,26 @@ class App(Tk):
     def getReviewScoresRatingMinMax(self):
         return (0, 10)
 
-    def getpropertyTypeIdDict(self):
-        return {"a":0, "b":1, "c":2}
+    def getPropertyTypeIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection, st.select_property_type_names_ids_statements, "Select Property_type names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
 
-    def getcancellationPolicyIdDict(self):
-        return {"d":0, "e":1, "f":2}
+    def getCancellationPolicyIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection, st.select_cancellation_policy_names_ids_statements, "Select Cancellation_policy names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
 
-    def getcityIdDict(self):
-        temp = dict(db.select_sql(self.databaseConnection, st.select_city_names_statements, "Select City names and ids"))
-
-        if (len(temp) <= 0):
-            return {"None":0}
-        else:
-            return temp
+    def getCityIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection, st.select_city_names_ids_statements, "Select City names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
