@@ -24,25 +24,20 @@ class App(Tk):
         self.drawTop()
         self.drawTabs()
 
-        self.connectDatabase()
-
-        #search tab
         self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB.\n"
                                                                     "Please try 'Connect to DB' in 'Settings' tab.")
         self.initialSearchFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        #queries tab
         Label(self.queriesFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        #modifications tab
         Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        #settings tab
         Label(self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-
         Button(self.settingsFrame, text="Connect to DB",          command=self.connectDatabase)        .grid(row=1, column=0, sticky=W, padx=5, pady=5)
         Button(self.settingsFrame, text="Create and Populate DB", command=self.createAndPopulateTables).grid(row=2, column=0, sticky=W, padx=5, pady=5)
         Button(self.settingsFrame, text="Delete DB",              command=self.deleteDatabase)         .grid(row=3, column=0, sticky=W, padx=5, pady=5)
+
+        self.connectDatabase()
 
     def connectDatabase(self):
         if self.databaseConnection is None:
@@ -105,18 +100,22 @@ class App(Tk):
 
                 Label(self.searchFrame, text="Accommodates (min)").grid(row=2, column=0, sticky=W, padx=5, pady=5)
                 self.accommodatesScale.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+                self.accommodatesScale.set(self.accommodatesMinMax[0])
 
                 Label(self.searchFrame, text="Square Feet (min)").grid(row=3, column=0, sticky=W, padx=5, pady=5)
                 self.squareFeetScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+                self.squareFeetScale.set(self.squareFeetMinMax[0])
 
                 Label(self.searchFrame, text="Price (max)").grid(row=4, column=0, sticky=W, padx=5, pady=5)
                 self.priceScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+                self.priceScale.set(self.priceMinMax[1])
 
                 Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
                 self.isBusinessTravelReadyCheckButton.grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
                 Label(self.searchFrame, text="Review Scores Rating (min)").grid(row=6, column=0, sticky=W, padx=5, pady=5)
                 self.reviewScoreRatingScale.grid(row=6, column=1, sticky=W, padx=5, pady=5)
+                self.reviewScoreRatingScale.set(self.reviewScoresRatingMinMax[0])
 
                 Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
                 self.propertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
@@ -179,22 +178,26 @@ class App(Tk):
 
         self.accommodatesScale = Scale(self.searchFrame, from_=self.accommodatesMinMax[0],
                                                             to=self.accommodatesMinMax[1],
-                                                        orient=HORIZONTAL)
+                                                        orient=HORIZONTAL,
+                                                        length=160)
 
         self.squareFeetScale   = Scale(self.searchFrame, from_=self.squareFeetMinMax[0],
                                                             to=self.squareFeetMinMax[1],
-                                                        orient=HORIZONTAL)
+                                                        orient=HORIZONTAL,
+                                                        length=160)
 
         self.priceScale        = Scale(self.searchFrame, from_=self.priceMinMax[0],
                                                             to=self.priceMinMax[1],
-                                                        orient=HORIZONTAL)
+                                                        orient=HORIZONTAL,
+                                                        length=160)
 
         self.isBusinessTravelReady = IntVar(self.searchFrame)
         self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
 
         self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
                                                                  to=self.reviewScoresRatingMinMax[1],
-                                                             orient=HORIZONTAL)
+                                                             orient=HORIZONTAL,
+                                                             length=160)
 
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
@@ -238,16 +241,36 @@ class App(Tk):
         self.cityIdDict               = self.getCityIdDict()
 
     def getAccommodatesMinMax(self):
-        return (0, 10)
+        try:
+            result = db.select_sql(self.databaseConnection, st.select_listing_accomodates_min_max, "Select Listing accommodates min and max")[0]
+        except:
+            result = (0, 0)
+        finally:
+            return result
 
     def getSquareFeetMinMax(self):
-        return (0, 10)
+        try:
+            result = db.select_sql(self.databaseConnection, st.select_listing_sqare_feet_min_max, "Select Listing square_feet min and max")[0]
+        except:
+            result = (0, 0)
+        finally:
+            return result
 
     def getPriceMinMax(self):
-        return (0, 10)
+        try:
+            result = db.select_sql(self.databaseConnection, st.select_listing_price_min_max, "Select Listing price min and max")[0]
+        except:
+            result = (0, 0)
+        finally:
+            return result
 
     def getReviewScoresRatingMinMax(self):
-        return (0, 10)
+        try:
+            result = db.select_sql(self.databaseConnection, st.select_listing_review_score_rating_min_max, "Select Listing review_scores_rating min and max")[0]
+        except:
+            result = (0, 0)
+        finally:
+            return result
 
     def getPropertyTypeIdDict(self):
         try:
