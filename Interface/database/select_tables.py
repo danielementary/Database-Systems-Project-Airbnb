@@ -39,7 +39,7 @@ WHERE neighbourhood_name LIKE %s and city_id = %s;"""
 
 predefned_query_1 = """
 SELECT AVG(L.price)
-FROM Listing L
+FROM  Listing L
 WHERE L.beds = 8;
 """
 
