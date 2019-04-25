@@ -69,6 +69,18 @@ def select_sql(db_connection, sql, description):
     cursor.close()
     return result
 
+def select_sql_with_values(db_connection, sql, values, description):
+    cursor = db_connection.cursor()
+    result = None
+    try:
+        cursor.execute(sql, values)
+        print("{} executed successfully".format(description))
+        result = cursor.fetchall()
+    except:
+        print("{} failed miserably".format(description))
+    cursor.close()
+    return result
+
 def has_tables(db_connection, database_name):
     cursor = db_connection.cursor()
     cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = '{}';".format(database_name))
