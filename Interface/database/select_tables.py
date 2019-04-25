@@ -40,10 +40,17 @@ WHERE neighbourhood_name LIKE %s and city_id = %s;"""
 predefned_query_1 = """
 SELECT AVG(price)
 FROM Listing
-WHERE beds = 8;"""
+WHERE beds = 8;
+"""
 
 predefned_query_2 = """
-SELECT * FROM City;
+SELECT AVG(L.price)
+FROM  Listing L, Listing_amenity_map M
+WHERE L.listing_id = M.listing_id
+      AND L.amenities_id EXISTS ( SELECT A.amenities_id
+                                  FROM Amenities A
+                                  WHERE A.amenities = 'TV'
+                                );
 """
 
 predefned_query_3 = """
