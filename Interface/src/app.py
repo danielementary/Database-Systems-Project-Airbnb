@@ -388,18 +388,19 @@ class Results(Toplevel):
 
         resultLength = len(queryResults)
         if (resultLength > 0):
-            scr=scrolledtext.ScrolledText(self)
-            scr.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+            resultsScrolledtext = scrolledtext.ScrolledText(self)
+            resultsScrolledtext.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+
             for r in queryResults:
                 for c in r:
-                    scr.insert(END, c)
-                    scr.insert(END, "\t\t\t\t")
-                scr.insert(END, "\n")
-            scr.config(state=DISABLED)
+                    resultsScrolledtext.insert(END, c)
+                    resultsScrolledtext.insert(END, "\t\t\t\t")
+                resultsScrolledtext.insert(END, "\n")
+            resultsScrolledtext.config(state=DISABLED)
+
             Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
         else:
             Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
-
 
     def closeResults(self):
         self.master.searchButton["state"]  = NORMAL
