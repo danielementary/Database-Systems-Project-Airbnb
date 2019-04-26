@@ -71,7 +71,7 @@ WHERE beds = 8;
 
 predefned_query_2 = """
 SELECT AVG(L.price)
-FROM  Listing L,
+FROM Listing L,
       Listing_amenity_map M
 WHERE L.listing_id = M.listing_id
       AND M.amenity_id = (SELECT A.amenity_id
@@ -98,7 +98,16 @@ SELECT * FROM City;
 """
 
 predefned_query_5 = """
-SELECT * FROM City;
+SELECT DISTINCT D.day_date
+FROM Day D,
+     Calendar C,
+     Listing L,
+     Host H
+WHERE D.day_id = C.calendar_day_id
+      AND C.listing_id = L.listing_id
+      AND C.calendar_available = 1
+      AND L.host_id = H.host_id
+      AND H.host_name = "Viajes Eco";
 """
 
 predefned_query_6 = """
