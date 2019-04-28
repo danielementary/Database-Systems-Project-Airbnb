@@ -1,0 +1,5 @@
+Assumptions
+
+1.	We assumed that all listings’ city corresponds to the filename and so put it for all listings accordingly to in which file they are.
+2.	We put new ids for all listings and hosts to not have duplicates between cities.
+3.	We removed reviewer if same id but not same name, we kept only one.
