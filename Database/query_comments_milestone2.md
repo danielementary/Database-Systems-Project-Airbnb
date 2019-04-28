@@ -184,10 +184,20 @@ We need the Host table for the name, the Listing, the Day and the Calendar table
     ```sql
     -- TODO
     ```
-5. The query finds the dates that a specified host (we use 'Viajes Eco') has available accommodations for rent.
+5. The query finds the dates that a specified host (we use 'Viajes Eco') has available accommodations for rent. <br>
+The Day, Calendar (listing-calendar relation), Listing (shows which listings Viajes Eco owns) and Host tables are necessary for the implementation.
 
     ```sql
-    -- TODO
+    SELECT DISTINCT D.day_date
+    FROM Day D,
+         Calendar C,
+         Listing L,
+         Host H
+    WHERE D.day_id = C.calendar_day_id
+          AND C.listing_id = L.listing_id
+          AND C.calendar_available = 1
+          AND L.host_id = H.host_id
+          AND H.host_name = "Viajes Eco";
     ```
 
 6. The query finds all the pairs (host_ids, host_names) that only have one listing online.
