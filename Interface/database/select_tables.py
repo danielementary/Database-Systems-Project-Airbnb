@@ -130,7 +130,7 @@ HAVING COUNT(L.listing_id) = 1;
 """
 
 predefned_query_7 = """
-SELECT AVG(L1.price) - AVG(L2.price)
+SELECT (AVG(L1.price) - AVG(L2.price))
 FROM Listing L1,
      Listing L2,
      Listing_amenity_map M1,
@@ -148,7 +148,26 @@ WHERE L1.listing_id = M1.listing_id
 """
 
 predefned_query_8 = """
-SELECT * FROM City;
+SELECT AVG(L1.price) - AVG(L2.price)
+FROM Listing L1,
+     Listing L2
+WHERE (L1.listing_id IN (SELECT L.listing_id
+                        FROM Listing L,
+                             Neighbourhood N,
+                             City C
+                        WHERE L.neighbourhood_id = N.neighbourhood_id
+                        AND N.city_id = C.city_id
+                        AND C.city_name = "Berlin"
+                     ))
+AND (L1.beds = 8)
+AND (L2.listing_id IN (SELECT L.listing_id
+                      FROM Listing L
+                           Neighbourhood N,
+                           City C
+                      WHERE L.neighbourhood_id = N.neighbourhood_id
+                      AND N.city_id = C.city_id
+                      AND C.city_name = "Madrid"))
+AND (L2.beds = 8);
 """
 
 predefned_query_9 = """
@@ -156,7 +175,12 @@ SELECT * FROM City;
 """
 
 predefned_query_10 = """
-SELECT * FROM City;
+SELECT L.listing_id, L.listing_name
+FROM Listing L
+WHERE L.review_score_rating IN (SELECT TOP 10 review_score_rating
+                               FROM Listing
+                               ORDER BY review_score_rating DESC
+                              );
 """
 
 predefined_queries = {"Predefined Query 1"  : predefned_query_1,
