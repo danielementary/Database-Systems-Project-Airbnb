@@ -18,7 +18,7 @@ def connect_database(database_name):
                 password="1234"
             )
             create_database(connection, database_name)
-            disconnect(connection)
+            connection.close()
             return connect_database(database_name)
         except:
             print("Unable to create or connect to {} database".format(database_name),
