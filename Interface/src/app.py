@@ -385,22 +385,24 @@ class Results(Toplevel):
         if (values is not None):
             Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
             Label(topFrame, text=values, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+        if (queryResults is not None):
+            resultLength = len(queryResults)
+            if (resultLength > 0):
+                resultsScrolledtext = scrolledtext.ScrolledText(self)
+                resultsScrolledtext.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
 
-        resultLength = len(queryResults)
-        if (resultLength > 0):
-            resultsScrolledtext = scrolledtext.ScrolledText(self)
-            resultsScrolledtext.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+                for r in queryResults:
+                    for c in r:
+                        resultsScrolledtext.insert(END, c)
+                        resultsScrolledtext.insert(END, "\t\t\t\t")
+                    resultsScrolledtext.insert(END, "\n")
+                resultsScrolledtext.config(state=DISABLED)
 
-            for r in queryResults:
-                for c in r:
-                    resultsScrolledtext.insert(END, c)
-                    resultsScrolledtext.insert(END, "\t\t\t\t")
-                resultsScrolledtext.insert(END, "\n")
-            resultsScrolledtext.config(state=DISABLED)
-
-            Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+                Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+            else:
+                Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
         else:
-            Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+            Label(self, text="This query cannot be executed.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
 
     def closeResults(self):
         self.master.searchButton["state"]  = NORMAL
