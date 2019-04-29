@@ -57,10 +57,10 @@ CREATE TABLE Listing (
   host_id          INT NOT NULL,
   neighbourhood_id INT NOT NULL,
 
-  property_type_id       INT,
-  room_type_id           INT,
-  bed_type_id            INT,
-  cancellation_policy_id INT,
+  property_type_id       INT NOT NULL,
+  room_type_id           INT NOT NULL,
+  bed_type_id            INT NOT NULL,
+  cancellation_policy_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(listing_id),
