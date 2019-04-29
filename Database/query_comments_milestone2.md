@@ -1,13 +1,6 @@
-##Deliverable 2
-###Queries
+# Deliverable 2
+## Queries
 
----------
-For each query: <br>
-Query a:
-*Description of logic:*<br>
-What does the query do and how do I decide to solve it
-SQL statement
-<The SQL statement>
 1. The query finds the average price for a listing with a specified number of bedrooms. We use 8 bedrooms for the example. <br>
 Since the table Listing has an attribute for the number of bedrooms and one for the price, the query is direct.
     ```sql
