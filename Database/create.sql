@@ -86,7 +86,7 @@ CREATE TABLE Host (
   host_picture_url   TINYTEXT,
 
   -----relation attributes----
-  neighbourhood_id INT,
+  neighbourhood_id INT NOT NULL,
 
   ------------keys------------
   PRIMARY KEY(host_id),
