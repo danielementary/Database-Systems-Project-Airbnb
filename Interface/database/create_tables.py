@@ -65,7 +65,7 @@ CREATE TABLE Host (
   host_response_rate TINYTEXT,
   host_thumbnail_url TINYTEXT,
   host_picture_url   TINYTEXT,
-  neighbourhood_id INT,
+  neighbourhood_id INT NOT NULL,
   PRIMARY KEY(host_id),
   FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
 );"""
