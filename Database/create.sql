@@ -66,10 +66,10 @@ CREATE TABLE Listing (
   PRIMARY KEY(listing_id),
   FOREIGN KEY(host_id)                REFERENCES Host(host_id)                   ON DELETE CASCADE,
   FOREIGN KEY(neighbourhood_id)       REFERENCES Neighbourhood(neighbourhood_id) ON DELETE CASCADE,
-  FOREIGN KEY(property_type_id)       REFERENCES Property_type(property_type_id),
-  FOREIGN KEY(room_type_id)           REFERENCES Room_type(room_type_id),
-  FOREIGN KEY(bed_type_id)            REFERENCES Bed_type(bed_type_id),
-  FOREIGN KEY(cancellation_policy_id) REFERENCES Cancellation_policy(cancellation_policy_id)
+  FOREIGN KEY(property_type_id)       REFERENCES Property_type(property_type_id) ON DELETE CASCADE,
+  FOREIGN KEY(room_type_id)           REFERENCES Room_type(room_type_id)         ON DELETE CASCADE,
+  FOREIGN KEY(bed_type_id)            REFERENCES Bed_type(bed_type_id)           ON DELETE CASCADE,
+  FOREIGN KEY(cancellation_policy_id) REFERENCES Cancellation_policy(cancellation_policy_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Host (
@@ -90,7 +90,7 @@ CREATE TABLE Host (
 
   ------------keys------------
   PRIMARY KEY(host_id),
-  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id)
+  FOREIGN KEY(neighbourhood_id) REFERENCES Neighbourhood(neighbourhood_id) ON DELETE CASCADE,
 );
 
 CREATE TABLE Neighbourhood (
