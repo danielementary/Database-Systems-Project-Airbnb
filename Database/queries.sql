@@ -1,5 +1,3 @@
-----------------SQL_Queries-------------------
-
 ---------------------01-----------------------
 SELECT AVG(price)
 FROM Listing
@@ -75,6 +73,7 @@ WHERE (L1.listing_id = M1.listing_id)
                                 FROM Amenity A
                                 WHERE A.amenity_name = "Wifi"
                                 OR A.amenity_name = "Pocket wifi");
+
 ---------------------08-----------------------
 SELECT AVG(L1.price) - AVG(L2.price)
 FROM Listing L1,
@@ -96,9 +95,6 @@ AND (L2.listing_id IN (SELECT L.listing_id
                       AND N.city_id = C.city_id
                       AND C.city_name = "Madrid"))
 AND (L2.beds = 8);
-
-
-
 
 ---------------------09-----------------------
 
