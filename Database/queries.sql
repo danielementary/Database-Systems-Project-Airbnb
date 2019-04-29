@@ -97,7 +97,6 @@ AND (L2.listing_id IN (SELECT L.listing_id
 AND (L2.beds = 8);
 
 ---------------------09-----------------------
---TODO
 
 ---------------------10-----------------------
 SELECT L.listing_id, L.listing_name
