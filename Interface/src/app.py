@@ -34,10 +34,9 @@ class App(Tk):
 
         Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label(self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Connect to DB",          command=self.connectDatabase)        .grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Create and Populate DB", command=self.createAndPopulateTables).grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Delete DB",              command=self.deleteDatabase)         .grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)                  .grid(row=2, column=0, sticky=W, padx=5, pady=5)
 
         self.connectDatabase()
 
@@ -133,43 +132,43 @@ class App(Tk):
 
             if (value == "Listing"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-                self.listingNameEntry.grid(row=1, column=1, sticky=W, padx=5, pady=5)
+                self.listingNameEntry               .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
                 Label(self.searchFrame, text="Accommodates (min)").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-                self.accommodatesScale.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+                self.accommodatesScale                            .grid(row=2, column=1, sticky=W, padx=5, pady=5)
                 self.accommodatesScale.set(self.accommodatesMinMax[0])
 
                 Label(self.searchFrame, text="Square Feet (min)").grid(row=3, column=0, sticky=W, padx=5, pady=5)
-                self.squareFeetScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+                self.squareFeetScale                             .grid(row=3, column=1, sticky=W, padx=5, pady=5)
                 self.squareFeetScale.set(self.squareFeetMinMax[0])
 
                 Label(self.searchFrame, text="Price (max)").grid(row=4, column=0, sticky=W, padx=5, pady=5)
-                self.priceScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+                self.priceScale                            .grid(row=4, column=1, sticky=W, padx=5, pady=5)
                 self.priceScale.set(self.priceMinMax[1])
 
                 Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
-                self.isBusinessTravelReadyCheckButton.grid(row=5, column=1, sticky=W, padx=5, pady=5)
+                self.isBusinessTravelReadyCheckButton                 .grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
                 Label(self.searchFrame, text="Review Scores Rating (min)").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-                self.reviewScoreRatingScale.grid(row=6, column=1, sticky=W, padx=5, pady=5)
+                self.reviewScoreRatingScale                               .grid(row=6, column=1, sticky=W, padx=5, pady=5)
                 self.reviewScoreRatingScale.set(self.reviewScoresRatingMinMax[0])
 
                 Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
-                self.propertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+                self.propertyTypeIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
                 Label(self.searchFrame, text="Cancellation Policy").grid(row=8, column=0, sticky=W, padx=5, pady=5)
-                self.cancellationPolicyIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
+                self.cancellationPolicyIdOptionMenu                .grid(row=8, column=1, sticky=W, padx=5, pady=5)
 
             elif (value == "Host"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-                self.hostNameEntry.grid(row=1, column=1, sticky=W, padx=5, pady=5)
+                self.hostNameEntry                  .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
             elif (value == "Neighbourhood"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-                self.NeighbourhoodNameEntry.grid(row=1, column=1, sticky=W, padx=5, pady=5)
+                self.NeighbourhoodNameEntry         .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
                 Label(self.searchFrame, text="City").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-                self.cityIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+                self.cityIdOptionMenu               .grid(row=2, column=1, sticky=W, padx=5, pady=5)
 
     def deleteDatabase(self):
         db.execute_sql(self.databaseConnection, "DROP DATABASE Airbnb;", "Airbnb drop")
@@ -229,7 +228,8 @@ class App(Tk):
                                                         length=160)
 
         self.isBusinessTravelReady = IntVar(self.searchFrame)
-        self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame, variable=self.isBusinessTravelReady)
+        self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame,
+                                                            variable=self.isBusinessTravelReady)
 
         self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
                                                                  to=self.reviewScoresRatingMinMax[1],
@@ -238,11 +238,15 @@ class App(Tk):
 
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
-        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame, self.propertyTypeId, *list(self.propertyTypeIdDict.keys()))
+        self.propertyTypeIdOptionMenu = OptionMenu(self.searchFrame,
+                                                   self.propertyTypeId,
+                                                   *list(self.propertyTypeIdDict.keys()))
 
         self.cancellationPolicyId = StringVar(self.searchFrame)
         self.cancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
-        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame, self.cancellationPolicyId, *list(self.cancellationPolicyIdDict.keys()))
+        self.cancellationPolicyIdOptionMenu = OptionMenu(self.searchFrame,
+                                                         self.cancellationPolicyId,
+                                                         *list(self.cancellationPolicyIdDict.keys()))
 
         #host
         self.hostNameEntry = Entry(self.searchFrame)
@@ -252,7 +256,9 @@ class App(Tk):
 
         self.cityId = StringVar(self.searchFrame)
         self.cityId.set(list(self.cityIdDict.keys())[0])
-        self.cityIdOptionMenu = OptionMenu(self.searchFrame, self.cityId, *list(self.cityIdDict.keys()))
+        self.cityIdOptionMenu = OptionMenu(self.searchFrame,
+                                           self.cityId,
+                                           *list(self.cityIdDict.keys()))
 
         #label and option menu for table selection
         self.initialSearchFrameLabel.grid_forget()
@@ -263,7 +269,9 @@ class App(Tk):
         self.table.set(temp)
         self.previousTable = None
         self.updateSearchFields(temp)
-        self.tableOptionMenu = OptionMenu(self.searchFrame, self.table, *list(st.search_tables), command=self.updateSearchFields)
+        self.tableOptionMenu = OptionMenu(self.searchFrame,
+                                          self.table,
+                                          *list(st.search_tables), command=self.updateSearchFields)
         self.tableOptionMenu.grid(row=0, column=1, padx=5, pady=5)
 
         self.searchButton = Button(self.searchFrame, text="Search", command=self.searchInDatabase)
