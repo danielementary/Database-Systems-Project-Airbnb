@@ -369,7 +369,7 @@ Splitting a bucket does not imply to double the directory. It is only the case i
 * suppose they are $N$ initial buckets
 * many hash functions $h_1, h_2, ...$ where $h_i = h(key) mod(2^i N)$. <br>
 $d_0 :=$ number of bits needed to represent N <br>
-$d_i := d_0 + i$ 
+$d_i := d_0 + i$
 
 * if $h_i$ maps to $M$ buckets, $h_{i+1}$ maps to $2M$ buckets <br>
 
@@ -388,4 +388,60 @@ number of buckets at the beginning of a round = $N_{level} = N * 2^{Level}$
 
 ---------
 ###Lecture 8bis : Sorting
-#####8.1
+#####8.1 Why sort ?
+
+* If a query needs an answer in sorted order
+* First step in *bulk loading* (creation) B+ tree index
+* Sort-merge join algorithm involves sorting
+
+#####8.2 Two-way merge sort
+
+We only need 3 pages in main memory. <br>
+The procedure : <br>
+* pages are read in one at a times
+* the loaded page's records are sorted
+* the sorted page can be written out
+* in the next passes, pairs of runs (sorted pages) are read and merged to produce runs twice as long.
+
+Let the number of pages be $2^k$, then :<br>
+
+|  pass | number of produced runs  | size of a run|
+|---|---|---|
+|  0 | $2^k$  | one page|
+|  1 | $2^{k-1}$ |2 pages |
+|  2  | $2^{k-2}$        |4 pages |
+|   ...  |   ...      | ... |
+|   $k$  |   one   | $2^k$ |
+
+The overall cost for a file of $N$ number of pages :<br>
+* for one pass : read the file, process it, write it out $= 2$ I/Os per page
+* number of passes : $\left\lceil \log_2 N \right\rceil + 1$
+* number of pages processed/pass $= N$
+* total cost $=2N(\left\lceil \log_2 N \right\rceil + 1)$
+
+#####8.3 General external merge sort
+Instead of using 3 buffer pages, use $B$ buffer pages.
+* pass 0 : <br>
+first sort by groups of $B$ pages. Each produced run is of size $B$, and they are $\left\lceil N/B \right\rceil$ different runs.
+![sort](images/external_merge_pass_0.png "sort")
+
+* pass $1,2,...$ : <br>
+merge the $B-1$ runs
+![sort](images/external_merge_pass_i.png "sort")
+Cost/pass $=2N$  <br>
+Number of passes $= 1 + \left\lceil \log_{B-1}  \left\lceil N/B\right\rceil \right\rceil$
+* **total cost** :
+$$ 2N \cdot (1 + \left\lceil \log_{B-1}  \left\lceil N/B\right\rceil \right\rceil)
+$$
+
+* *example* :<br>
+$B = 5$, $N=108$
+
+|  pass | #sorted runs  | pages/run (except last run) | pages/last_run  |
+|---|---|---|---|
+| 0 | $108/5$ = 22  | 5   |only 3 pages |
+| 1 |  $22/4$ = 6 |  $5 \cdot 4 = 20$  |  $22\%4 = 2$ runs left to merge (of size 5 and 3)  $5 + 3 = 8$ pages |
+| 2 | $6/4$ = 2 | $5 \cdot 4^2 = 80$ | $6\%4 = 2$ runs left to merge (of size 20 and 8)  $20 + 8 = 28$ pages |
+| 3 | sorted file of 108 pages  |  |
+
+*Notation abuse :* $x/y =\left\lceil x/y \right\rceil$
