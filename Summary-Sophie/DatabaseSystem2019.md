@@ -445,3 +445,30 @@ $B = 5$, $N=108$
 | 3 | sorted file of 108 pages  |  |
 
 *Notation abuse :* $x/y =\left\lceil x/y \right\rceil$
+
+
+#####8.4 Using B+ trees for sorting
+* **Clustered**: <br>
+Thus, the strategy of using a clustered B+ tree index to retrieve the records in sorted order is a good one and should be used whenever such an index is available Suppose we use Alt. 2 (the data entries are : *key,rid*)<br>
+The **cost** of using the clustered B+ tree index to retrieve data records in search key order is the cost to traverse the tree from the *root* to the *left-most leaf* (usually less than four I/Os) plus the cost to retrieving the following
+
+| Alternative  |  Method   | Cost    |     
+|----|----|----|
+| common for all alternatives  |  traverse the tree from the *root* to the *left-most leaf*   |  at most four I/Os in general  |
+| 1.  | retrieve simply all the leaf pages (leaf pages contain the actual data records)  | if they are a total of $N$ pages, the retrieval of those $N$ pages is the only cost   |
+| 2.  | retrieve the pages that contain the sequence set pointing to the actual data, then retrieve the pages containing the actual data records    |  add the cost of retrieving the sequence pages + $N$  |
+|   |     |    |      
+
+
+* **Unclustered**: <br>
+In this case each rid in a leaf page could point to a different data page.
+Should this happen, the cost (in disk I/Os) of retrieving all data records could equal
+the number of data records.
+
+|Alternative   |  Method   |    |   
+|---|----|----|
+| common for all alternatives  |  worst-case cost : retrieve all data records separately   |  #I/Os  = #data records   |    
+| 1.  |  same as clustered  |//TODO    |
+| 2.  |  same as clustered   |  same as clustered + ...  |    
+
+*Note* : let $p$ be average records per data page, and $N$ number of data pages
