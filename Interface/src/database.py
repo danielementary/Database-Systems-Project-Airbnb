@@ -111,7 +111,7 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
         portion = 0
         values = []
         for row in reader:
-            if (portion % 150000 == 0):
+            if (portion % 250000 == 0):
                 cursor.executemany(sql, values)
                 values = []
             temp = tuple([None if x == "NULL" else 0 if x == "0" else 1 if x == "1" else x for x in row])
