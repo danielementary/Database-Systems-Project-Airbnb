@@ -1,6 +1,9 @@
 # DBS-Project
 
 ## Dependencies
+### Git LFS (to clone repository)
+https://git-lfs.github.com/
+
 ### MySQL
 #### Configuration
 Install mysql-server : **Do not** choose `strong password encryption`
@@ -25,7 +28,8 @@ Install mysql-server : **Do not** choose `strong password encryption`
 - Stop : `sudo launchctl unload -F /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist`
 - Status : `sudo launchctl list | grep mysql`
 
-### Python MySQL (with Python 3.7, `python3` may need to be replaced by `python` or `python37` depending on your installations)
+### Python MySQL With Python 3.7
+`python3` may need to be replaced by `python` or `python37` depending on your installations.
 #### Installation
 `python3 -m pip install mysql-connector`
 
