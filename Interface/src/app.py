@@ -46,7 +46,7 @@ class App(Tk):
 
             if self.databaseConnection is not None:
                 self.statusLabel["text"] = "Connected to {} DB".format(DB_NAME)
-                if (not db.has_tables(self.databaseConnection, DB_NAME)):
+                if (not db.has_tables(self.databaseConnection, len(create_statements_ordered), DB_NAME)):
                     self.createAndPopulateTables()
                 else:
                     self.tablesLabel["text"] = "Created"
