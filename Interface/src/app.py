@@ -25,18 +25,7 @@ class App(Tk):
 
         self.drawTop()
         self.drawTabs()
-
-        self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
-        self.initialSearchFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
-
-        self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
-        self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
-
-        Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-
-        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)                  .grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.drawWidgets()
 
         self.connectDatabase()
 
@@ -46,7 +35,7 @@ class App(Tk):
 
             if self.databaseConnection is not None:
                 self.statusLabel["text"] = "Connected to {} DB".format(DB_NAME)
-                if (not db.has_tables(self.databaseConnection, len(create_statements_ordered), DB_NAME) and
+                if (not db.has_tables(self.databaseConnection, len(create_statements_ordered), DB_NAME) or
                     not db.every_table_has_entries(self.databaseConnection, DB_NAME)):
                     try:
                         self.createAndPopulateTables()
@@ -173,9 +162,14 @@ class App(Tk):
                 self.cityIdOptionMenu               .grid(row=2, column=1, sticky=W, padx=5, pady=5)
 
     def deleteDatabase(self):
+        for w in self.winfo_children():
+            w.destroy()
         db.execute_sql(self.databaseConnection, "DROP DATABASE Airbnb;", "Airbnb drop")
         db.disconnect(self.databaseConnection)
         self.databaseConnection = None
+        self.drawTop()
+        self.drawTabs()
+        self.drawWidgets()
 
     def drawTop(self):
         self.databaseSettingsFrame = ttk.Frame(self)
@@ -210,6 +204,19 @@ class App(Tk):
         self.tabControl.add(self.settingsFrame,      text="Settings")
 
         self.tabControl.pack(fill=BOTH, expand=1)
+
+    def drawWidgets(self):
+        self.initialSearchFrameLabel = Label(self.searchFrame, text="Forms are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
+        self.initialSearchFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
+        self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+
+        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)                  .grid(row=2, column=0, sticky=W, padx=5, pady=5)
 
     def drawForms(self):
         self.listingNameEntry  = Entry(self.searchFrame)
