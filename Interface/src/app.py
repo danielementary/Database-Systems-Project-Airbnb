@@ -11,7 +11,7 @@ from database.create_tables import create_statements_ordered
 from database.insert_tables import insert_tables_names_ordered
 
 DB_NAME = "Airbnb"
-DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../Dataset/Final/")
+DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../Datasets/Final/")
 
 class App(Tk):
     def __init__(self):
