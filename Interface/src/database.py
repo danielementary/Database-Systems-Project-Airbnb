@@ -9,6 +9,7 @@ def connect_database(database_name):
             database=database_name
         )
         print("Connected to {} database".format(database_name))
+        connection.autocommit = True
         return connection
     except:
         print("Connection to {} database failed".format(database_name))
@@ -91,11 +92,10 @@ def has_tables(db_connection, number_of_tables, database_name):
 
 def every_table_has_entries(db_connection, database_name):
     cursor = db_connection.cursor()
-    cursor.execute("SELECT TABLE_ROWS FROM information_schema.tables WHERE table_schema = '{}';".format(database_name))
+    cursor.execute("SELECT TABLE_NAME, SUM(TABLE_ROWS) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{}' GROUP BY TABLE_NAME;".format(database_name))
     result = True
     for x in cursor:
-        if (x[0] <= 0):
-            print(x[0])
+        if (x[1] <= 0):
             result = False
     cursor.close()
     return result
@@ -118,7 +118,6 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
             values.append(temp)
             portion += 1
         cursor.executemany(sql, values)
-        db_connection.commit()
         file.close()
         print("Table {} has been successfully populated".format(table_name))
     cursor.close()
