@@ -396,6 +396,9 @@ class Results(Toplevel):
         topFrame = Frame(self)
         topFrame.pack(padx=10, pady=10)
 
+        bottomFrame = Frame(self, bg="white")
+        bottomFrame.pack(side=BOTTOM, expand=1, fill=BOTH, padx=10, pady=10)
+
         Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
         Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
 
@@ -405,15 +408,16 @@ class Results(Toplevel):
         if (queryResults is not None):
             resultLength = len(queryResults)
             if (resultLength > 0):
-                resultsScrolledtext = scrolledtext.ScrolledText(self)
-                resultsScrolledtext.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+                scrollbarY = Scrollbar(bottomFrame)
+                scrollbarY.pack(side=LEFT, fill=Y)
+
+                listbox = Listbox(bottomFrame, yscrollcommand=scrollbarY.set)
+                listbox.pack(side=LEFT, expand=1, fill=BOTH)
+
+                scrollbarY.config(command=listbox.yview)
 
                 for r in queryResults:
-                    for c in r:
-                        resultsScrolledtext.insert(END, c)
-                        resultsScrolledtext.insert(END, "\t\t\t\t")
-                    resultsScrolledtext.insert(END, "\n")
-                resultsScrolledtext.config(state=DISABLED)
+                    listbox.insert(END, rString)
 
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
             else:
