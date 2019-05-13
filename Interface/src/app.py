@@ -408,22 +408,30 @@ class Results(Toplevel):
         if (queryResults is not None):
             resultLength = len(queryResults)
             if (resultLength > 0):
-                scrollbarY = Scrollbar(bottomFrame)
-                scrollbarY.pack(side=LEFT, fill=Y)
+                resultsScrollbarY = Scrollbar(bottomFrame)
+                resultsScrollbarY.pack(side=LEFT, fill=Y)
 
-                listbox = Listbox(bottomFrame, yscrollcommand=scrollbarY.set)
-                listbox.pack(side=LEFT, expand=1, fill=BOTH)
+                resultsListbox = Listbox(bottomFrame, yscrollcommand=resultsScrollbarY.set)
+                resultsListbox.pack(side=LEFT, expand=1, fill=BOTH)
 
-                scrollbarY.config(command=listbox.yview)
+                resultsScrollbarY.config(command=resultsListbox.yview)
+
+                resultsListbox.bind("<<ListboxSelect>>", self.onResultSelect)
 
                 for r in queryResults:
-                    listbox.insert(END, rString)
+                    resultsListbox.insert(END, r)
 
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
             else:
                 Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
         else:
             Label(self, text="This query cannot be executed.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+
+    def onResultSelect(self, event):
+        widget = event.widget
+        index = int(widget.curselection()[0])
+        value = widget.get(index)
+        print(index, value, sep="\n")
 
     def closeResults(self):
         self.master.searchButton["state"]  = NORMAL
