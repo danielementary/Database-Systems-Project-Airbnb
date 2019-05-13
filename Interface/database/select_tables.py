@@ -95,7 +95,7 @@ WHERE H.host_id = L.host_id
 """
 
 predefned_query_4 = """
-SELECT COUNT(L.listing_id)
+SELECT COUNT(L1.listing_id)
 FROM Listing L1,
      Listing L2,
      Host H1,

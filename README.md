@@ -1,4 +1,4 @@
-# DBS-Project
+# Database-Systems-Project-Airbnb
 
 ## Dependencies
 ### Git LFS (to clone repository)
