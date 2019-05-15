@@ -11,7 +11,7 @@ WHERE L.listing_id = M.listing_id
       AND M.amenity_id IN (SELECT A.amenity_id
                           FROM Amenity A
                           WHERE A.amenity_name = "TV"
-                          OR "Smart TV");
+                          OR A.amenity_name = "Smart TV");
 
 ---------------------03-----------------------
 SELECT DISTINCT H.host_name
