@@ -4,14 +4,27 @@ FROM Listing
 WHERE beds = 8;
 
 ---------------------02-----------------------
-SELECT AVG(L.price)
-FROM Listing L,
-     Listing_amenity_map M
-WHERE L.listing_id = M.listing_id
-      AND M.amenity_id IN (SELECT A.amenity_id
-                          FROM Amenity A
-                          WHERE A.amenity_name = "TV"
-                          OR A.amenity_name = "Smart TV");
+--with union :  104.67844896768075
+--without union :
+SELECT
+  AVG(L.price)
+FROM
+  Listing L,
+  Listing_amenity_map M
+WHERE
+  L.listing_id = M.listing_id
+  AND M.amenity_id IN
+    (
+      SELECT DISTINCT
+        amenity_id
+      FROM
+        Amenity
+      WHERE
+        amenity_name = "TV"
+      OR
+        amenity_name = "Smart TV"
+    );
+  
 
 ---------------------03-----------------------
 SELECT DISTINCT H.host_name
@@ -58,6 +71,25 @@ GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 
 ---------------------07-----------------------
+WITH amenity_id AS
+(
+  SELECT A.amenity_id
+  FROM Amenity A
+  WHERE A.amenity_name = "Wifi"
+  OR A.amenity_name = "Pocket wifi")
+)
+
+
+SELECT AVG(L.price)
+FROM Listing L,
+     Listing_amenity_map M,
+     Amenity A
+WHERE L.listing_id = M.listing_id
+      AND M.amenity_id = A.amenity_id
+      AND (A.amenity_name = "Wifi")
+      UNION
+      OR A.amenity_name = "Pocket wifi");
+
 
 
 SELECT AVG(L1.price) - AVG(L2.price)
