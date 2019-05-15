@@ -53,11 +53,13 @@ WHERE D.day_id = C.calendar_day_id
 SELECT DISTINCT H.host_id, H.host_name
 FROM Host H,
      Listing L
-WHERE H.listing_id = L.listing_id
+WHERE H.host_id = L.host_id
 GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 
 ---------------------07-----------------------
+
+
 SELECT AVG(L1.price) - AVG(L2.price)
 FROM Listing L1,
      Listing L2,
