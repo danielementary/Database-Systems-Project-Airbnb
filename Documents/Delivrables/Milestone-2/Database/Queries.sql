@@ -8,7 +8,7 @@ SELECT AVG(L.price)
 FROM Listing L,
      Listing_amenity_map M
 WHERE L.listing_id = M.listing_id
-      AND M.amenity_id = (SELECT A.amenity_id
+      AND M.amenity_id IN (SELECT A.amenity_id
                           FROM Amenity A
                           WHERE A.amenity_name = "TV"
                           OR "Smart TV");
