@@ -52,4 +52,28 @@ WHERE subtable.rownum IN (
 		SELECT *
 		FROM rownumbers
 		)
-ORDER BY subtable.review_scores_rating DESC Limit 5
+ORDER BY subtable.review_scores_rating DESC LIMIT 5;
+
+-- Query 3): find hosts with higher number of listings
+WITH hosts_with_number AS (
+		SELECT h.host_id,
+			h.host_name,
+			sum(l.listing_id) AS number
+		FROM Listing l,
+			Host h
+		WHERE h.host_id = l.host_id
+		GROUP BY h.host_id
+		ORDER BY number DESC
+		),
+	highest_number AS (
+		SELECT number
+		FROM hosts_with_number limit 1
+		)
+
+SELECT host_id,
+	host_name
+FROM hosts_with_number
+WHERE number = (
+		SELECT *
+		FROM highest_number
+  );
