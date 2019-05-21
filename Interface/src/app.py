@@ -303,8 +303,8 @@ class App(Tk):
     def getAccommodatesMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_accomodates_min_max,
-                          "Select Listing accommodates min and max")[0]
+                                   st.select_listing_accomodates_min_max,
+                                   "Select Listing accommodates min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -313,8 +313,8 @@ class App(Tk):
     def getSquareFeetMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_sqare_feet_min_max,
-                          "Select Listing square_feet min and max")[0]
+                                   st.select_listing_sqare_feet_min_max,
+                                   "Select Listing square_feet min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -323,8 +323,8 @@ class App(Tk):
     def getPriceMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_price_min_max,
-                          "Select Listing price min and max")[0]
+                                   st.select_listing_price_min_max,
+                                   "Select Listing price min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -343,8 +343,8 @@ class App(Tk):
     def getPropertyTypeIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_property_type_names_ids_statements,
-                          "Select Property_type names and ids"))
+                                        st.select_property_type_names_ids_statements,
+                                        "Select Property_type names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -353,8 +353,8 @@ class App(Tk):
     def getCancellationPolicyIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_cancellation_policy_names_ids_statements,
-                          "Select Cancellation_policy names and ids"))
+                                        st.select_cancellation_policy_names_ids_statements,
+                                        "Select Cancellation_policy names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -363,8 +363,8 @@ class App(Tk):
     def getCityIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_city_names_ids_statements,
-                          "Select City names and ids"))
+                                        st.select_city_names_ids_statements,
+                                        "Select City names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -373,9 +373,8 @@ class App(Tk):
     def getRoomTypeIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-            st.select_room_type_names_ids_statements,
-            "Select Room_type names and ids"))
-            print(result)
+                                        st.select_room_type_names_ids_statements,
+                                        "Select Room_type names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -384,8 +383,8 @@ class App(Tk):
     def getBedTypeIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_bed_type_names_ids_statements,
-                          "Select Bed_type names and ids"))
+                                        st.select_bed_type_names_ids_statements,
+                                        "Select Bed_type names and ids"))
         except:
             result = {"None": 0}
         finally:
