@@ -297,7 +297,8 @@ class App(Tk):
         self.propertyTypeIdDict       = self.getPropertyTypeIdDict()
         self.cancellationPolicyIdDict = self.getCancellationPolicyIdDict()
         self.cityIdDict               = self.getCityIdDict()
-        self.BedTypeIdDict            = self.getBedTypeIdDict()
+        self.roomTypeIdDict           = self.getRoomTypeIdDict()
+        self.bedTypeIdDict            = self.getBedTypeIdDict()
 
     def getAccommodatesMinMax(self):
         try:
@@ -369,6 +370,17 @@ class App(Tk):
         finally:
             return result
 
+    def getRoomTypeIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+            st.select_room_type_names_ids_statements,
+            "Select Room_type names and ids"))
+            print(result)
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
     def getBedTypeIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
@@ -378,7 +390,6 @@ class App(Tk):
             result = {"None": 0}
         finally:
             return result
-
 
     def drawPredefinedQueries(self):
         self.initialQueriesFrameLabel.grid_forget()
@@ -425,20 +436,20 @@ class App(Tk):
                                                                 *list(self.propertyTypeIdDict.keys()))
         self.insertListingPropertyTypeIdOptionMenu.grid(row=4, column=1, sticky=W, padx=5, pady=5)
 
-        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
-        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
-        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
-        #                                                         self.insertListingPropertyTypeId,
-        #                                                         *list(self.propertyTypeIdDict.keys()))
-        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Room Type").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingRoomTypeId = StringVar(self.insertFrame)
+        self.insertListingRoomTypeId.set(list(self.roomTypeIdDict.keys())[0])
+        self.insertListingRoomTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                            self.insertListingRoomTypeId,
+                                                            *list(self.roomTypeIdDict.keys()))
+        self.insertListingRoomTypeIdOptionMenu.grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
         Label(self.insertFrame, text="Bed Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
         self.insertListingBedTypeId = StringVar(self.insertFrame)
-        self.insertListingBedTypeId.set(list(self.BedTypeIdDict.keys())[0])
+        self.insertListingBedTypeId.set(list(self.bedTypeIdDict.keys())[0])
         self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                            self.insertListingBedTypeId,
-                                                           *list(self.BedTypeIdDict.keys()))
+                                                           *list(self.bedTypeIdDict.keys()))
         self.insertListingBedTypeIdOptionMenu.grid(row=6, column=1, sticky=W, padx=5, pady=5)
 
         Label(self.insertFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
