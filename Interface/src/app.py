@@ -48,6 +48,7 @@ class App(Tk):
                     self.updateDatabaseVariables()
                     self.drawForms()
                     self.drawPredefinedQueries()
+                    self.drawInsert()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
 
@@ -193,15 +194,17 @@ class App(Tk):
     def drawTabs(self):
         self.tabControl = ttk.Notebook(self)
 
-        self.searchFrame        = ttk.Frame(self.tabControl)
-        self.queriesFrame       = ttk.Frame(self.tabControl)
-        self.modificationsFrame = ttk.Frame(self.tabControl)
-        self.settingsFrame      = ttk.Frame(self.tabControl)
+        self.searchFrame   = ttk.Frame(self.tabControl)
+        self.queriesFrame  = ttk.Frame(self.tabControl)
+        self.insertFrame   = ttk.Frame(self.tabControl)
+        self.deleteFrame   = ttk.Frame(self.tabControl)
+        self.settingsFrame = ttk.Frame(self.tabControl)
 
-        self.tabControl.add(self.searchFrame,        text="Search")
-        self.tabControl.add(self.queriesFrame,       text="Predefined Queries")
-        self.tabControl.add(self.modificationsFrame, text="Insert/Delete")
-        self.tabControl.add(self.settingsFrame,      text="Settings")
+        self.tabControl.add(self.searchFrame,   text="Search")
+        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
+        self.tabControl.add(self.insertFrame,   text="Insert A Listing")
+        self.tabControl.add(self.deleteFrame,   text="Delete")
+        self.tabControl.add(self.settingsFrame, text="Settings")
 
         self.tabControl.pack(fill=BOTH, expand=1)
 
@@ -212,7 +215,7 @@ class App(Tk):
         self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
         self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        Label(self.deleteFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
         Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
@@ -294,6 +297,7 @@ class App(Tk):
         self.propertyTypeIdDict       = self.getPropertyTypeIdDict()
         self.cancellationPolicyIdDict = self.getCancellationPolicyIdDict()
         self.cityIdDict               = self.getCityIdDict()
+        self.BedTypeIdDict            = self.getBedTypeIdDict()
 
     def getAccommodatesMinMax(self):
         try:
@@ -365,6 +369,17 @@ class App(Tk):
         finally:
             return result
 
+    def getBedTypeIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                          st.select_bed_type_names_ids_statements,
+                          "Select Bed_type names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
+
     def drawPredefinedQueries(self):
         self.initialQueriesFrameLabel.grid_forget()
         Label(self.queriesFrame, text="Query").grid(row=0, column=0, sticky=W, padx=5, pady=5)
@@ -376,6 +391,63 @@ class App(Tk):
 
         self.executeButton = Button(self.queriesFrame, text="Execute", command=self.executePredefinedQuery)
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
+
+    def drawInsert(self):
+        self.insertListingName = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Name").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingName              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
+
+        self.insertListingSummary = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
+
+        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
+        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
+        #                                                         self.insertListingPropertyTypeId,
+        #                                                         *list(self.propertyTypeIdDict.keys()))
+        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+
+        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
+        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
+        #                                                         self.insertListingPropertyTypeId,
+        #                                                         *list(self.propertyTypeIdDict.keys()))
+        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Property Type").grid(row=4, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingPropertyTypeId = StringVar(self.insertFrame)
+        self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                                self.insertListingPropertyTypeId,
+                                                                *list(self.propertyTypeIdDict.keys()))
+        self.insertListingPropertyTypeIdOptionMenu.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+
+        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
+        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
+        #                                                         self.insertListingPropertyTypeId,
+        #                                                         *list(self.propertyTypeIdDict.keys()))
+        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Bed Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingBedTypeId = StringVar(self.insertFrame)
+        self.insertListingBedTypeId.set(list(self.BedTypeIdDict.keys())[0])
+        self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                           self.insertListingBedTypeId,
+                                                           *list(self.BedTypeIdDict.keys()))
+        self.insertListingBedTypeIdOptionMenu.grid(row=6, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingCancellationPolicyId = StringVar(self.insertFrame)
+        self.insertListingCancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
+        self.insertListingCancellationPolicyIdOptionMenu = OptionMenu(self.insertFrame,
+                                                                      self.insertListingCancellationPolicyId,
+                                                                      *list(self.cancellationPolicyIdDict.keys()))
+        self.insertListingCancellationPolicyIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
     def showResults(self, queryResults, sql, values):
         Results(self, queryResults, sql, values).focus()
