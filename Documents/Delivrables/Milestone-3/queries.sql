@@ -148,3 +148,35 @@ WHERE l1.listing_id IN (
 			) listings_per_accomodates
 		)
 ORDER BY a.accom
+
+
+-- Query 6): Busiest Listing per host
+WITH listings_with_number_reviews
+AS (
+	SELECT l.listing_id,
+		l.host_id,
+		count(DISTINCT (r.review_id)) AS n_reviews
+	FROM Listing l,
+		Review r
+	WHERE l.listing_id = r.listing_id
+	GROUP BY l.listing_id
+	ORDER BY l.host_id,
+		n_reviews
+	)
+SELECT l.listing_id,
+	l.n_reviews,
+	h.host_id
+FROM listings_with_number_reviews l,
+	(
+		SELECT DISTINCT (host_id) AS host_id
+		FROM Host
+		) h
+WHERE l.listing_id IN (
+		SELECT *
+		FROM (
+			SELECT listing_id
+			FROM listings_with_number_reviews l2
+			WHERE l2.host_id = h.host_id LIMIT 3
+			) z
+		)
+ORDER BY h.host_id, l.n_reviews DESC
