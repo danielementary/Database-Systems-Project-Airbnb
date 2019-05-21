@@ -36,7 +36,8 @@ FROM Listing L1,
      Listing L2,
      Host H1,
      Host H2
-WHERE L1.host_id = H1.host_id
+WHERE L1.listing_id = L2.listing_id
+      AND L1.host_id = H1.host_id
       AND L2.host_id = H2.host_id
       AND H1.host_id <> H2.host_id
       AND H1.host_name = H2.host_name;
