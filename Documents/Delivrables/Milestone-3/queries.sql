@@ -180,3 +180,39 @@ WHERE l.listing_id IN (
 			) z
 		)
 ORDER BY h.host_id, l.n_reviews DESC
+
+
+-- Query 7): Three most used amenities per Neighbourhood in Private Room
+WITH amenity_per_neigh_w_listings_n
+AS (
+	SELECT a.amenity_id,
+		a.amenity_name,
+		l.neighbourhood_id,
+		COUNT(DISTINCT (l.listing_id)) AS listings_number
+	FROM Listing l,
+		Room_type rt,
+		Amenity a,
+		Listing_amenity_map lam
+	WHERE l.room_type_id = rt.room_type_id
+		AND rt.room_type_name = 'Private room'
+		AND a.amenity_id = lam.amenity_id
+		AND lam.listing_id = l.listing_id
+	GROUP BY a.amenity_id,
+		l.neighbourhood_id
+	ORDER BY l.neighbourhood_id,
+		listings_number DESC
+	)
+SELECT ame.amenity_id,
+	apn.neighbourhood_id
+FROM Amenity ame,
+	amenity_per_neigh_w_listings_n apn
+WHERE ame.amenity_id = apn.amenity_id
+	AND ame.amenity_id IN (
+		SELECT *
+		FROM (
+			SELECT amenity_id
+			FROM amenity_per_neigh_w_listings_n apn2
+			WHERE apn.neighbourhood_id = apn2.neighbourhood_id LIMIT 3
+			) z
+		)
+ORDER BY apn.neighbourhood_id
