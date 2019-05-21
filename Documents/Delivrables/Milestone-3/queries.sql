@@ -183,6 +183,7 @@ GROUP BY h.host_id
 
 
 
+
 -- Query 7): Three most used amenities per Neighbourhood in Private Room
 WITH amenity_per_neigh_w_listings_n
 AS (
