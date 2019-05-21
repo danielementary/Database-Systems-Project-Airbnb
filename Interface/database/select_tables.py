@@ -171,16 +171,27 @@ AND (L2.beds = 8);
 """
 
 predefned_query_9 = """
-SELECT * FROM City;
+SELECT H.host_id, H.host_name
+FROM  Host H,
+      Listing L,
+      Neighbourhood N,
+      City T,
+      Country C
+WHERE H.host_id = L.host_id
+AND   N.city_id = T.city_id
+AND   T.country_id = C.country_id
+AND   C.country_name = "Spain"
+GROUP BY L.listing_id
+ORDER BY COUNT(*) DESC LIMIT 10;
 """
 
 predefned_query_10 = """
 SELECT L.listing_id, L.listing_name
-FROM Listing L
-WHERE L.review_score_rating IN (SELECT TOP 10 review_score_rating
-                               FROM Listing
-                               ORDER BY review_score_rating DESC
-                              );
+FROM Listing L, Neighbourhood N, City C
+WHERE L.neighbourhood_id = N.neighbourhood_id
+AND   N.city_id = C.city_id
+AND   C.city_name = "Barcelona"
+ORDER BY L.review_scores_rating DESC LIMIT 10;
 """
 
 predefined_queries = {"Predefined Query 1"  : predefned_query_1,

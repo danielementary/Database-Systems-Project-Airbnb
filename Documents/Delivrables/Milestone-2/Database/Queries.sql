@@ -4,27 +4,16 @@ FROM Listing
 WHERE beds = 8;
 
 ---------------------02-----------------------
---with union :  104.67844896768075
---without union :
-SELECT
-  AVG(L.price)
-FROM
-  Listing L,
-  Listing_amenity_map M
-WHERE
-  L.listing_id = M.listing_id
-  AND M.amenity_id IN
-    (
-      SELECT DISTINCT
-        amenity_id
-      FROM
-        Amenity
-      WHERE
-        amenity_name = "TV"
-      OR
-        amenity_name = "Smart TV"
-    );
-  
+--answer :  104.67844896768075
+
+SELECT AVG(L.price)
+FROM Listing L,
+     Listing_amenity_map M
+WHERE L.listing_id = M.listing_id
+AND M.amenity_id IN ( SELECT DISTINCT amenity_id
+                      FROM Amenity
+                      WHERE amenity_name = "TV"
+                      OR amenity_name = "Smart TV");
 
 ---------------------03-----------------------
 SELECT DISTINCT H.host_name
@@ -40,6 +29,8 @@ WHERE H.host_id = L.host_id
       AND D.day_date < "2019-10-01";
 
 ---------------------04-----------------------
+--to check this one
+--answer : 1930788
 SELECT COUNT(L1.listing_id)
 FROM Listing L1,
      Listing L2,
@@ -71,26 +62,8 @@ GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 
 ---------------------07-----------------------
-WITH amenity_id AS
-(
-  SELECT A.amenity_id
-  FROM Amenity A
-  WHERE A.amenity_name = "Wifi"
-  OR A.amenity_name = "Pocket wifi")
-)
-
-
-SELECT AVG(L.price)
-FROM Listing L,
-     Listing_amenity_map M,
-     Amenity A
-WHERE L.listing_id = M.listing_id
-      AND M.amenity_id = A.amenity_id
-      AND (A.amenity_name = "Wifi")
-      UNION
-      OR A.amenity_name = "Pocket wifi");
-
-
+--c'est faux
+--with wifi : 85.73360122916912
 
 SELECT AVG(L1.price) - AVG(L2.price)
 FROM Listing L1,
@@ -131,12 +104,24 @@ AND (L2.listing_id IN (SELECT L.listing_id
 AND (L2.beds = 8);
 
 ---------------------09-----------------------
---TODO
+SELECT H.host_id, H.host_name
+FROM  Host H,
+      Listing L,
+      Neighbourhood N,
+      City T,
+      Country C
+WHERE H.host_id = L.host_id
+AND   N.city_id = T.city_id
+AND   T.country_id = C.country_id
+AND   C.country_name = "Spain"
+GROUP BY L.listing_id
+ORDER BY COUNT(*) DESC LIMIT 10;
+
 
 ---------------------10-----------------------
 SELECT L.listing_id, L.listing_name
-FROM Listing L
-WHERE L.review_score_rating IN (SELECT TOP 10 review_score_rating
-                                FROM Listing
-                                ORDER BY review_score_rating DESC
-                               );
+FROM Listing L, Neighbourhood N, City C
+WHERE L.neighbourhood_id = N.neighbourhood_id
+AND   N.city_id = C.city_id
+AND   C.city_name = "Barcelona"
+ORDER BY L.review_scores_rating DESC LIMIT 10;
