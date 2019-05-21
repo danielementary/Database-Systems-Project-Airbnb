@@ -418,14 +418,26 @@ class Results(Toplevel):
 
                 resultsListbox.bind("<<ListboxSelect>>", self.onResultSelect)
 
+                self.sizes = [len(str(e)) for e in queryResults[0]]
                 for r in queryResults:
-                    resultsListbox.insert(END, r)
+                    self.sizes = self.maxSizes(self.sizes, [len(str(e)) for e in r])
 
+                for r in queryResults:
+                    temp = ""
+                    c    = 0
+                    for e in r:
+                        temp += "{0:<{1}}".format(e, self.sizes[c]+5)
+                        c    += 1
+                    resultsListbox.insert(END, temp)
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
             else:
                 Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
         else:
             Label(self, text="This query cannot be executed.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+
+    def maxSizes(self, list1, list2):
+        lists = zip(list1, list2)
+        return [max(e[0], e[1]) for e in lists]
 
     def onResultSelect(self, event):
         widget = event.widget
