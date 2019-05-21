@@ -163,9 +163,9 @@ AS (
 	ORDER BY l.host_id,
 		n_reviews
 	)
-SELECT l.listing_id,
-	l.n_reviews,
-	h.host_id
+SELECT h.host_id,
+	GROUP_CONCAT(l.listing_id SEPARATOR ', '),
+	GROUP_CONCAT(l.n_reviews SEPARATOR ', ')
 FROM listings_with_number_reviews l,
 	(
 		SELECT DISTINCT (host_id) AS host_id
@@ -179,7 +179,8 @@ WHERE l.listing_id IN (
 			WHERE l2.host_id = h.host_id LIMIT 3
 			) z
 		)
-ORDER BY h.host_id, l.n_reviews DESC
+GROUP BY h.host_id
+
 
 
 -- Query 7): Three most used amenities per Neighbourhood in Private Room
@@ -188,22 +189,28 @@ AS (
 	SELECT a.amenity_id,
 		a.amenity_name,
 		l.neighbourhood_id,
+		n.neighbourhood_name,
 		COUNT(DISTINCT (l.listing_id)) AS listings_number
 	FROM Listing l,
 		Room_type rt,
 		Amenity a,
-		Listing_amenity_map lam
+		Listing_amenity_map lam,
+		Neighbourhood n,
+		City c
 	WHERE l.room_type_id = rt.room_type_id
 		AND rt.room_type_name = 'Private room'
 		AND a.amenity_id = lam.amenity_id
 		AND lam.listing_id = l.listing_id
+		AND l.neighbourhood_id = n.neighbourhood_id
+		AND n.city_id = c.city_id
+		AND c.city_name = 'Berlin'
 	GROUP BY a.amenity_id,
 		l.neighbourhood_id
 	ORDER BY l.neighbourhood_id,
 		listings_number DESC
 	)
-SELECT ame.amenity_id,
-	apn.neighbourhood_id
+SELECT apn.neighbourhood_name,
+	GROUP_CONCAT(ame.amenity_name SEPARATOR ', ')
 FROM Amenity ame,
 	amenity_per_neigh_w_listings_n apn
 WHERE ame.amenity_id = apn.amenity_id
@@ -215,4 +222,4 @@ WHERE ame.amenity_id = apn.amenity_id
 			WHERE apn.neighbourhood_id = apn2.neighbourhood_id LIMIT 3
 			) z
 		)
-ORDER BY apn.neighbourhood_id
+GROUP BY apn.neighbourhood_id
