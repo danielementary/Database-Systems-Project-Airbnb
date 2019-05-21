@@ -117,7 +117,8 @@ WITH listings_with_facilities
 AS (
 	SELECT l.listing_id,
 		count(a.amenity_id) AS n_amenities,
-		l.review_scores_rating, l.accommodates
+		l.review_scores_rating,
+		l.accommodates
 	FROM Listing l,
 		Amenity a,
 		Listing_amenity_map lam
@@ -126,8 +127,24 @@ AS (
 		AND a.amenity_name IN ('TV', 'Wifi', 'Internet', 'Free street parking')
 	GROUP BY l.listing_id
 	HAVING n_amenities >= 2
+	),
+accommodates
+AS (
+	SELECT DISTINCT (l.accommodates) AS accom
+	FROM Listing l
 	)
-SELECT l.listing_id,
-	l.review_scores_value
-FROM listings_with_facilities l
-WHERE
+SELECT l1.listing_id,
+	l1.review_scores_value,
+	a.accom
+FROM Listing l1,
+	accommodates a
+WHERE l1.listing_id IN (
+		SELECT *
+		FROM (
+			SELECT listing_id
+			FROM listings_with_facilities lwf
+			WHERE lwf.accommodates = accom
+			ORDER BY lwf.review_scores_rating DESC LIMIT 5
+			) listings_per_accomodates
+		)
+ORDER BY a.accom
