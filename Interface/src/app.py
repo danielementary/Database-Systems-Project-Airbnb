@@ -451,6 +451,10 @@ class App(Tk):
                                                                       *list(self.cancellationPolicyIdDict.keys()))
         self.insertListingCancellationPolicyIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
+
+        self.insertButton = Button(self.insertFrame, text="Insert")
+        self.insertButton.grid(row=0, column=3, padx=5, pady=5)
+
     def showResults(self, queryResults, sql, values):
         Results(self, queryResults, sql, values).focus()
 
@@ -500,7 +504,7 @@ class Results(Toplevel):
                     temp = ""
                     c    = 0
                     for e in r:
-                        temp += "{0:<{1}}".format(e, self.sizes[c]+5)
+                        temp += "{0:<{1}}".format(e, self.sizes[c]+10)
                         c    += 1
                     resultsListbox.insert(END, temp)
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
