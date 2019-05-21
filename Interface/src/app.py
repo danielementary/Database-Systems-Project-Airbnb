@@ -411,21 +411,13 @@ class App(Tk):
         Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
         self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
-        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
-        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
-        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
-        #                                                         self.insertListingPropertyTypeId,
-        #                                                         *list(self.propertyTypeIdDict.keys()))
-        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingHost = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Host Name").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingHost                   .grid(row=2, column=1, sticky=W, padx=5, pady=5)
 
-        # Label(self.insertFrame, text="Property Type").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        # self.insertListingPropertyTypeId = StringVar(self.insertFrame)
-        # self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
-        # self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
-        #                                                         self.insertListingPropertyTypeId,
-        #                                                         *list(self.propertyTypeIdDict.keys()))
-        # self.insertListingPropertyTypeIdOptionMenu.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Neighbourhood Name").grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood                   .grid(row=3, column=1, sticky=W, padx=5, pady=5)
 
         Label(self.insertFrame, text="Property Type").grid(row=4, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
