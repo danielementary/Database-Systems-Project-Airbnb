@@ -340,3 +340,45 @@ WHERE neigh_n_occupied.n_occupied / (
 		FROM Listing l1
 		WHERE l1.neighbourhood_id = neigh_n_occupied.neighbourhood_id
 		) >= 0.5
+
+--Query 11)
+SELECT DISTINCT (country_name)
+FROM (
+	SELECT ctry.country_id,
+		ctry.country_name,
+		d.day_date,
+		SUM(CASE
+				WHEN cal.calendar_available = (1)
+					THEN 1
+				WHEN cal.calendar_available = (0)
+					THEN 0
+				ELSE 0
+				END) AS n_available
+	FROM Country ctry,
+		Calendar cal,
+		Day d,
+		Listing l,
+		Neighbourhood n,
+		City c
+	WHERE cal.calendar_day_id = d.day_id
+		AND cal.listing_id = l.listing_id
+		AND l.neighbourhood_id = n.neighbourhood_id
+		AND c.city_id = n.city_id
+		AND c.country_id = ctry.country_id
+		AND d.day_date >= '2018-01-01'
+		AND d.day_date <= '2018-12-31'
+	GROUP BY ctry.country_id,
+		ctry.country_name,
+		d.day_date
+	) subtable
+WHERE subtable.n_available / (
+		SELECT count(DISTINCT (listing_id))
+		FROM Listing l,
+			Neighbourhood n,
+			City c,
+			Country ct
+		WHERE l.neighbourhood_id = n.neighbourhood_id
+			AND n.city_id = c.city_id
+			AND c.country_id = ct.country_id
+			AND ct.country_id = subtable.country_id
+		) > 0.2
