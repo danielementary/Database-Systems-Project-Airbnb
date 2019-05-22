@@ -122,3 +122,11 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
         print("Table {} has been successfully populated".format(table_name))
     cursor.close()
     print("Database has been successfully populated")
+
+def insert_listing(db_connection, columns, values):
+    cursor = db_connection.cursor()
+    sql = "INSERT INTO Listing {} VALUES {}".format(columns, tuple(["%s" for _ in range(len(columns))]))
+    print(sql)
+    # cursor.execute(sql, values)
+    cursor.close()
+    print("Listing {} has been successfully insert by {}").format(columns[0], columns[-6])

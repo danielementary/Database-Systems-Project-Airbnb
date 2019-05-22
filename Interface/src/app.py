@@ -104,6 +104,29 @@ class App(Tk):
 
             self.showResults(queryResults, st.select_neighbourhood, values)
 
+    def insertListingInDatabase(self):
+        columns = ["listing_id", "listing_name", "listing_summary"]
+        values  = []
+
+        id = db.select_sql(self.databaseConnection, "SELECT MAX(listing_id) FROM Listing", "Select biggest listing_id")[0][0] + 1
+        values.append("{}".format(id))
+
+        tempName = self.insertListingNameEntry.get()[:250]
+        if (len(tempName) <= 0):
+            values.append("id : {}".format(id))
+        else:
+            values.append(tempName)
+
+        tempSummary = self.insertListingSummaryEntry.get()[:65000]
+        if (len(tempSummary) <= 0):
+            values.append("There is no summary for this listing.")
+        else:
+            values.append(tempSummary)
+
+        #todo
+
+        print(columns, values, sep="\n")
+
     def executePredefinedQuery(self):
         sql = st.predefined_queries[self.predefniedQuery.get()]
 
@@ -408,13 +431,13 @@ class App(Tk):
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
 
     def drawInsert(self):
-        self.insertListingName = Entry(self.insertFrame)
+        self.insertListingNameEntry = Entry(self.insertFrame)
         Label(self.insertFrame, text="Name").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingName              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingNameEntry              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
 
-        self.insertListingSummary = Entry(self.insertFrame)
+        self.insertListingSummaryEntry = Entry(self.insertFrame)
         Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingSummaryEntry              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
         Label(self.insertFrame, text="Accommodates").grid(row=2, column=0, sticky=W, padx=5, pady=5)
         self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
@@ -481,7 +504,7 @@ class App(Tk):
         self.insertListingCancellationPolicyIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
 
 
-        self.insertButton = Button(self.insertFrame, text="Insert")
+        self.insertButton = Button(self.insertFrame, text="Insert", command=self.insertListingInDatabase)
         self.insertButton.grid(row=0, column=3, padx=5, pady=5)
 
     def showResults(self, queryResults, sql, values):
