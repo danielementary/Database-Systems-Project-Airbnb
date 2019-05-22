@@ -218,9 +218,13 @@ class App(Tk):
 
         Label(self.deleteFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)                  .grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5, columnspan=2)
+
+        self.connectDatabaseButton = Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)
+        self.deleteDatabaseButton  = Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)
+
+        self.connectDatabaseButton.grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.deleteDatabaseButton .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
     def drawForms(self):
         self.listingNameEntry  = Entry(self.searchFrame)

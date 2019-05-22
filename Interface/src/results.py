@@ -9,8 +9,11 @@ class Results(Toplevel):
         self.resizable(width=False, height=False)
         self.protocol("WM_DELETE_WINDOW", self.closeResults)
 
-        self.master.searchButton["state"]  =  DISABLED
-        self.master.executeButton["state"] =  DISABLED
+        self.master.searchButton         ["state"] = DISABLED
+        self.master.executeButton        ["state"] = DISABLED
+        self.master.insertButton         ["state"] = DISABLED
+        self.master.connectDatabaseButton["state"] = DISABLED
+        self.master.deleteDatabaseButton ["state"] = DISABLED
 
         Label(self, text="Please close this windows before next operations.").pack(padx=10, pady=10)
 
@@ -67,6 +70,9 @@ class Results(Toplevel):
         print(index, value, sep="\n")
 
     def closeResults(self):
-        self.master.searchButton["state"]  = NORMAL
-        self.master.executeButton["state"] = NORMAL
+        self.master.searchButton         ["state"] = NORMAL
+        self.master.executeButton        ["state"] = NORMAL
+        self.master.insertButton         ["state"] = NORMAL
+        self.master.connectDatabaseButton["state"] = NORMAL
+        self.master.deleteDatabaseButton ["state"] = NORMAL
         self.destroy()
