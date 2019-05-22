@@ -332,7 +332,8 @@ FROM (
 			) listings_occupied_days
 	WHERE n1.neighbourhood_id = listings_occupied_days.neighbourhood_id
 		AND n_occupied_days > 0
-	GROUP BY n1.neighbourhood_name, n1.neighbourhood_id
+	GROUP BY n1.neighbourhood_name,
+		n1.neighbourhood_id
 	) neigh_n_occupied
 WHERE neigh_n_occupied.n_occupied / (
 		SELECT count(DISTINCT (l1.listing_id))
