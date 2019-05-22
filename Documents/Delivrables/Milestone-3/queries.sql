@@ -147,7 +147,7 @@ WHERE l1.listing_id IN (
 			ORDER BY lwf.review_scores_rating DESC LIMIT 5
 			) listings_per_accomodates
 		)
-ORDER BY a.accom
+ORDER BY a.accom;
 
 
 -- Query 6): Busiest Listing per host
@@ -179,7 +179,7 @@ WHERE l.listing_id IN (
 			WHERE l2.host_id = h.host_id LIMIT 3
 			) z
 		)
-GROUP BY h.host_id
+GROUP BY h.host_id;
 
 
 
@@ -223,4 +223,41 @@ WHERE ame.amenity_id = apn.amenity_id
 			WHERE apn.neighbourhood_id = apn2.neighbourhood_id LIMIT 3
 			) z
 		)
-GROUP BY apn.neighbourhood_id
+GROUP BY apn.neighbourhood_id;
+
+
+
+--Query 8):
+
+WITH host_id_with_n_verf
+AS (
+	SELECT host_id,
+		count(DISTINCT (host_verification_id)) AS n_verf
+	FROM Host_verification_map
+	GROUP BY host_id
+	)
+SELECT (
+		(
+			SELECT avg(l.review_scores_communication)
+			FROM Listing l
+			WHERE l.host_id IN (
+					SELECT *
+					FROM (
+						SELECT host_id
+						FROM host_id_with_n_verf
+						ORDER BY n_verf DESC limit 1
+						) z
+					)
+			) - (
+			SELECT avg(l.review_scores_communication)
+			FROM Listing l
+			WHERE l.host_id IN (
+					SELECT *
+					FROM (
+						SELECT host_id
+						FROM host_id_with_n_verf
+						ORDER BY n_verf ASC limit 1
+						) z
+					)
+			)
+		);
