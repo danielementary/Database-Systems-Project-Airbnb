@@ -48,6 +48,7 @@ class App(Tk):
                     self.updateDatabaseVariables()
                     self.drawForms()
                     self.drawPredefinedQueries()
+                    self.drawInsert()
             else:
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
 
@@ -193,15 +194,17 @@ class App(Tk):
     def drawTabs(self):
         self.tabControl = ttk.Notebook(self)
 
-        self.searchFrame        = ttk.Frame(self.tabControl)
-        self.queriesFrame       = ttk.Frame(self.tabControl)
-        self.modificationsFrame = ttk.Frame(self.tabControl)
-        self.settingsFrame      = ttk.Frame(self.tabControl)
+        self.searchFrame   = ttk.Frame(self.tabControl)
+        self.queriesFrame  = ttk.Frame(self.tabControl)
+        self.insertFrame   = ttk.Frame(self.tabControl)
+        self.deleteFrame   = ttk.Frame(self.tabControl)
+        self.settingsFrame = ttk.Frame(self.tabControl)
 
-        self.tabControl.add(self.searchFrame,        text="Search")
-        self.tabControl.add(self.queriesFrame,       text="Predefined Queries")
-        self.tabControl.add(self.modificationsFrame, text="Insert/Delete")
-        self.tabControl.add(self.settingsFrame,      text="Settings")
+        self.tabControl.add(self.searchFrame,   text="Search")
+        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
+        self.tabControl.add(self.insertFrame,   text="Insert A Listing")
+        self.tabControl.add(self.deleteFrame,   text="Delete")
+        self.tabControl.add(self.settingsFrame, text="Settings")
 
         self.tabControl.pack(fill=BOTH, expand=1)
 
@@ -212,7 +215,7 @@ class App(Tk):
         self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
         self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label(self.modificationsFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        Label(self.deleteFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
         Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
@@ -294,12 +297,14 @@ class App(Tk):
         self.propertyTypeIdDict       = self.getPropertyTypeIdDict()
         self.cancellationPolicyIdDict = self.getCancellationPolicyIdDict()
         self.cityIdDict               = self.getCityIdDict()
+        self.roomTypeIdDict           = self.getRoomTypeIdDict()
+        self.bedTypeIdDict            = self.getBedTypeIdDict()
 
     def getAccommodatesMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_accomodates_min_max,
-                          "Select Listing accommodates min and max")[0]
+                                   st.select_listing_accomodates_min_max,
+                                   "Select Listing accommodates min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -308,8 +313,8 @@ class App(Tk):
     def getSquareFeetMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_sqare_feet_min_max,
-                          "Select Listing square_feet min and max")[0]
+                                   st.select_listing_sqare_feet_min_max,
+                                   "Select Listing square_feet min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -318,8 +323,8 @@ class App(Tk):
     def getPriceMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
-                          st.select_listing_price_min_max,
-                          "Select Listing price min and max")[0]
+                                   st.select_listing_price_min_max,
+                                   "Select Listing price min and max")[0]
         except:
             result = (0, 0)
         finally:
@@ -338,8 +343,8 @@ class App(Tk):
     def getPropertyTypeIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_property_type_names_ids_statements,
-                          "Select Property_type names and ids"))
+                                        st.select_property_type_names_ids_statements,
+                                        "Select Property_type names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -348,8 +353,8 @@ class App(Tk):
     def getCancellationPolicyIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_cancellation_policy_names_ids_statements,
-                          "Select Cancellation_policy names and ids"))
+                                        st.select_cancellation_policy_names_ids_statements,
+                                        "Select Cancellation_policy names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -358,8 +363,28 @@ class App(Tk):
     def getCityIdDict(self):
         try:
             result = dict(db.select_sql(self.databaseConnection,
-                          st.select_city_names_ids_statements,
-                          "Select City names and ids"))
+                                        st.select_city_names_ids_statements,
+                                        "Select City names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
+    def getRoomTypeIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                                        st.select_room_type_names_ids_statements,
+                                        "Select Room_type names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
+    def getBedTypeIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                                        st.select_bed_type_names_ids_statements,
+                                        "Select Bed_type names and ids"))
         except:
             result = {"None": 0}
         finally:
@@ -376,6 +401,83 @@ class App(Tk):
 
         self.executeButton = Button(self.queriesFrame, text="Execute", command=self.executePredefinedQuery)
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
+
+    def drawInsert(self):
+        self.insertListingName = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Name").grid(row=0, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingName              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
+
+        self.insertListingSummary = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Accommodates").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.accommodatesMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
+        Label(self.insertFrame, text="Square Feet").grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.squareFeetMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
+        Label(self.insertFrame, text="Price").grid(row=4, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.priceMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
+        self.insertListingHost = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Host Name").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingHost                   .grid(row=5, column=1, sticky=W, padx=5, pady=5)
+
+        self.insertListingNeighbourhood = Entry(self.insertFrame)
+        Label(self.insertFrame, text="Neighbourhood Name").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood                   .grid(row=6, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingPropertyTypeId = StringVar(self.insertFrame)
+        self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
+        self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                                self.insertListingPropertyTypeId,
+                                                                *list(self.propertyTypeIdDict.keys()))
+        self.insertListingPropertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Room Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingRoomTypeId = StringVar(self.insertFrame)
+        self.insertListingRoomTypeId.set(list(self.roomTypeIdDict.keys())[0])
+        self.insertListingRoomTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                            self.insertListingRoomTypeId,
+                                                            *list(self.roomTypeIdDict.keys()))
+        self.insertListingRoomTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Bed Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingBedTypeId = StringVar(self.insertFrame)
+        self.insertListingBedTypeId.set(list(self.bedTypeIdDict.keys())[0])
+        self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
+                                                           self.insertListingBedTypeId,
+                                                           *list(self.bedTypeIdDict.keys()))
+        self.insertListingBedTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Cancellation Policy").grid(row=10, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingCancellationPolicyId = StringVar(self.insertFrame)
+        self.insertListingCancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
+        self.insertListingCancellationPolicyIdOptionMenu = OptionMenu(self.insertFrame,
+                                                                      self.insertListingCancellationPolicyId,
+                                                                      *list(self.cancellationPolicyIdDict.keys()))
+        self.insertListingCancellationPolicyIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
+
+
+        self.insertButton = Button(self.insertFrame, text="Insert")
+        self.insertButton.grid(row=0, column=3, padx=5, pady=5)
 
     def showResults(self, queryResults, sql, values):
         Results(self, queryResults, sql, values).focus()
@@ -396,6 +498,9 @@ class Results(Toplevel):
         topFrame = Frame(self)
         topFrame.pack(padx=10, pady=10)
 
+        bottomFrame = Frame(self, bg="white")
+        bottomFrame.pack(side=BOTTOM, expand=1, fill=BOTH, padx=10, pady=10)
+
         Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
         Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
 
@@ -405,21 +510,42 @@ class Results(Toplevel):
         if (queryResults is not None):
             resultLength = len(queryResults)
             if (resultLength > 0):
-                resultsScrolledtext = scrolledtext.ScrolledText(self)
-                resultsScrolledtext.pack(side=BOTTOM, fill=BOTH, padx=10, pady=10)
+                resultsScrollbarY = Scrollbar(bottomFrame)
+                resultsScrollbarY.pack(side=LEFT, fill=Y)
+
+                resultsListbox = Listbox(bottomFrame, yscrollcommand=resultsScrollbarY.set)
+                resultsListbox.pack(side=LEFT, expand=1, fill=BOTH)
+
+                resultsScrollbarY.config(command=resultsListbox.yview)
+
+                resultsListbox.bind("<<ListboxSelect>>", self.onResultSelect)
+
+                self.sizes = [len(str(e)) for e in queryResults[0]]
+                for r in queryResults:
+                    self.sizes = self.maxSizes(self.sizes, [len(str(e)) for e in r])
 
                 for r in queryResults:
-                    for c in r:
-                        resultsScrolledtext.insert(END, c)
-                        resultsScrolledtext.insert(END, "\t\t\t\t")
-                    resultsScrolledtext.insert(END, "\n")
-                resultsScrolledtext.config(state=DISABLED)
-
+                    temp = ""
+                    c    = 0
+                    for e in r:
+                        temp += "{0:<{1}}".format(e, self.sizes[c]+10)
+                        c    += 1
+                    resultsListbox.insert(END, temp)
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
             else:
                 Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
         else:
             Label(self, text="This query cannot be executed.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
+
+    def maxSizes(self, list1, list2):
+        lists = zip(list1, list2)
+        return [max(e[0], e[1]) for e in lists]
+
+    def onResultSelect(self, event):
+        widget = event.widget
+        index = int(widget.curselection()[0])
+        value = widget.get(index)
+        print(index, value, sep="\n")
 
     def closeResults(self):
         self.master.searchButton["state"]  = NORMAL

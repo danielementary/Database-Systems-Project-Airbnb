@@ -15,6 +15,16 @@ SELECT city_name,
        city_id FROM City;
 """
 
+select_room_type_names_ids_statements = """
+SELECT room_type_name,
+       room_type_name FROM Room_type;
+"""
+
+select_bed_type_names_ids_statements = """
+SELECT bed_type_name,
+       bed_type_name FROM Bed_type;
+"""
+
 select_listing_accomodates_min_max = """
 SELECT MIN(accommodates),
        MAX(accommodates)
