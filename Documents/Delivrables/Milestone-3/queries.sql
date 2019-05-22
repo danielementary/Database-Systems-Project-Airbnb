@@ -261,3 +261,34 @@ SELECT (
 					)
 			)
 		);
+
+
+
+-- Query 9):
+SELECT c1.city_name,
+	total_reviews
+FROM City c1,
+	(
+		SELECT city_id,
+			sum(n_reviews) AS total_reviews
+		FROM (
+			SELECT l.room_type_id,
+				c.city_id,
+				c.city_name,
+				avg(l.accommodates) AS avg_acc,
+				count(DISTINCT (r.review_id)) AS n_reviews
+			FROM Listing l,
+				City c,
+				Neighbourhood n,
+				Review r
+			WHERE n.neighbourhood_id = l.neighbourhood_id
+				AND c.city_id = n.city_id
+				AND r.listing_id = l.listing_id
+			GROUP BY l.room_type_id,
+				c.city_id
+			) per_room_type
+		WHERE avg_acc >= 3
+		GROUP BY city_id
+		) total_reviews_per_city
+WHERE c1.city_id = total_reviews_per_city.city_id
+ORDER BY total_reviews DESC LIMIT 1;
