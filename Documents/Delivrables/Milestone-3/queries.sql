@@ -117,7 +117,8 @@ WITH listings_with_facilities
 AS (
 	SELECT l.listing_id,
 		count(a.amenity_id) AS n_amenities,
-		l.review_scores_rating, l.accommodates
+		l.review_scores_rating,
+		l.accommodates
 	FROM Listing l,
 		Amenity a,
 		Listing_amenity_map lam
@@ -126,17 +127,100 @@ AS (
 		AND a.amenity_name IN ('TV', 'Wifi', 'Internet', 'Free street parking')
 	GROUP BY l.listing_id
 	HAVING n_amenities >= 2
+	),
+accommodates
+AS (
+	SELECT DISTINCT (l.accommodates) AS accom
+	FROM Listing l
 	)
-SELECT l.listing_id,
-	l.review_scores_value
-FROM listings_with_facilities l
-WHERE
+SELECT l1.listing_id,
+	l1.review_scores_value,
+	a.accom
+FROM Listing l1,
+	accommodates a
+WHERE l1.listing_id IN (
+		SELECT *
+		FROM (
+			SELECT listing_id
+			FROM listings_with_facilities lwf
+			WHERE lwf.accommodates = accom
+			ORDER BY lwf.review_scores_rating DESC LIMIT 5
+			) listings_per_accomodates
+		)
+ORDER BY a.accom
 
 
--- Query 6): top three busiest listings per host
-SELECT L.listing_name, H.host_name
-FROM 	Listing L, Host H, Review R
-WHERE L.host_id = H.host_id
-AND R.listing_id = L.listing_id
-GROUP BY H.host_id
-ORDER BY COUNT(*) DESC LIMIT 3;
+-- Query 6): Busiest Listing per host
+WITH listings_with_number_reviews
+AS (
+	SELECT l.listing_id,
+		l.host_id,
+		count(DISTINCT (r.review_id)) AS n_reviews
+	FROM Listing l,
+		Review r
+	WHERE l.listing_id = r.listing_id
+	GROUP BY l.listing_id
+	ORDER BY l.host_id,
+		n_reviews
+	)
+SELECT h.host_id,
+	GROUP_CONCAT(l.listing_id SEPARATOR ', '),
+	GROUP_CONCAT(l.n_reviews SEPARATOR ', ')
+FROM listings_with_number_reviews l,
+	(
+		SELECT DISTINCT (host_id) AS host_id
+		FROM Host
+		) h
+WHERE l.listing_id IN (
+		SELECT *
+		FROM (
+			SELECT listing_id
+			FROM listings_with_number_reviews l2
+			WHERE l2.host_id = h.host_id LIMIT 3
+			) z
+		)
+GROUP BY h.host_id
+
+
+
+
+-- Query 7): Three most used amenities per Neighbourhood in Private Room
+WITH amenity_per_neigh_w_listings_n
+AS (
+	SELECT a.amenity_id,
+		a.amenity_name,
+		l.neighbourhood_id,
+		n.neighbourhood_name,
+		COUNT(DISTINCT (l.listing_id)) AS listings_number
+	FROM Listing l,
+		Room_type rt,
+		Amenity a,
+		Listing_amenity_map lam,
+		Neighbourhood n,
+		City c
+	WHERE l.room_type_id = rt.room_type_id
+		AND rt.room_type_name = 'Private room'
+		AND a.amenity_id = lam.amenity_id
+		AND lam.listing_id = l.listing_id
+		AND l.neighbourhood_id = n.neighbourhood_id
+		AND n.city_id = c.city_id
+		AND c.city_name = 'Berlin'
+	GROUP BY a.amenity_id,
+		l.neighbourhood_id
+	ORDER BY l.neighbourhood_id,
+		listings_number DESC
+	)
+SELECT apn.neighbourhood_name,
+	GROUP_CONCAT(ame.amenity_name SEPARATOR ', ')
+FROM Amenity ame,
+	amenity_per_neigh_w_listings_n apn
+WHERE ame.amenity_id = apn.amenity_id
+	AND ame.amenity_id IN (
+		SELECT *
+		FROM (
+			SELECT amenity_id
+			FROM amenity_per_neigh_w_listings_n apn2
+			WHERE apn.neighbourhood_id = apn2.neighbourhood_id LIMIT 3
+			) z
+		)
+GROUP BY apn.neighbourhood_id
