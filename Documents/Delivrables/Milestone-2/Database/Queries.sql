@@ -65,22 +65,52 @@ HAVING COUNT(L.listing_id) = 1;
 ---------------------07-----------------------
 --c'est faux
 --with wifi : 85.73360122916912
+WITH amenities_wifi
+AS (
+	SELECT A.amenity_id
+	FROM Amenity A
+	WHERE A.amenity_name = "Wifi"
+		OR A.amenity_name = "Pocket wifi"
+	),
+listings_with_wifi
+AS (
+	SELECT avg(cal.calendar_price) AS avg_wifi
+	FROM Listing l,
+		Listing_amenity_map lam,
+		Calendar cal
+	WHERE l.listing_id = lam.listing_id
+		AND lam.amenity_id IN (
+			SELECT amenity_id
+			FROM amenities_wifi
+			)
+		AND l.listing_id = cal.listing_id
+		AND cal.calendar_price IS NOT NULL
+	),
+listings_without_wifi
+AS (
+	SELECT avg(cal.calendar_price) AS avg_without_wifi
+	FROM Listing l,
+		Listing_amenity_map lam,
+		Calendar cal
+	WHERE l.listing_id = lam.listing_id
+		AND lam.amenity_id NOT IN (
+			SELECT amenity_id FROM amenities_wifi
+			)
+		AND l.listing_id = cal.listing_id
+		AND cal.calendar_price IS NOT NULL
+	)
+SELECT ABS(l1.avg_wifi - l2.avg_without_wifi)
+FROM listings_with_wifi l1,
+	listings_without_wifi l2;
 
-SELECT AVG(L1.price) - AVG(L2.price)
-FROM Listing L1,
-     Listing L2,
-     Listing_amenity_map M1,
-     Listing_amenity_map M2,
-WHERE (L1.listing_id = M1.listing_id)
-      AND (M1.amenity_id IN (SELECT A.amenity_id
-                             FROM Amenity A
-                             WHERE A.amenity_name = "Wifi"
-                             OR A.amenity_name = "Pocket wifi"))
-      AND (L2.listing_id = M2.listing_id)
-      AND M2.amenity_id NOT IN (SELECT A.amenity_id
-                                FROM Amenity A
-                                WHERE A.amenity_name = "Wifi"
-                                OR A.amenity_name = "Pocket wifi");
+
+
+
+
+
+
+
+
 
 ---------------------08-----------------------
 SELECT AVG(L1.price) - AVG(L2.price)
