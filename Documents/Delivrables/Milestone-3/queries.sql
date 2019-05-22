@@ -131,3 +131,12 @@ SELECT l.listing_id,
 	l.review_scores_value
 FROM listings_with_facilities l
 WHERE
+
+
+-- Query 6): top three busiest listings per host
+SELECT L.listing_name, H.host_name
+FROM 	Listing L, Host H, Review R
+WHERE L.host_id = H.host_id
+AND R.listing_id = L.listing_id
+GROUP BY H.host_id
+ORDER BY COUNT(*) DESC LIMIT 3;
