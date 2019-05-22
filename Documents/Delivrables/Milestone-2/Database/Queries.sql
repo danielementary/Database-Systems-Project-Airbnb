@@ -113,26 +113,34 @@ FROM listings_with_wifi l1,
 
 
 ---------------------08-----------------------
-SELECT AVG(L1.price) - AVG(L2.price)
-FROM Listing L1,
-     Listing L2
-WHERE (L1.listing_id IN (SELECT L.listing_id
-                         FROM Listing L,
-                              Neighbourhood N,
-                              City C
-                         WHERE L.neighbourhood_id = N.neighbourhood_id
-                         AND N.city_id = C.city_id
-                         AND C.city_name = "Berlin"
-                        ))
-AND (L1.beds = 8)
-AND (L2.listing_id IN (SELECT L.listing_id
-                       FROM Listing L
-                            Neighbourhood N,
-                            City C
-                       WHERE L.neighbourhood_id = N.neighbourhood_id
-                       AND N.city_id = C.city_id
-                       AND C.city_name = "Madrid"))
-AND (L2.beds = 8);
+SELECT (
+		(
+			SELECT avg(cal.calendar_price)
+			FROM Listing l,
+				Neighbourhood n,
+				City c,
+				Calendar cal
+			WHERE cal.listing_id = l.listing_id
+				AND cal.calendar_price IS NOT NULL
+				AND l.beds = 8
+				AND c.city_name = 'Berlin'
+				AND c.city_id = n.city_id
+				AND n.neighbourhood_id = l.neighbourhood_id
+			) - (
+			SELECT avg(cal.calendar_price)
+			FROM Listing l,
+				Neighbourhood n,
+				City c,
+				Calendar cal
+			WHERE cal.listing_id = l.listing_id
+				AND cal.calendar_price IS NOT NULL
+				AND l.beds = 8
+				AND c.city_name = 'Madrid'
+				AND c.city_id = n.city_id
+				AND n.neighbourhood_id = l.neighbourhood_id
+			)
+		) AS Berlin_minus_Madrid_8_beds_avg_price;
+
 
 ---------------------09-----------------------
 SELECT H.host_id, H.host_name
