@@ -411,45 +411,69 @@ class App(Tk):
         Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
         self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
+        Label(self.insertFrame, text="Accommodates").grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.accommodatesMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
+        Label(self.insertFrame, text="Square Feet").grid(row=3, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.squareFeetMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
+        Label(self.insertFrame, text="Price").grid(row=4, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
+                                                                        to=self.priceMinMax[1]*2,
+                                                                    orient=HORIZONTAL,
+                                                                    length=160)
+        self.insertListingAccomodatesScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingAccomodatesScale.set(0)
+
         self.insertListingHost = Entry(self.insertFrame)
-        Label(self.insertFrame, text="Host Name").grid(row=2, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingHost                   .grid(row=2, column=1, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Host Name").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingHost                   .grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
         self.insertListingNeighbourhood = Entry(self.insertFrame)
-        Label(self.insertFrame, text="Neighbourhood Name").grid(row=3, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingNeighbourhood                   .grid(row=3, column=1, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Neighbourhood Name").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood                   .grid(row=6, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Property Type").grid(row=4, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
         self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
         self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                                 self.insertListingPropertyTypeId,
                                                                 *list(self.propertyTypeIdDict.keys()))
-        self.insertListingPropertyTypeIdOptionMenu.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingPropertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Room Type").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Room Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
         self.insertListingRoomTypeId = StringVar(self.insertFrame)
         self.insertListingRoomTypeId.set(list(self.roomTypeIdDict.keys())[0])
         self.insertListingRoomTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                             self.insertListingRoomTypeId,
                                                             *list(self.roomTypeIdDict.keys()))
-        self.insertListingRoomTypeIdOptionMenu.grid(row=5, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingRoomTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Bed Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Bed Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
         self.insertListingBedTypeId = StringVar(self.insertFrame)
         self.insertListingBedTypeId.set(list(self.bedTypeIdDict.keys())[0])
         self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                            self.insertListingBedTypeId,
                                                            *list(self.bedTypeIdDict.keys()))
-        self.insertListingBedTypeIdOptionMenu.grid(row=6, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingBedTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Cancellation Policy").grid(row=10, column=0, sticky=W, padx=5, pady=5)
         self.insertListingCancellationPolicyId = StringVar(self.insertFrame)
         self.insertListingCancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
         self.insertListingCancellationPolicyIdOptionMenu = OptionMenu(self.insertFrame,
                                                                       self.insertListingCancellationPolicyId,
                                                                       *list(self.cancellationPolicyIdDict.keys()))
-        self.insertListingCancellationPolicyIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingCancellationPolicyIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
 
 
         self.insertButton = Button(self.insertFrame, text="Insert")
