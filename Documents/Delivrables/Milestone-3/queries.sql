@@ -339,7 +339,7 @@ WHERE neigh_n_occupied.n_occupied / (
 		SELECT count(DISTINCT (l1.listing_id))
 		FROM Listing l1
 		WHERE l1.neighbourhood_id = neigh_n_occupied.neighbourhood_id
-		) >= 0.5
+	) >= 0.5;
 
 --Query 11)
 SELECT DISTINCT (country_name)
@@ -381,4 +381,37 @@ WHERE subtable.n_available / (
 			AND n.city_id = c.city_id
 			AND c.country_id = ct.country_id
 			AND ct.country_id = subtable.country_id
-		) > 0.2
+		) >= 0.2;
+
+
+--Query 12):
+SELECT subtable.neighbourhood_name,
+	subtable.n_strict_grace / total_list_per_neigh.n_listings
+FROM (
+	SELECT n.neighbourhood_id,
+		n.neighbourhood_name,
+		count(DISTINCT (l.listing_id)) AS n_strict_grace
+	FROM Neighbourhood n,
+		Listing l,
+		City c,
+		Cancellation_policy cp
+	WHERE n.neighbourhood_id = l.neighbourhood_id
+		AND n.city_id = c.city_id
+		AND l.cancellation_policy_id = cp.cancellation_policy_id
+		AND cp.cancellation_policy_name = 'strict_14_with_grace_period'
+		AND c.city_name = 'Barcelona'
+	GROUP BY n.neighbourhood_id
+	) subtable,
+	(
+		SELECT count(DISTINCT (l.listing_id)) AS n_listings,
+			n.neighbourhood_id
+		FROM Listing l,
+			Neighbourhood n,
+			City c
+		WHERE n.neighbourhood_id = l.neighbourhood_id
+			AND n.city_id = c.city_id
+			AND c.city_name = 'Barcelona'
+		GROUP BY n.neighbourhood_id
+		) total_list_per_neigh
+WHERE n_strict_grace / total_list_per_neigh.n_listings >= 0.05
+	AND subtable.neighbourhood_id = total_list_per_neigh.neighbourhood_id;
