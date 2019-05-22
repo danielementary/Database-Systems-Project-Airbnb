@@ -292,3 +292,50 @@ FROM City c1,
 		) total_reviews_per_city
 WHERE c1.city_id = total_reviews_per_city.city_id
 ORDER BY total_reviews DESC LIMIT 1;
+
+
+--Query 10):
+SELECT neigh_n_occupied.neighbourhood_name
+FROM (
+	SELECT n1.neighbourhood_name,
+		n1.neighbourhood_id,
+		count(DISTINCT (listing_id)) AS n_occupied
+	FROM Neighbourhood n1,
+		(
+			SELECT l.listing_id,
+				l.host_id,
+				l.neighbourhood_id,
+				SUM(CASE
+						WHEN cal.calendar_available = (0)
+							THEN 1
+						WHEN cal.calendar_available = (1)
+							THEN 0
+						ELSE 0
+						END) AS n_occupied_days
+			FROM Listing l,
+				Calendar cal,
+				Day d,
+				Neighbourhood n,
+				City c,
+				Host h
+			WHERE l.neighbourhood_id = n.neighbourhood_id
+				AND n.city_id = c.city_id
+				AND c.city_name = 'Madrid'
+				AND cal.listing_id = l.listing_id
+				AND cal.calendar_day_id = d.day_id
+				AND d.day_date >= '2019-01-01'
+				AND d.day_date <= '2019-12-31'
+				AND h.host_id = l.host_id
+				AND h.host_since <= '2017-06-01'
+			GROUP BY l.listing_id,
+				l.host_id
+			) listings_occupied_days
+	WHERE n1.neighbourhood_id = listings_occupied_days.neighbourhood_id
+		AND n_occupied_days > 0
+	GROUP BY n1.neighbourhood_name, n1.neighbourhood_id
+	) neigh_n_occupied
+WHERE neigh_n_occupied.n_occupied / (
+		SELECT count(DISTINCT (l1.listing_id))
+		FROM Listing l1
+		WHERE l1.neighbourhood_id = neigh_n_occupied.neighbourhood_id
+		) >= 0.5
