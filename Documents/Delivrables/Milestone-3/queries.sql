@@ -1,5 +1,6 @@
 -- WARNIING !! when formatting, be sure that := have not a space in between. Formatter puts one but it does not work if so.
 -- Query 1): number of hosts per city that put square_feet in their listing
+-- time: 0.65 sec
 SELECT COUNT(DISTINCT (h1.host_id)),
 	city_name
 FROM Host h1,
@@ -21,6 +22,7 @@ ORDER BY city_name;
 
 
 -- Query 2): top 5 Neighbourhoods of Madrid based on median of review_scores_rating
+-- time: 0.24 sec
 WITH subtable
 AS (
 	SELECT @row := @row + 1 AS rownum,
@@ -57,6 +59,7 @@ WHERE subtable.rownum IN (
 ORDER BY subtable.review_scores_rating DESC LIMIT 5;
 
 -- Query 3): find hosts with higher number of listings
+-- time: 0.11 sec
 WITH hosts_with_number
 AS (
 	SELECT h.host_id,
@@ -82,6 +85,7 @@ WHERE number = (
 		);
 
 -- Query 4): 5 cheapest in Berlin with lots of specs
+-- time: 14.88 sec
 SELECT l.listing_id,
 	avg(cal.calendar_price) AS price
 FROM Listing l,
@@ -114,6 +118,7 @@ ORDER BY price ASC LIMIT 5;
 
 
 -- Query 5):
+-- time: 3.90 sec
 WITH listings_with_facilities
 AS (
 	SELECT l.listing_id,
@@ -152,6 +157,7 @@ ORDER BY a.accom;
 
 
 -- Query 6): Busiest Listing per host
+-- time: 0,76 sec
 WITH listings_with_number_reviews
 AS (
 	SELECT l.listing_id,
@@ -186,6 +192,7 @@ GROUP BY h.host_id;
 
 
 -- Query 7): Three most used amenities per Neighbourhood in Private Room
+-- time: 0,66 sec
 WITH amenity_per_neigh_w_listings_n
 AS (
 	SELECT a.amenity_id,
@@ -229,7 +236,7 @@ GROUP BY apn.neighbourhood_id;
 
 
 --Query 8):
-
+-- time: 0,08 sec
 WITH host_id_with_n_verf
 AS (
 	SELECT host_id,
@@ -266,6 +273,7 @@ SELECT (
 
 
 -- Query 9):
+-- time: 2,29 sec
 SELECT c1.city_name,
 	total_reviews
 FROM City c1,
@@ -296,6 +304,7 @@ ORDER BY total_reviews DESC LIMIT 1;
 
 
 --Query 10):
+-- time: 1 min 37,95 sec
 -- Long time to execute maybe optimize with index
 SELECT neigh_n_occupied.neighbourhood_name
 FROM (
@@ -344,6 +353,7 @@ WHERE neigh_n_occupied.n_occupied / (
 	) >= 0.5;
 
 --Query 11)
+-- time: 49.26 sec
 -- Pretty long too
 SELECT DISTINCT (country_name)
 FROM (
@@ -388,6 +398,7 @@ WHERE subtable.n_available / (
 
 
 --Query 12):
+-- time: 0.48 sec
 SELECT subtable.neighbourhood_name,
 	subtable.n_strict_grace / total_list_per_neigh.n_listings
 FROM (
