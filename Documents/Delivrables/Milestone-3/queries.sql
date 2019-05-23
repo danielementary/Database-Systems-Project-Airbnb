@@ -19,6 +19,7 @@ WHERE l1.host_id = h1.host_id
 GROUP BY city_name
 ORDER BY city_name;
 
+
 -- Query 2): top 5 Neighbourhoods of Madrid based on median of review_scores_rating
 WITH subtable
 AS (
@@ -260,7 +261,7 @@ SELECT (
 						) z
 					)
 			)
-		);
+		) as average;
 
 
 
@@ -295,6 +296,7 @@ ORDER BY total_reviews DESC LIMIT 1;
 
 
 --Query 10):
+-- Long time to execute maybe optimize with index
 SELECT neigh_n_occupied.neighbourhood_name
 FROM (
 	SELECT n1.neighbourhood_name,
@@ -342,6 +344,7 @@ WHERE neigh_n_occupied.n_occupied / (
 	) >= 0.5;
 
 --Query 11)
+-- Pretty long too
 SELECT DISTINCT (country_name)
 FROM (
 	SELECT ctry.country_id,
