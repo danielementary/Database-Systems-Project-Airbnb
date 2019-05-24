@@ -140,7 +140,7 @@ AS (
 	FROM Listing l
 	)
 SELECT l1.listing_id,
-	l1.review_scores_value,
+	l1.review_scores_rating,
 	a.accom
 FROM Listing l1,
 	accommodates a
