@@ -1,5 +1,7 @@
 
-query 4) :
+query 4) : 5,203sec
+
+with index 2,605sec
 
 +----+-------------+-------+------------+--------+---------------------------------------------------------------------------------------------------+------------------------+---------+-------------------------------------------------+------+----------+----------------------------------------------------+
 | id | select_type | table | partitions | type   | possible_keys                                                                                     | key                    | key_len | ref                                             | rows | filtered | Extra                                              |
@@ -44,6 +46,10 @@ index tree without having to do an additional seek to read the actual row.
 This strategy can be used when the query uses only columns that are part of a single index.
 
 
+
+Description :
+There is a table scan when we join the host verifications and the previous nested blocks.
+Hence we can add an index on that holds the host_verification_id and host_verification_description
 
 
 ALTER TABLE `Host_verification` ADD INDEX `host_verification_descr_id` (`host_verification_description`,`host_verification_id`);
