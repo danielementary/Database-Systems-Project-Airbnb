@@ -347,10 +347,16 @@ class App(Tk):
         self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
 
     def checkHost(self):
-        print("Host")
+        self.insertListingCheckHostButton["state"] = DISABLED
+        if (self.insertListingCheckNeighboorhoodButton["state"] == DISABLED):
+            self.insertButton["state"] = NORMAL
+        print("NOT WORKING !")
 
     def checkNeighboorhood(self):
-        print("Neighbourhood")
+        self.insertListingCheckNeighboorhoodButton["state"] = DISABLED
+        if (self.insertListingCheckHostButton["state"] == DISABLED):
+            self.insertButton["state"] = NORMAL
+        print("NOT WORKING !")
 
     def getAccommodatesMinMax(self):
         try:
@@ -583,8 +589,9 @@ class App(Tk):
 
 
         self.insertButton = Button(self.insertFrame, text="Insert", command=self.insertListingInDatabase)
-        self.insertButton.grid(row=0, column=7, padx=5, pady=5)
-        Label(self.insertFrame, text="If this host/neighbourhood does not exist it will be added to the database.").grid(row=0, column=2, sticky=W, padx=5, pady=5, columnspan=5)
+        self.insertButton.grid(row=0, column=8, padx=5, pady=5)
+        self.insertButton["state"] = DISABLED
+        Label(self.insertFrame, text="Please check host and neighbourhood before inserting the listing.").grid(row=0, column=3, sticky=W, padx=5, pady=5, columnspan=5)
 
 
     def showResults(self, queryResults, sql, values):
