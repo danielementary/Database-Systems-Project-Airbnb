@@ -12,22 +12,34 @@ FROM Cancellation_policy;"""
 
 select_city_names_ids_statements = """
 SELECT city_name,
-       city_id FROM City;
+       city_id
+FROM City;
 """
 
 select_room_type_names_ids_statements = """
 SELECT room_type_name,
-       room_type_id FROM Room_type;
+       room_type_id
+FROM Room_type;
 """
 
 select_bed_type_names_ids_statements = """
 SELECT bed_type_name,
-       bed_type_id FROM Bed_type;
+       bed_type_id
+FROM Bed_type;
 """
 
 select_neighbourhood_names_ids_statements = """
 SELECT neighbourhood_name,
-       neighbourhood_id FROM Neighbourhood;
+       neighbourhood_id
+FROM Neighbourhood
+WHERE city_id = 0;
+"""
+
+select_neighbourhood_names_ids_for_city_id_statements = """
+SELECT neighbourhood_name,
+       neighbourhood_id
+FROM Neighbourhood
+WHERE city_id = {};
 """
 
 select_listing_accomodates_min_max = """

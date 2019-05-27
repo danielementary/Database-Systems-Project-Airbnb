@@ -336,8 +336,15 @@ class App(Tk):
         self.bedTypeIdDict            = self.getBedTypeIdDict()
         self.neighbourhoodIdDict      = self.getNeighbourhoodIdDict()
 
-    def updateHostNeighboorhoods(self, value):
-        print(self.cityIdDict[value])
+    def updateHostNeighboorhoods(self, cityName):
+        self.neighbourhoodIdDict = self.getNeighbourhoodIdForCityIdDict(self.cityIdDict[cityName])
+        self.insertListingHostNeighboorhoodOptionMenu.grid_forget()
+        self.insertListingHostNeighboorhood = StringVar(self.insertFrame)
+        self.insertListingHostNeighboorhood.set(list(self.neighbourhoodIdDict.keys())[0])
+        self.insertListingHostNeighboorhoodOptionMenu = OptionMenu(self.insertFrame,
+                                                            self.insertListingHostNeighboorhood,
+                                                            *list(self.neighbourhoodIdDict.keys()))
+        self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
 
     def getAccommodatesMinMax(self):
         try:
@@ -439,6 +446,16 @@ class App(Tk):
         finally:
             return result
 
+    def getNeighbourhoodIdForCityIdDict(self, cityId):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                                        st.select_neighbourhood_names_ids_for_city_id_statements.format(cityId),
+                                        "Select Neighbourhood names and ids for city {}".format(cityId)))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
     def drawPredefinedQueries(self):
         self.initialQueriesFrameLabel.grid_forget()
         Label(self.queriesFrame, text="Query").grid(row=0, column=0, sticky=W, padx=5, pady=5)
@@ -508,8 +525,18 @@ class App(Tk):
         self.insertListingHost              .grid(row=5, column=6, sticky=W, padx=5, pady=5)
 
         self.insertListingNeighbourhood = Entry(self.insertFrame)
-        Label(self.insertFrame, text="Neighbourhood").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingNeighbourhood                   .grid(row=6, column=2, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Neighbourhood : ").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="City").grid(row=6, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhoodCity = StringVar(self.insertFrame)
+        self.insertListingNeighbourhoodCity.set(list(self.cityIdDict.keys())[0])
+        self.insertListingNeighbourhoodCityOptionMenu = OptionMenu(self.insertFrame,
+                                                          self.insertListingNeighbourhoodCity,
+                                                          *list(self.cityIdDict.keys()))
+        self.insertListingNeighbourhoodCityOptionMenu.grid(row=6, column=2, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Name").grid(row=6, column=5, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood     .grid(row=6, column=6, sticky=W, padx=5, pady=5)
+
 
         Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
@@ -545,8 +572,8 @@ class App(Tk):
 
 
         self.insertButton = Button(self.insertFrame, text="Insert", command=self.insertListingInDatabase)
-        self.insertButton.grid(row=0, column=6, padx=5, pady=5)
-        Label(self.insertFrame, text="If this host/neighbourhood does not exist it will be added to the database.").grid(row=0, column=2, sticky=W, padx=5, pady=5, columnspan=4)
+        self.insertButton.grid(row=0, column=7, padx=5, pady=5)
+        Label(self.insertFrame, text="If this host/neighbourhood does not exist it will be added to the database.").grid(row=0, column=2, sticky=W, padx=5, pady=5, columnspan=5)
 
 
     def showResults(self, queryResults, sql, values):
