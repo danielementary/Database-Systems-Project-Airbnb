@@ -105,7 +105,8 @@ class App(Tk):
             self.showResults(queryResults, st.select_neighbourhood, values)
 
     def insertListingInDatabase(self):
-        columns = ["listing_id", "listing_name", "listing_summary"]
+        columns = ["listing_id", "listing_name", "listing_summary", "accommodates", "square_feet", "price", \
+                   "property_type_id", "room_type_id", "bed_type_id", "cancellation_policy_id"]
         values  = []
 
         id = db.select_sql(self.databaseConnection, "SELECT MAX(listing_id) FROM Listing", "Select biggest listing_id")[0][0] + 1
@@ -123,7 +124,13 @@ class App(Tk):
         else:
             values.append(tempSummary)
 
-        #todo
+        values.append(self.insertListingAccomodatesScale.get())
+        values.append(self.insertListingSquareFeetScale.get())
+        values.append(self.insertListingPriceScale.get())
+        values.append(self.propertyTypeIdDict[self.insertListingPropertyTypeId.get()])
+        values.append(self.roomTypeIdDict[self.insertListingRoomTypeId.get()])
+        values.append(self.bedTypeIdDict[self.insertListingBedTypeId.get()])
+        values.append(self.cancellationPolicyIdDict[self.insertListingCancellationPolicyId.get()])
 
         print(columns, values, sep="\n")
 
@@ -448,20 +455,20 @@ class App(Tk):
         self.insertListingAccomodatesScale.set(0)
 
         Label(self.insertFrame, text="Square Feet").grid(row=3, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
-                                                                        to=self.squareFeetMinMax[1]*2,
-                                                                    orient=HORIZONTAL,
-                                                                    length=160)
-        self.insertListingAccomodatesScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale.set(0)
+        self.insertListingSquareFeetScale = Scale(self.insertFrame, from_=0,
+                                                                       to=self.squareFeetMinMax[1]*2,
+                                                                   orient=HORIZONTAL,
+                                                                   length=160)
+        self.insertListingSquareFeetScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingSquareFeetScale.set(0)
 
         Label(self.insertFrame, text="Price").grid(row=4, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
-                                                                        to=self.priceMinMax[1]*2,
-                                                                    orient=HORIZONTAL,
-                                                                    length=160)
-        self.insertListingAccomodatesScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale.set(0)
+        self.insertListingPriceScale = Scale(self.insertFrame, from_=0,
+                                                                  to=self.priceMinMax[1]*2,
+                                                              orient=HORIZONTAL,
+                                                              length=160)
+        self.insertListingPriceScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingPriceScale.set(0)
 
         self.insertListingHost = Entry(self.insertFrame)
         Label(self.insertFrame, text="Host Name").grid(row=5, column=0, sticky=W, padx=5, pady=5)
