@@ -25,6 +25,11 @@ SELECT bed_type_name,
        bed_type_id FROM Bed_type;
 """
 
+select_neighbourhood_names_ids_statements = """
+SELECT neighbourhood_name,
+       neighbourhood_id FROM Neighbourhood;
+"""
+
 select_listing_accomodates_min_max = """
 SELECT MIN(accommodates),
        MAX(accommodates)
