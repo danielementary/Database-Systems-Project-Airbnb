@@ -346,6 +346,12 @@ class App(Tk):
                                                             *list(self.neighbourhoodIdDict.keys()))
         self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
 
+    def checkHost(self):
+        print("Host")
+
+    def checkNeighboorhood(self):
+        print("Neighbourhood")
+
     def getAccommodatesMinMax(self):
         try:
             result = db.select_sql(self.databaseConnection,
@@ -524,6 +530,9 @@ class App(Tk):
         Label(self.insertFrame, text="Name").grid(row=5, column=5, sticky=W, padx=5, pady=5)
         self.insertListingHost              .grid(row=5, column=6, sticky=W, padx=5, pady=5)
 
+        self.insertListingCheckHostButton = Button(self.insertFrame, text="Check Host", command=self.checkHost)
+        self.insertListingCheckHostButton.grid(row=5, column=7, padx=5, pady=5)
+
         self.insertListingNeighbourhood = Entry(self.insertFrame)
         Label(self.insertFrame, text="Neighbourhood : ").grid(row=6, column=0, sticky=W, padx=5, pady=5)
 
@@ -537,6 +546,8 @@ class App(Tk):
         Label(self.insertFrame, text="Name").grid(row=6, column=5, sticky=W, padx=5, pady=5)
         self.insertListingNeighbourhood     .grid(row=6, column=6, sticky=W, padx=5, pady=5)
 
+        self.insertListingCheckNeighboorhoodButton = Button(self.insertFrame, text="Check Neighbourhood", command=self.checkNeighboorhood)
+        self.insertListingCheckNeighboorhoodButton.grid(row=6, column=7, padx=5, pady=5)
 
         Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
