@@ -1,1 +1,17 @@
+chez sophie :
+WITHOUT indexes :
+2.900
+1.975
+1.973
+2.122
+avg = 2.2425sec
 
+WITH indexes :
+2.245
+2.010
+2.130
+avg =2.128sec
+
+
+
+both cases are the same ! the added index already existed 
