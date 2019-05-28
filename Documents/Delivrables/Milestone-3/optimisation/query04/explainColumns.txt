@@ -50,6 +50,3 @@ This strategy can be used when the query uses only columns that are part of a si
 Description :
 There is a table scan when we join the host verifications and the previous nested blocks.
 Hence we can add an index on that holds the host_verification_id and host_verification_description
-
-
-ALTER TABLE `Host_verification` ADD INDEX `host_verification_descr_id` (`host_verification_description`,`host_verification_id`);
