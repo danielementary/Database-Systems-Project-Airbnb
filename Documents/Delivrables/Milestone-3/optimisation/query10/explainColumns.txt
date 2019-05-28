@@ -1,0 +1,4 @@
+
+query 10) : 89.518sec
+
+with index 35.482sec
