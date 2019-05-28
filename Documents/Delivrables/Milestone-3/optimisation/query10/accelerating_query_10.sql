@@ -1,18 +1,3 @@
-SELECT COUNT(DISTINCT (h1.host_id)),
-	city_name
-FROM Host h1,
-	Listing l1,
-	Neighbourhood n1,
-	City c1
-WHERE l1.host_id = h1.host_id
-	AND l1.neighbourhood_id = n1.neighbourhood_id
-	AND n1.city_id = c1.city_id
-	AND h1.host_id IN (
-		SELECT h2.host_id
-		FROM Host h2,
-			Listing l2
-		WHERE l2.host_id = h2.host_id
-			AND l2.square_feet IS NOT NULL
-		)
-GROUP BY city_name
-ORDER BY city_name;
+CREATE INDEX since_on_host_with_host_id USING BTREE ON Host(host_since, host_id); -- goes from 1min 17sec to 1min 9sec
+
+CREATE INDEX available_on_calendar ON Calendar(calendar_available)
