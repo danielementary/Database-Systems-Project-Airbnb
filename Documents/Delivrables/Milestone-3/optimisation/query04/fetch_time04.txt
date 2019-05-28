@@ -5,8 +5,15 @@ without indexes :
 4.440
 avg = 4.4306sec
 
-with indexes :
+with first indexe :
 1.892
 1.900
 1.836
 avg = 1.876sec
+
+
+with 3 indexes :   --> useless 
+1.734
+1.955
+1.879
+1.938
