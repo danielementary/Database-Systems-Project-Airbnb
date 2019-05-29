@@ -10,6 +10,7 @@ without index :
 65.162sec
 78.847sec
 81.023sec
+avg = 75.011sec
 
 with both indexes :
 (second one takes 18sec to create)
