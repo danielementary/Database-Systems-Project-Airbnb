@@ -29,13 +29,11 @@ WHERE H.host_id = L.host_id
 	AND D.day_date < "2019-10-01";
 
 -----------------query 04---------------------
---answer : 1930788  --TODO !!!!!
 SELECT COUNT(L1.listing_id)
 	Listing L2,
 	Host H1,
 	Host H2
-WHERE L1.listing_id = L2.listing_id
-	AND L1.host_id = H1.host_id
+WHERE L1.host_id = H1.host_id
 	AND L2.host_id = H2.host_id
 	AND H1.host_id <> H2.host_id
 	AND H1.host_name = H2.host_name;
@@ -62,7 +60,6 @@ GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 
 -----------------query 07---------------------
---with wifi : 85.73360122916912
 WITH amenities_wifi
 AS (
 	SELECT A.amenity_id
