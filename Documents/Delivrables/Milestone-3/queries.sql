@@ -1,7 +1,7 @@
 -- WARNIING !! when formatting, be sure that := have not a space in between. Formatter puts one but it does not work if so.
 -- Query 1): number of hosts per city that put square_feet in their listing
 -- time: 0.65 sec
-SELECT COUNT(DISTINCT (h1.host_id)),
+SELECT COUNT(DISTINCT (h1.host_id)) as number_of_hosts,
 	city_name
 FROM Host h1,
 	Listing l1,
@@ -18,7 +18,7 @@ WHERE l1.host_id = h1.host_id
 			AND l2.square_feet IS NOT NULL
 		)
 GROUP BY city_name
-ORDER BY city_name;
+ORDER BY city_name ASC;
 
 
 -- Query 2): top 5 Neighbourhoods of Madrid based on median of review_scores_rating
@@ -168,11 +168,11 @@ AS (
 	WHERE l.listing_id = r.listing_id
 	GROUP BY l.listing_id
 	ORDER BY l.host_id,
-		n_reviews
+		n_reviews DESC
 	)
 SELECT h.host_id,
-	GROUP_CONCAT(l.listing_id SEPARATOR ', '),
-	GROUP_CONCAT(l.n_reviews SEPARATOR ', ')
+	GROUP_CONCAT(l.listing_id SEPARATOR ', ') AS listing_ids,
+	GROUP_CONCAT(l.n_reviews SEPARATOR ', ') AS n_reviews_per_listing
 FROM listings_with_number_reviews l,
 	(
 		SELECT DISTINCT (host_id) AS host_id
@@ -187,6 +187,7 @@ WHERE l.listing_id IN (
 			) z
 		)
 GROUP BY h.host_id;
+
 
 
 
@@ -219,7 +220,7 @@ AS (
 		listings_number DESC
 	)
 SELECT apn.neighbourhood_name,
-	GROUP_CONCAT(ame.amenity_name SEPARATOR ', ')
+	GROUP_CONCAT(ame.amenity_name SEPARATOR ', ') as amenities
 FROM Amenity ame,
 	amenity_per_neigh_w_listings_n apn
 WHERE ame.amenity_id = apn.amenity_id
@@ -268,7 +269,8 @@ SELECT (
 						) z
 					)
 			)
-		) as average;
+		) AS average_difference;
+
 
 
 
@@ -400,7 +402,7 @@ WHERE subtable.n_available / (
 --Query 12):
 -- time: 0.48 sec
 SELECT subtable.neighbourhood_name,
-	subtable.n_strict_grace / total_list_per_neigh.n_listings
+	subtable.n_strict_grace / total_list_per_neigh.n_listings as strict_over_all_ratio
 FROM (
 	SELECT n.neighbourhood_id,
 		n.neighbourhood_name,
