@@ -1,7 +1,7 @@
 -- WARNIING !! when formatting, be sure that := have not a space in between. Formatter puts one but it does not work if so.
 -- Query 1): number of hosts per city that put square_feet in their listing
 -- time: 0.65 sec
-SELECT COUNT(DISTINCT (h1.host_id)) as number_of_hosts,
+SELECT COUNT(DISTINCT (h1.host_id)) AS number_of_hosts,
 	city_name
 FROM Host h1,
 	Listing l1,
