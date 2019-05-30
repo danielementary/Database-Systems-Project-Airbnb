@@ -156,7 +156,9 @@ WHERE L1.host_id = H1.host_id
 """
 
 predefined_query_2_5 = """
-SELECT DISTINCT D.day_date
+SELECT DISTINCT DAY(D.day_date) AS day,
+    MONTH(D.day_date) AS month,
+    YEAR(D.day_date) AS year
 FROM Day D,
 	Calendar C,
 	Listing L,
