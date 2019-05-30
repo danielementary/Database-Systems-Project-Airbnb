@@ -52,7 +52,7 @@ query 6: (16,94 sec) to optimise ????
 +---------+-------------------------------------+
 
 
-query 7: ??? can't run from shell .... TODO 
+query 7: ??? can't run from shell .... TODO
 
 query 8:
 +--------------------------------------+
@@ -70,7 +70,11 @@ query 9:
 |   14390 | Gilad          |
 |   23778 | Fadrique       |
 |   32141 | Amanda         |
-| ...     | ...            |
+|   29911 | Franziska      |
+|   28190 | Henrik         |
+|   12434 | Andrei         |
+|   16230 | Gabriela       |
+|   14412 | José & María   |
 +---------+----------------+
 
 query 10:
@@ -82,5 +86,9 @@ query 10:
 |       4777 | BOUTIQUE CITY CENTER APARTMENT                    |
 |       5046 | 4 Bedroom Next to La Pedrera                      |
 |       5258 | Amazing apartment in Plaça Catalunya              |
-| ...        | ...                                               |
+|       5386 | Diagonal elegante, terraza & Wifi *Bcn*           |
+|       5791 | Silent and bright apartment in the city center    |
+|       6058 | Cozy apartment in the heart of Barcelona          |
+|       8488 | Compact single room, shared bath, Placa Catalunya |
+|       9009 | Beautiful room at the heart of Barcelona          |
 +------------+---------------------------------------------------+
