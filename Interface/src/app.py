@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import scrolledtext
 
 import os
+
+from src.results import Results
 
 import src.database as db
 import database.select_tables as st
@@ -74,7 +75,6 @@ class App(Tk):
                             self.squareFeetScale.get(),
                             self.priceScale.get(),
                             self.isBusinessTravelReady.get(),
-                            self.reviewScoreRatingScale.get(),
                             self.propertyTypeIdDict[self.propertyTypeId.get()],
                             self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]])
 
@@ -102,6 +102,39 @@ class App(Tk):
                                                      "Get neighbourhoods")
 
             self.showResults(queryResults, st.select_neighbourhood, values)
+
+    def insertListingInDatabase(self):
+        values  = []
+
+        id = db.select_sql(self.databaseConnection, "SELECT MAX(listing_id) FROM Listing", "Select biggest listing_id")[0][0] + 1
+        values.append("{}".format(id))
+
+        tempName = self.insertListingNameEntry.get()[:250]
+        if (len(tempName) <= 0):
+            values.append("id : {}".format(id))
+        else:
+            values.append(tempName)
+
+        tempSummary = self.insertListingSummaryEntry.get()[:65000]
+        if (len(tempSummary) <= 0):
+            values.append("There is no summary for this listing.")
+        else:
+            values.append(tempSummary)
+
+        values.append(self.insertListingAccomodatesScale.get())
+        values.append(self.insertListingSquareFeetScale.get())
+        values.append(self.insertListingPriceScale.get())
+        values.append(self.listingHostId)
+        values.append(self.listingNeighbourhoodId)
+        values.append(self.insertListingIsBusinessTravelReady.get())
+        values.append(self.propertyTypeIdDict[self.insertListingPropertyTypeId.get()])
+        values.append(self.roomTypeIdDict[self.insertListingRoomTypeId.get()])
+        values.append(self.bedTypeIdDict[self.insertListingBedTypeId.get()])
+        values.append(self.cancellationPolicyIdDict[self.insertListingCancellationPolicyId.get()])
+
+        db.insert_listing(self.databaseConnection, values)
+        self.updateDatabaseVariables()
+        self.drawInsert()
 
     def executePredefinedQuery(self):
         sql = st.predefined_queries[self.predefniedQuery.get()]
@@ -141,15 +174,11 @@ class App(Tk):
                 Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
                 self.isBusinessTravelReadyCheckButton                 .grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Review Scores Rating (min)").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-                self.reviewScoreRatingScale                               .grid(row=6, column=1, sticky=W, padx=5, pady=5)
-                self.reviewScoreRatingScale.set(self.reviewScoresRatingMinMax[0])
+                Label(self.searchFrame, text="Property Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+                self.propertyTypeIdOptionMenu                .grid(row=6, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
-                self.propertyTypeIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
-
-                Label(self.searchFrame, text="Cancellation Policy").grid(row=8, column=0, sticky=W, padx=5, pady=5)
-                self.cancellationPolicyIdOptionMenu                .grid(row=8, column=1, sticky=W, padx=5, pady=5)
+                Label(self.searchFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+                self.cancellationPolicyIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
             elif (value == "Host"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
@@ -217,9 +246,13 @@ class App(Tk):
 
         Label(self.deleteFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
-        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)                 .grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)                  .grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5, columnspan=2)
+
+        self.connectDatabaseButton = Button(self.settingsFrame, text="Connect to DB", command=self.connectDatabase)
+        self.deleteDatabaseButton  = Button(self.settingsFrame, text="Delete DB",     command=self.deleteDatabase)
+
+        self.connectDatabaseButton.grid(row=1, column=0, sticky=W, padx=5, pady=5)
+        self.deleteDatabaseButton .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
     def drawForms(self):
         self.listingNameEntry  = Entry(self.searchFrame)
@@ -242,11 +275,6 @@ class App(Tk):
         self.isBusinessTravelReady = IntVar(self.searchFrame)
         self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame,
                                                             variable=self.isBusinessTravelReady)
-
-        self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
-                                                                 to=self.reviewScoresRatingMinMax[1],
-                                                             orient=HORIZONTAL,
-                                                             length=160)
 
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
@@ -299,6 +327,59 @@ class App(Tk):
         self.cityIdDict               = self.getCityIdDict()
         self.roomTypeIdDict           = self.getRoomTypeIdDict()
         self.bedTypeIdDict            = self.getBedTypeIdDict()
+        self.neighbourhoodIdDict      = self.getNeighbourhoodIdDict()
+
+    def updateHostNeighboorhoods(self, cityName):
+        self.neighbourhoodIdDict = self.getNeighbourhoodIdForCityIdDict(self.cityIdDict[cityName])
+        self.insertListingHostNeighboorhoodOptionMenu.grid_forget()
+        self.insertListingHostNeighboorhood = StringVar(self.insertFrame)
+        self.insertListingHostNeighboorhood.set(list(self.neighbourhoodIdDict.keys())[0])
+        self.insertListingHostNeighboorhoodOptionMenu = OptionMenu(self.insertFrame,
+                                                            self.insertListingHostNeighboorhood,
+                                                            *list(self.neighbourhoodIdDict.keys()))
+        self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
+
+    def checkHost(self):
+        if (len(self.insertListingHost.get()) > 0):
+            self.insertListingCheckHostButton["state"] = DISABLED
+            if (self.insertListingCheckNeighboorhoodButton["state"] == DISABLED):
+                self.insertButton["state"] = NORMAL
+
+            values = (self.insertListingHost.get(),
+                      self.neighbourhoodIdDict[self.insertListingHostNeighboorhood.get()])
+
+            result = db.select_sql_with_values(self.databaseConnection,
+                                               st.find_host, (values),
+                                               "Check Host")
+            if (len(result) == 1):
+                self.listingHostId = result[0][0]
+            else:
+                self.listingHostId = db.select_sql(self.databaseConnection, "SELECT MAX(host_id) FROM Host", "Select biggest host_id")[0][0] + 1
+                values = [self.listingHostId, self.insertListingHost.get(), self.neighbourhoodIdDict[self.insertListingHostNeighboorhood.get()]]
+                db.insert_host(self.databaseConnection, values)
+
+            Label(self.insertFrame, text="id : {}".format(self.listingHostId)).grid(row=5, column=8, sticky=W, padx=5, pady=5)
+
+    def checkNeighboorhood(self):
+        if (len(self.insertListingNeighbourhood.get()) > 0):
+            self.insertListingCheckNeighboorhoodButton["state"] = DISABLED
+            if (self.insertListingCheckHostButton["state"] == DISABLED):
+                self.insertButton["state"] = NORMAL
+
+            values = (self.insertListingNeighbourhood.get(),
+                      self.cityIdDict[self.insertListingNeighbourhoodCity.get()])
+
+            result = db.select_sql_with_values(self.databaseConnection,
+                                               st.find_neighbourhood, (values),
+                                               "Check Neighbourhood")
+            if (len(result) == 1):
+                self.listingNeighbourhoodId = result[0][0]
+            else:
+                self.listingNeighbourhoodId = db.select_sql(self.databaseConnection, "SELECT MAX(neighbourhood_id) FROM Neighbourhood", "Select biggest neighbourhood_id")[0][0] + 1
+                values = [self.listingNeighbourhoodId, self.insertListingNeighbourhood.get(), self.cityIdDict[self.insertListingNeighbourhoodCity.get()]]
+                db.insert_neighboorhood(self.databaseConnection, values)
+
+            Label(self.insertFrame, text="id : {}".format(self.listingNeighbourhoodId)).grid(row=6, column=8, sticky=W, padx=5, pady=5)
 
     def getAccommodatesMinMax(self):
         try:
@@ -390,6 +471,26 @@ class App(Tk):
         finally:
             return result
 
+    def getNeighbourhoodIdDict(self):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                                        st.select_neighbourhood_names_ids_statements,
+                                        "Select Neighbourhood names and ids"))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
+    def getNeighbourhoodIdForCityIdDict(self, cityId):
+        try:
+            result = dict(db.select_sql(self.databaseConnection,
+                                        st.select_neighbourhood_names_ids_for_city_id_statements.format(cityId),
+                                        "Select Neighbourhood names and ids for city {}".format(cityId)))
+        except:
+            result = {"None": 0}
+        finally:
+            return result
+
     def drawPredefinedQueries(self):
         self.initialQueriesFrameLabel.grid_forget()
         Label(self.queriesFrame, text="Query").grid(row=0, column=0, sticky=W, padx=5, pady=5)
@@ -403,13 +504,13 @@ class App(Tk):
         self.executeButton.grid(row=0, column=2, padx=5, pady=5)
 
     def drawInsert(self):
-        self.insertListingName = Entry(self.insertFrame)
+        self.insertListingNameEntry = Entry(self.insertFrame)
         Label(self.insertFrame, text="Name").grid(row=0, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingName              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingNameEntry              .grid(row=0, column=1, sticky=W, padx=5, pady=5)
 
-        self.insertListingSummary = Entry(self.insertFrame)
+        self.insertListingSummaryEntry = Entry(self.insertFrame)
         Label(self.insertFrame, text="Summary").grid(row=1, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingSummary              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingSummaryEntry              .grid(row=1, column=1, sticky=W, padx=5, pady=5)
 
         Label(self.insertFrame, text="Accommodates").grid(row=2, column=0, sticky=W, padx=5, pady=5)
         self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
@@ -420,134 +521,107 @@ class App(Tk):
         self.insertListingAccomodatesScale.set(0)
 
         Label(self.insertFrame, text="Square Feet").grid(row=3, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
-                                                                        to=self.squareFeetMinMax[1]*2,
-                                                                    orient=HORIZONTAL,
-                                                                    length=160)
-        self.insertListingAccomodatesScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale.set(0)
+        self.insertListingSquareFeetScale = Scale(self.insertFrame, from_=0,
+                                                                       to=self.squareFeetMinMax[1]*2,
+                                                                   orient=HORIZONTAL,
+                                                                   length=160)
+        self.insertListingSquareFeetScale.grid(row=3, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingSquareFeetScale.set(0)
 
         Label(self.insertFrame, text="Price").grid(row=4, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale = Scale(self.insertFrame, from_=0,
-                                                                        to=self.priceMinMax[1]*2,
-                                                                    orient=HORIZONTAL,
-                                                                    length=160)
-        self.insertListingAccomodatesScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
-        self.insertListingAccomodatesScale.set(0)
+        self.insertListingPriceScale = Scale(self.insertFrame, from_=0,
+                                                                  to=self.priceMinMax[1]*2,
+                                                              orient=HORIZONTAL,
+                                                              length=160)
+        self.insertListingPriceScale.grid(row=4, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingPriceScale.set(0)
 
         self.insertListingHost = Entry(self.insertFrame)
-        Label(self.insertFrame, text="Host Name").grid(row=5, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingHost                   .grid(row=5, column=1, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Host : ").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="City").grid(row=5, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingHostCity = StringVar(self.insertFrame)
+        self.insertListingHostCity.set(list(self.cityIdDict.keys())[0])
+        self.insertListingHostCityOptionMenu = OptionMenu(self.insertFrame,
+                                                          self.insertListingHostCity,
+                                                          *list(self.cityIdDict.keys()),
+                                                          command=self.updateHostNeighboorhoods)
+        self.insertListingHostCityOptionMenu.grid(row=5, column=2, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Neighbourhood").grid(row=5, column=3, sticky=W, padx=5, pady=5)
+        self.insertListingHostNeighboorhood = StringVar(self.insertFrame)
+        self.insertListingHostNeighboorhood.set(list(self.neighbourhoodIdDict.keys())[0])
+        self.insertListingHostNeighboorhoodOptionMenu = OptionMenu(self.insertFrame,
+                                                            self.insertListingHostNeighboorhood,
+                                                            *list(self.neighbourhoodIdDict.keys()))
+        self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Name").grid(row=5, column=5, sticky=W, padx=5, pady=5)
+        self.insertListingHost              .grid(row=5, column=6, sticky=W, padx=5, pady=5)
+
+        self.insertListingCheckHostButton = Button(self.insertFrame, text="Check Host", command=self.checkHost)
+        self.insertListingCheckHostButton.grid(row=5, column=7, padx=5, pady=5)
 
         self.insertListingNeighbourhood = Entry(self.insertFrame)
-        Label(self.insertFrame, text="Neighbourhood Name").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-        self.insertListingNeighbourhood                   .grid(row=6, column=1, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Neighbourhood : ").grid(row=6, column=0, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="City").grid(row=6, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhoodCity = StringVar(self.insertFrame)
+        self.insertListingNeighbourhoodCity.set(list(self.cityIdDict.keys())[0])
+        self.insertListingNeighbourhoodCityOptionMenu = OptionMenu(self.insertFrame,
+                                                          self.insertListingNeighbourhoodCity,
+                                                          *list(self.cityIdDict.keys()))
+        self.insertListingNeighbourhoodCityOptionMenu.grid(row=6, column=2, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Name").grid(row=6, column=5, sticky=W, padx=5, pady=5)
+        self.insertListingNeighbourhood     .grid(row=6, column=6, sticky=W, padx=5, pady=5)
+
+        self.insertListingCheckNeighboorhoodButton = Button(self.insertFrame, text="Check Neighbourhood", command=self.checkNeighboorhood)
+        self.insertListingCheckNeighboorhoodButton.grid(row=6, column=7, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Businness Travel Ready").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingIsBusinessTravelReady = IntVar(self.insertFrame)
+        self.insertListingIsBusinessTravelReadyCheckButton = Checkbutton(self.insertFrame,
+                                                                         variable=self.insertListingIsBusinessTravelReady)
+        self.insertListingIsBusinessTravelReadyCheckButton.grid(row=7, column=2, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Property Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
         self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
         self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                                 self.insertListingPropertyTypeId,
                                                                 *list(self.propertyTypeIdDict.keys()))
-        self.insertListingPropertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingPropertyTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Room Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Room Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
         self.insertListingRoomTypeId = StringVar(self.insertFrame)
         self.insertListingRoomTypeId.set(list(self.roomTypeIdDict.keys())[0])
         self.insertListingRoomTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                             self.insertListingRoomTypeId,
                                                             *list(self.roomTypeIdDict.keys()))
-        self.insertListingRoomTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingRoomTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Bed Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Bed Type").grid(row=10, column=0, sticky=W, padx=5, pady=5)
         self.insertListingBedTypeId = StringVar(self.insertFrame)
         self.insertListingBedTypeId.set(list(self.bedTypeIdDict.keys())[0])
         self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                            self.insertListingBedTypeId,
                                                            *list(self.bedTypeIdDict.keys()))
-        self.insertListingBedTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingBedTypeIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Cancellation Policy").grid(row=10, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Cancellation Policy").grid(row=11, column=0, sticky=W, padx=5, pady=5)
         self.insertListingCancellationPolicyId = StringVar(self.insertFrame)
         self.insertListingCancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
         self.insertListingCancellationPolicyIdOptionMenu = OptionMenu(self.insertFrame,
                                                                       self.insertListingCancellationPolicyId,
                                                                       *list(self.cancellationPolicyIdDict.keys()))
-        self.insertListingCancellationPolicyIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingCancellationPolicyIdOptionMenu.grid(row=11, column=1, sticky=W, padx=5, pady=5)
 
 
-        self.insertButton = Button(self.insertFrame, text="Insert")
-        self.insertButton.grid(row=0, column=3, padx=5, pady=5)
+        self.insertButton = Button(self.insertFrame, text="Insert", command=self.insertListingInDatabase)
+        self.insertButton.grid(row=0, column=8, padx=5, pady=5)
+        self.insertButton["state"] = DISABLED
+        Label(self.insertFrame, text="Please check host and neighbourhood before inserting the listing.").grid(row=0, column=3, sticky=W, padx=5, pady=5, columnspan=5)
+
 
     def showResults(self, queryResults, sql, values):
         Results(self, queryResults, sql, values).focus()
-
-class Results(Toplevel):
-    def __init__(self, master, queryResults, sql, values, **options):
-        Toplevel.__init__(self, master, **options)
-        self.title("DBS-Project Group32 Results")
-        self.geometry("1280x720")
-        self.resizable(width=False, height=False)
-        self.protocol("WM_DELETE_WINDOW", self.closeResults)
-
-        self.master.searchButton["state"]  =  DISABLED
-        self.master.executeButton["state"] =  DISABLED
-
-        Label(self, text="Please close this windows before next operations.").pack(padx=10, pady=10)
-
-        topFrame = Frame(self)
-        topFrame.pack(padx=10, pady=10)
-
-        bottomFrame = Frame(self, bg="white")
-        bottomFrame.pack(side=BOTTOM, expand=1, fill=BOTH, padx=10, pady=10)
-
-        Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-        Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-
-        if (values is not None):
-            Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-            Label(topFrame, text=values, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-        if (queryResults is not None):
-            resultLength = len(queryResults)
-            if (resultLength > 0):
-                resultsScrollbarY = Scrollbar(bottomFrame)
-                resultsScrollbarY.pack(side=LEFT, fill=Y)
-
-                resultsListbox = Listbox(bottomFrame, yscrollcommand=resultsScrollbarY.set)
-                resultsListbox.pack(side=LEFT, expand=1, fill=BOTH)
-
-                resultsScrollbarY.config(command=resultsListbox.yview)
-
-                resultsListbox.bind("<<ListboxSelect>>", self.onResultSelect)
-
-                self.sizes = [len(str(e)) for e in queryResults[0]]
-                for r in queryResults:
-                    self.sizes = self.maxSizes(self.sizes, [len(str(e)) for e in r])
-
-                for r in queryResults:
-                    temp = ""
-                    c    = 0
-                    for e in r:
-                        temp += "{0:<{1}}".format(e, self.sizes[c]+10)
-                        c    += 1
-                    resultsListbox.insert(END, temp)
-                Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
-            else:
-                Label(self, text="There are no results for this query.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
-        else:
-            Label(self, text="This query cannot be executed.".format()).pack(side=BOTTOM, fill=X, padx=10, pady=10)
-
-    def maxSizes(self, list1, list2):
-        lists = zip(list1, list2)
-        return [max(e[0], e[1]) for e in lists]
-
-    def onResultSelect(self, event):
-        widget = event.widget
-        index = int(widget.curselection()[0])
-        value = widget.get(index)
-        print(index, value, sep="\n")
-
-    def closeResults(self):
-        self.master.searchButton["state"]  = NORMAL
-        self.master.executeButton["state"] = NORMAL
-        self.destroy()

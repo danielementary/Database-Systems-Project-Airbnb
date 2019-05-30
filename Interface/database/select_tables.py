@@ -12,17 +12,34 @@ FROM Cancellation_policy;"""
 
 select_city_names_ids_statements = """
 SELECT city_name,
-       city_id FROM City;
+       city_id
+FROM City;
 """
 
 select_room_type_names_ids_statements = """
 SELECT room_type_name,
-       room_type_name FROM Room_type;
+       room_type_id
+FROM Room_type;
 """
 
 select_bed_type_names_ids_statements = """
 SELECT bed_type_name,
-       bed_type_name FROM Bed_type;
+       bed_type_id
+FROM Bed_type;
+"""
+
+select_neighbourhood_names_ids_statements = """
+SELECT neighbourhood_name,
+       neighbourhood_id
+FROM Neighbourhood
+WHERE city_id = 0;
+"""
+
+select_neighbourhood_names_ids_for_city_id_statements = """
+SELECT neighbourhood_name,
+       neighbourhood_id
+FROM Neighbourhood
+WHERE city_id = {};
 """
 
 select_listing_accomodates_min_max = """
@@ -48,22 +65,20 @@ FROM Listing;
 """
 
 select_listing = """
-SELECT listing_name,
-       listing_url,
+SELECT listing_id,
+       listing_name,
        accommodates,
-       square_feet, price,
-       review_scores_rating
+       square_feet,
+       price
 FROM Listing
 WHERE listing_name LIKE %s AND accommodates >= %s
                            AND square_feet  >= %s
                            AND price <= %s
                            AND is_business_travel_ready = %s
-                           AND review_scores_rating >= %s
                            AND property_type_id = %s
                            AND cancellation_policy_id = %s;"""
 select_host = """
-SELECT host_name,
-       host_since
+SELECT host_name
 FROM Host
 WHERE host_name LIKE %s;
 """
@@ -72,6 +87,18 @@ select_neighbourhood = """
 SELECT neighbourhood_name
 FROM Neighbourhood
 WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
+
+find_host = """
+SELECT host_id
+FROM Host
+WHERE host_name = %s AND neighbourhood_id = %s
+"""
+
+find_neighbourhood = """
+SELECT neighbourhood_id
+FROM Neighbourhood
+WHERE neighbourhood_name = %s AND city_id = %s;
+"""
 
 predefined_query_2_1 = """
 SELECT AVG(price) AS price
@@ -641,16 +668,16 @@ WHERE n_strict_grace / total_list_per_neigh.n_listings >= 0.05
 """
 
 
-predefined_queries = {"Predefined Query 2.1"  : predefined_query_2_1,
-                      "Predefined Query 2.2"  : predefined_query_2_2,
-                      "Predefined Query 2.3"  : predefined_query_2_3,
-                      "Predefined Query 2.4"  : predefined_query_2_4,
-                      "Predefined Query 2.5"  : predefined_query_2_5,
-                      "Predefined Query 2.6"  : predefined_query_2_6,
-                      "Predefined Query 2.7"  : predefined_query_2_7,
-                      "Predefined Query 2.8"  : predefined_query_2_8,
-                      "Predefined Query 2.9"  : predefined_query_2_9,
-                      "Predefined Query 2.10" : predefined_query_2_10,
+predefined_queries = {"Predefined Query 2.1" : predefined_query_2_1,
+                      "Predefined Query 2.2" : predefined_query_2_2,
+                      "Predefined Query 2.3" : predefined_query_2_3,
+                      "Predefined Query 2.4" : predefined_query_2_4,
+                      "Predefined Query 2.5" : predefined_query_2_5,
+                      "Predefined Query 2.6" : predefined_query_2_6,
+                      "Predefined Query 2.7" : predefined_query_2_7,
+                      "Predefined Query 2.8" : predefined_query_2_8,
+                      "Predefined Query 2.9" : predefined_query_2_9,
+                      "Predefined Query 2.10": predefined_query_2_10,
                       "Predefined Query 3.1" : predefined_query_3_1,
                       "Predefined Query 3.2" : predefined_query_3_2,
                       "Predefined Query 3.3" : predefined_query_3_3,
@@ -660,7 +687,7 @@ predefined_queries = {"Predefined Query 2.1"  : predefined_query_2_1,
                       "Predefined Query 3.7" : predefined_query_3_7,
                       "Predefined Query 3.8" : predefined_query_3_8,
                       "Predefined Query 3.9" : predefined_query_3_9,
-                      "Predefined Query 3.10" : predefined_query_3_10,
-                      "Predefined Query 3.11" : predefined_query_3_11,
-                      "Predefined Query 3.12" : predefined_query_3_12,
+                      "Predefined Query 3.10": predefined_query_3_10,
+                      "Predefined Query 3.11": predefined_query_3_11,
+                      "Predefined Query 3.12": predefined_query_3_12,
                       }

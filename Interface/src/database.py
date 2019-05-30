@@ -122,3 +122,26 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
         print("Table {} has been successfully populated".format(table_name))
     cursor.close()
     print("Database has been successfully populated")
+
+def insert_listing(db_connection, values):
+    cursor = db_connection.cursor()
+    sql = "INSERT INTO Listing (listing_id, listing_name, listing_summary, accommodates, square_feet, price, \
+                                host_id, neighbourhood_id, is_business_travel_ready, property_type_id, room_type_id, \
+                                bed_type_id, cancellation_policy_id) VALUES {}".format(tuple(values))
+    cursor.execute(sql)
+    cursor.close()
+    print("Listing {} has been successfully inserted by {}".format(values[0], values[-6]))
+
+def insert_host(db_connection, values):
+    cursor = db_connection.cursor()
+    sql    = "INSERT INTO Host (host_id, host_name, neighbourhood_id)  VALUES {}".format(tuple(values))
+    cursor.execute(sql)
+    cursor.close()
+    print("Host {} has been successfully inserted".format(values[1]))
+
+def insert_neighboorhood(db_connection, values):
+    cursor = db_connection.cursor()
+    sql    = "INSERT INTO Neighbourhood (neighbourhood_id, neighbourhood_name, city_id) VALUES {}".format(tuple(values))
+    cursor.execute(sql)
+    cursor.close()
+    print("Neighbourhood {} has been successfully inserted".format(values[1]))
