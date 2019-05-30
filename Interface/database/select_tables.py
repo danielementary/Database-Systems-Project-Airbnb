@@ -90,6 +90,18 @@ SELECT neighbourhood_name
 FROM Neighbourhood
 WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
 
+find_host = """
+SELECT host_id
+FROM Host
+WHERE host_name = %s AND neighbourhood_id = %s
+"""
+
+find_neighbourhood = """
+SELECT neighbourhood_id
+FROM Neighbourhood
+WHERE neighbourhood_name = %s AND city_id = %s;
+"""
+
 predefned_query_1 = """
 SELECT AVG(price)
 FROM Listing

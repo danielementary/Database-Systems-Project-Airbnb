@@ -347,16 +347,42 @@ class App(Tk):
         self.insertListingHostNeighboorhoodOptionMenu.grid(row=5, column=4, sticky=W, padx=5, pady=5)
 
     def checkHost(self):
-        self.insertListingCheckHostButton["state"] = DISABLED
-        if (self.insertListingCheckNeighboorhoodButton["state"] == DISABLED):
-            self.insertButton["state"] = NORMAL
-        print("NOT WORKING !")
+        if (len(self.insertListingHost.get()) > 0):
+            self.insertListingCheckHostButton["state"] = DISABLED
+            if (self.insertListingCheckNeighboorhoodButton["state"] == DISABLED):
+                self.insertButton["state"] = NORMAL
+
+            values = (self.insertListingHost.get(),
+                      self.neighbourhoodIdDict[self.insertListingHostNeighboorhood.get()])
+
+            result = db.select_sql_with_values(self.databaseConnection,
+                                               st.find_host, (values),
+                                               "Check Host")
+            if (len(result) == 1):
+                self.listingHostId = result[0][0]
+            else:
+                self.listingHostId = db.select_sql(self.databaseConnection, "SELECT MAX(host_id) FROM Host", "Select biggest host_id")[0][0] + 1
+
+            Label(self.insertFrame, text="id : {}".format(self.listingHostId)).grid(row=5, column=8, sticky=W, padx=5, pady=5)
 
     def checkNeighboorhood(self):
-        self.insertListingCheckNeighboorhoodButton["state"] = DISABLED
-        if (self.insertListingCheckHostButton["state"] == DISABLED):
-            self.insertButton["state"] = NORMAL
-        print("NOT WORKING !")
+        if (len(self.insertListingNeighbourhood.get()) > 0):
+            self.insertListingCheckNeighboorhoodButton["state"] = DISABLED
+            if (self.insertListingCheckHostButton["state"] == DISABLED):
+                self.insertButton["state"] = NORMAL
+
+            values = (self.insertListingNeighbourhood.get(),
+                      self.cityIdDict[self.insertListingNeighbourhoodCity.get()])
+
+            result = db.select_sql_with_values(self.databaseConnection,
+                                               st.find_neighbourhood, (values),
+                                               "Check Neighbourhood")
+            if (len(result) == 1):
+                self.listingNeighbourhoodId = result[0][0]
+            else:
+                self.listingNeighbourhoodId = db.select_sql(self.databaseConnection, "SELECT MAX(neighbourhood_id) FROM Neighbourhood", "Select biggest neighbourhood_id")[0][0] + 1
+
+            Label(self.insertFrame, text="id : {}".format(self.listingNeighbourhoodId)).grid(row=6, column=8, sticky=W, padx=5, pady=5)
 
     def getAccommodatesMinMax(self):
         try:
