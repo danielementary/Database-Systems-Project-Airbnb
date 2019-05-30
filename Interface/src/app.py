@@ -58,6 +58,7 @@ class App(Tk):
                 self.statusLabel["text"] = "Please check that the MySQL server is running and configured"
 
     def disconnectAndClose(self):
+        self.drop_indexes()
         db.disconnect(self.databaseConnection)
         self.destroy()
 
