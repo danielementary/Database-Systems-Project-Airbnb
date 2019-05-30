@@ -73,13 +73,13 @@ SELECT neighbourhood_name
 FROM Neighbourhood
 WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
 
-predefned_query_1 = """
+predefined_query_2_1 = """
 SELECT AVG(price)
 FROM Listing
 WHERE beds = 8;
 """
 
-predefned_query_2 = """
+predefined_query_2_2 = """
 SELECT AVG(L.price)
 FROM Listing L,
      Listing_amenity_map M
@@ -90,7 +90,7 @@ WHERE L.listing_id = M.listing_id
                           OR "Smart TV");
 """
 
-predefned_query_3 = """
+predefined_query_2_3 = """
 SELECT DISTINCT H.host_name
 FROM Host H,
      Listing L,
@@ -104,7 +104,7 @@ WHERE H.host_id = L.host_id
       AND D.day_date < "2019-10-01";
 """
 
-predefned_query_4 = """
+predefined_query_2_4 = """
 SELECT COUNT(L1.listing_id)
 FROM Listing L1,
      Listing L2,
@@ -117,7 +117,7 @@ WHERE L1.host_id = H1.host_id
 
 """
 
-predefned_query_5 = """
+predefined_query_2_5 = """
 SELECT DISTINCT D.day_date
 FROM Day D,
      Calendar C,
@@ -130,7 +130,7 @@ WHERE D.day_id = C.calendar_day_id
       AND H.host_name = "Viajes Eco";
 """
 
-predefned_query_6 = """
+predefined_query_2_6 = """
 SELECT DISTINCT H.host_id, H.host_name
 FROM Host H,
      Listing L
@@ -139,7 +139,7 @@ GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 """
 
-predefned_query_7 = """
+predefined_query_2_7 = """
 SELECT (AVG(L1.price) - AVG(L2.price))
 FROM Listing L1,
      Listing L2,
@@ -157,7 +157,7 @@ WHERE L1.listing_id = M1.listing_id
                                 OR A.amenity_name = "Pocket wifi");
 """
 
-predefned_query_8 = """
+predefined_query_2_8 = """
 SELECT AVG(L1.price) - AVG(L2.price)
 FROM Listing L1,
      Listing L2
@@ -180,7 +180,7 @@ AND (L2.listing_id IN (SELECT L.listing_id
 AND (L2.beds = 8);
 """
 
-predefned_query_9 = """
+predefined_query_2_9 = """
 SELECT H.host_id, H.host_name
 FROM  Host H,
       Listing L,
@@ -195,7 +195,7 @@ GROUP BY L.listing_id
 ORDER BY COUNT(*) DESC LIMIT 10;
 """
 
-predefned_query_10 = """
+predefined_query_2_10 = """
 SELECT L.listing_id, L.listing_name
 FROM Listing L, Neighbourhood N, City C
 WHERE L.neighbourhood_id = N.neighbourhood_id
@@ -204,13 +204,14 @@ AND   C.city_name = "Barcelona"
 ORDER BY L.review_scores_rating DESC LIMIT 10;
 """
 
-predefined_queries = {"Predefined Query 1"  : predefned_query_1,
-                      "Predefined Query 2"  : predefned_query_2,
-                      "Predefined Query 3"  : predefned_query_3,
-                      "Predefined Query 4"  : predefned_query_4,
-                      "Predefined Query 5"  : predefned_query_5,
-                      "Predefined Query 6"  : predefned_query_6,
-                      "Predefined Query 7"  : predefned_query_7,
-                      "Predefined Query 8"  : predefned_query_8,
-                      "Predefined Query 9"  : predefned_query_9,
-                      "Predefined Query 10" : predefned_query_10}
+predefined_queries = {"Predefined Query 2.1"  : predefined_query_2_1,
+                      "Predefined Query 2.2"  : predefined_query_2_2,
+                      "Predefined Query 2.3"  : predefined_query_2_3,
+                      "Predefined Query 2.4"  : predefined_query_2_4,
+                      "Predefined Query 2.5"  : predefined_query_2_5,
+                      "Predefined Query 2.6"  : predefined_query_2_6,
+                      "Predefined Query 2.7"  : predefined_query_2_7,
+                      "Predefined Query 2.8"  : predefined_query_2_8,
+                      "Predefined Query 2.9"  : predefined_query_2_9,
+                      "Predefined Query 2.10" : predefined_query_2_10,
+                      }
