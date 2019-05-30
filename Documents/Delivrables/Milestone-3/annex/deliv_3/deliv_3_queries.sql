@@ -58,29 +58,15 @@ ORDER BY subtable.review_scores_rating DESC LIMIT 5;
 
 
 -----------------query 03---------------------
-WITH hosts_with_number
-AS (
-	SELECT h.host_id,
-		h.host_name,
-		count(DISTINCT (l.listing_id)) AS number
-	FROM Listing l,
-		Host h
-	WHERE h.host_id = l.host_id
-	GROUP BY h.host_id
-	ORDER BY number DESC
-	),
-highest_number
-AS (
-	SELECT number
-	FROM hosts_with_number limit 1
-	)
-SELECT host_id,
-	host_name
-FROM hosts_with_number
-WHERE number = (
-		SELECT *
-		FROM highest_number
-		);
+
+SELECT h.host_id,
+	h.host_name,
+	count(DISTINCT (l.listing_id)) AS number_of_listings
+FROM Listing l,
+	Host h
+WHERE h.host_id = l.host_id
+GROUP BY h.host_id
+ORDER BY number DESC LIMIT 1;
 
 
 
