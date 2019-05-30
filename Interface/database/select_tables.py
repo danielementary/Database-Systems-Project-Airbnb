@@ -1,5 +1,15 @@
 search_tables = ("Listing", "Host", "Neighbourhood")
 
+delete_tables = ("Listing", "Host", "Neighbourhood", "Property_type", "Room_type", "Bed_type",
+                 "Cancellation_policy", "City", "Country", "Review", "Reviewer", "Calendar",
+                 "Day", "Amenity", "Host_verification")
+
+id_map = {"Listing": "listing_id",  "Host": "host_id",  "Neighbourhood": "neighbourhood_id",
+          "Property_type": "property_type_id",  "Room_type": "room_type_id",  "Bed_type": "bed_type_id",
+          "Cancellation_policy": "cancellation_policy_id",  "City": "city_id",  "Country": "country_id",
+          "Review": "review_id",  "Reviewer": "review_id",  "Calendar": "calendar_id",
+          "Day": "day_id",  "Amenity": "amenity_id", "Host_verification": "host_verification_id"}
+
 select_property_type_names_ids_statements = """
 SELECT property_type_name,
        property_type_id
