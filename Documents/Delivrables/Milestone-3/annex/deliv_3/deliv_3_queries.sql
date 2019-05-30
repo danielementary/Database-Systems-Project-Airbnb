@@ -1,257 +1,4 @@
-search_tables = ("Listing", "Host", "Neighbourhood")
-
-select_property_type_names_ids_statements = """
-SELECT property_type_name,
-       property_type_id
-FROM Property_type;"""
-
-select_cancellation_policy_names_ids_statements = """
-SELECT cancellation_policy_name,
-       cancellation_policy_id
-FROM Cancellation_policy;"""
-
-select_city_names_ids_statements = """
-SELECT city_name,
-       city_id
-FROM City;
-"""
-
-select_room_type_names_ids_statements = """
-SELECT room_type_name,
-       room_type_id
-FROM Room_type;
-"""
-
-select_bed_type_names_ids_statements = """
-SELECT bed_type_name,
-       bed_type_id
-FROM Bed_type;
-"""
-
-select_neighbourhood_names_ids_statements = """
-SELECT neighbourhood_name,
-       neighbourhood_id
-FROM Neighbourhood
-WHERE city_id = 0;
-"""
-
-select_neighbourhood_names_ids_for_city_id_statements = """
-SELECT neighbourhood_name,
-       neighbourhood_id
-FROM Neighbourhood
-WHERE city_id = {};
-"""
-
-select_listing_accomodates_min_max = """
-SELECT MIN(accommodates),
-       MAX(accommodates)
-FROM Listing;
-"""
-
-select_listing_sqare_feet_min_max = """
-SELECT MIN(square_feet),
-       MAX(square_feet)
-FROM Listing;
-"""
-
-select_listing_price_min_max = """
-SELECT MIN(price), MAX(price)
-FROM Listing;
-"""
-
-select_listing_review_score_rating_min_max = """
-SELECT MIN(review_scores_rating), MAX(review_scores_rating)
-FROM Listing;
-"""
-
-select_listing = """
-SELECT listing_id,
-       listing_name,
-       accommodates,
-       square_feet,
-       price
-FROM Listing
-WHERE listing_name LIKE %s AND accommodates >= %s
-                           AND square_feet  >= %s
-                           AND price <= %s
-                           AND is_business_travel_ready = %s
-                           AND property_type_id = %s
-                           AND cancellation_policy_id = %s;"""
-select_host = """
-SELECT host_name
-FROM Host
-WHERE host_name LIKE %s;
-"""
-
-select_neighbourhood = """
-SELECT neighbourhood_name
-FROM Neighbourhood
-WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
-
-find_host = """
-SELECT host_id
-FROM Host
-WHERE host_name = %s AND neighbourhood_id = %s
-"""
-
-find_neighbourhood = """
-SELECT neighbourhood_id
-FROM Neighbourhood
-WHERE neighbourhood_name = %s AND city_id = %s;
-"""
-
-predefined_query_2_1 = """
-SELECT AVG(price) AS price
-FROM Listing
-WHERE beds = 8;
-"""
-
-predefined_query_2_2 = """
-SELECT AVG(L.price) AS price
-FROM Listing L,
-	Listing_amenity_map M
-WHERE L.listing_id = M.listing_id
-	AND M.amenity_id IN (
-		SELECT DISTINCT amenity_name
-		FROM Amenity
-		WHERE amenity_name LIKE "%TV%"
-		);
-"""
-
-predefined_query_2_3 = """
-SELECT DISTINCT H.host_name
-FROM Host H,
-	Listing L,
-	Day D,
-	Calendar C
-WHERE H.host_id = L.host_id
-	AND L.listing_id = C.listing_id
-	AND C.calendar_available = 1
-	AND C.calendar_day_id = D.day_id
-	AND D.day_date >= "2019-03-01"
-	AND D.day_date < "2019-10-01";
-"""
-
-predefined_query_2_4 = """
-SELECT COUNT(L1.listing_id) AS number_of_listings
-FROM Listing L1,
-	Listing L2,
-	Host H1,
-	Host H2
-WHERE L1.host_id = H1.host_id
-	AND L2.host_id = H2.host_id
-	AND H1.host_id <> H2.host_id
-	AND H1.host_name = H2.host_name;
-
-"""
-
-predefined_query_2_5 = """
-SELECT DISTINCT D.day_date
-FROM Day D,
-	Calendar C,
-	Listing L,
-	Host H
-WHERE D.day_id = C.calendar_day_id
-	AND C.listing_id = L.listing_id
-	AND C.calendar_available = 1
-	AND L.host_id = H.host_id
-	AND H.host_name = "Viajes Eco";
-"""
-
-predefined_query_2_6 = """
-SELECT DISTINCT H.host_id,
-	H.host_name
-FROM Host H,
-	Listing L
-WHERE H.host_id = L.host_id
-GROUP BY L.listing_id
-HAVING COUNT(L.listing_id) = 1;
-"""
-
-predefined_query_2_7 = """
-WITH amenities_wifi
-AS (
-	SELECT A.amenity_id
-	FROM Amenity A
-	WHERE A.amenity_name LIKE "%wifi%"
-	),
-prices
-AS (
-	SELECT avg(l.price) AS avg_price,
-		(
-			CASE
-				WHEN lam.amenity_id IN (
-						SELECT amenity_id
-						FROM amenities_wifi
-						)
-					THEN 1
-				ELSE 0
-				END
-			) AS wifi
-	FROM Listing l,
-		Listing_amenity_map lam
-	WHERE l.listing_id = lam.listing_id
-	GROUP BY wifi
-	)
-SELECT t1.avg_price - t2.avg_price AS average_price_difference
-FROM prices t1,
-	prices t2
-WHERE t1.wifi = 1
-	AND t2.wifi = 0;
-"""
-
-predefined_query_2_8 = """
-WITH eight_beds_average_price
-AS (
-	SELECT avg(cal.calendar_price) AS avg_price,
-		c.city_name
-	FROM Listing l,
-		Neighbourhood n,
-		City c,
-		Calendar cal
-	WHERE cal.listing_id = l.listing_id
-		AND cal.calendar_price IS NOT NULL
-		AND l.beds = 8
-		AND c.city_id = n.city_id
-		AND n.neighbourhood_id = l.neighbourhood_id
-	GROUP BY c.city_name
-	)
-SELECT t1.avg_price - t2.avg_price AS Berlin_minus_Madrid_8_beds_avg_price
-FROM eight_beds_average_price t1,
-	eight_beds_average_price t2
-WHERE t1.city_name = 'Berlin'
-	AND t2.city_name = 'Madrid';
-"""
-
-predefined_query_2_9 = """
-SELECT H.host_id,
-	H.host_name
-FROM Host H,
-	Listing L,
-	Neighbourhood N,
-	City T,
-	Country C
-WHERE H.host_id = L.host_id
-	AND N.city_id = T.city_id
-	AND T.country_id = C.country_id
-	AND C.country_name = "Spain"
-GROUP BY L.listing_id
-ORDER BY COUNT(*) DESC LIMIT 10;
-"""
-
-predefined_query_2_10 = """
-SELECT L.listing_id,
-	L.listing_name
-FROM Listing L,
-	Neighbourhood N,
-	City C
-WHERE L.neighbourhood_id = N.neighbourhood_id
-	AND N.city_id = C.city_id
-	AND C.city_name = "Barcelona"
-ORDER BY L.review_scores_rating DESC LIMIT 10;
-"""
-
-predefined_query_3_1 = """
+-----------------query 01---------------------
 SELECT COUNT(DISTINCT (h1.host_id)) AS number_of_hosts,
 	city_name
 FROM Host h1,
@@ -270,8 +17,9 @@ WHERE l1.host_id = h1.host_id
 		)
 GROUP BY city_name
 ORDER BY city_name ASC;
-"""
-predefined_query_3_2 = """
+
+
+-----------------query 02---------------------
 WITH subtable
 AS (
 	SELECT @row := @row + 1 AS rownum,
@@ -307,35 +55,22 @@ WHERE subtable.rownum IN (
 		)
 ORDER BY subtable.review_scores_rating DESC LIMIT 5;
 
-"""
 
-predefined_query_3_3 = """
-WITH hosts_with_number
-AS (
-	SELECT h.host_id,
-		h.host_name,
-		count(DISTINCT (l.listing_id)) AS number
-	FROM Listing l,
-		Host h
-	WHERE h.host_id = l.host_id
-	GROUP BY h.host_id
-	ORDER BY number DESC
-	),
-highest_number
-AS (
-	SELECT number
-	FROM hosts_with_number limit 1
-	)
-SELECT host_id,
-	host_name
-FROM hosts_with_number
-WHERE number = (
-		SELECT *
-		FROM highest_number
-		);
-"""
 
-predefined_query_3_4 = """
+-----------------query 03---------------------
+
+SELECT h.host_id,
+	h.host_name,
+	count(DISTINCT (l.listing_id)) AS number_of_listings
+FROM Listing l,
+	Host h
+WHERE h.host_id = l.host_id
+GROUP BY h.host_id
+ORDER BY number DESC LIMIT 1;
+
+
+
+-----------------query 04---------------------
 SELECT l.listing_id,
 	avg(cal.calendar_price) AS price
 FROM Listing l,
@@ -365,9 +100,10 @@ WHERE l.neighbourhood_id = n.neighbourhood_id
 	AND hv.host_verification_description = 'government_id'
 GROUP BY l.listing_id
 ORDER BY price ASC LIMIT 5;
-"""
 
-predefined_query_3_5 = """
+
+
+-----------------query 05---------------------
 WITH listings_with_facilities
 AS (
 	SELECT l.listing_id,
@@ -403,9 +139,9 @@ WHERE l1.listing_id IN (
 			) listings_per_accomodates
 		)
 ORDER BY a.accom;
-"""
 
-predefined_query_3_6 = """
+
+-----------------query 06---------------------
 WITH listings_with_number_reviews
 AS (
 	SELECT l.listing_id,
@@ -435,9 +171,9 @@ WHERE l.listing_id IN (
 			) z
 		)
 GROUP BY h.host_id;
-"""
 
-predefined_query_3_7 = """
+
+-----------------query 07---------------------
 WITH amenity_per_neigh_w_listings_n
 AS (
 	SELECT a.amenity_id,
@@ -477,9 +213,10 @@ WHERE ame.amenity_id = apn.amenity_id
 			) z
 		)
 GROUP BY apn.neighbourhood_id;
-"""
 
-predefined_query_3_8 = """
+
+
+-----------------query 08---------------------
 WITH host_id_with_n_verf
 AS (
 	SELECT host_id,
@@ -512,9 +249,10 @@ SELECT (
 					)
 			)
 		) AS average_difference;
-"""
 
-predefined_query_3_9 = """
+
+
+-----------------query 09---------------------
 SELECT c1.city_name,
 	total_reviews
 FROM City c1,
@@ -542,9 +280,9 @@ FROM City c1,
 		) total_reviews_per_city
 WHERE c1.city_id = total_reviews_per_city.city_id
 ORDER BY total_reviews DESC LIMIT 1;
-"""
 
-predefined_query_3_10 = """
+
+-----------------query 10---------------------
 SELECT neigh_n_occupied.neighbourhood_name
 FROM (
 	SELECT n1.neighbourhood_name,
@@ -590,8 +328,10 @@ WHERE neigh_n_occupied.n_occupied / (
 		FROM Listing l1
 		WHERE l1.neighbourhood_id = neigh_n_occupied.neighbourhood_id
 	) >= 0.5;
-"""
-predefined_query_3_11 = """
+
+
+
+-----------------query 11---------------------
 SELECT DISTINCT (country_name)
 FROM (
 	SELECT ctry.country_id,
@@ -632,9 +372,10 @@ WHERE subtable.n_available / (
 			AND c.country_id = ct.country_id
 			AND ct.country_id = subtable.country_id
 		) >= 0.2;
-"""
 
-predefined_query_3_12 = """
+
+
+-----------------query 12---------------------
 SELECT subtable.neighbourhood_name,
 	subtable.n_strict_grace / total_list_per_neigh.n_listings as strict_over_all_ratio
 FROM (
@@ -665,29 +406,3 @@ FROM (
 		) total_list_per_neigh
 WHERE n_strict_grace / total_list_per_neigh.n_listings >= 0.05
 	AND subtable.neighbourhood_id = total_list_per_neigh.neighbourhood_id;
-"""
-
-
-predefined_queries = {"Predefined Query 2.1" : predefined_query_2_1,
-                      "Predefined Query 2.2" : predefined_query_2_2,
-                      "Predefined Query 2.3" : predefined_query_2_3,
-                      "Predefined Query 2.4" : predefined_query_2_4,
-                      "Predefined Query 2.5" : predefined_query_2_5,
-                      "Predefined Query 2.6" : predefined_query_2_6,
-                      "Predefined Query 2.7" : predefined_query_2_7,
-                      "Predefined Query 2.8" : predefined_query_2_8,
-                      "Predefined Query 2.9" : predefined_query_2_9,
-                      "Predefined Query 2.10": predefined_query_2_10,
-                      "Predefined Query 3.1" : predefined_query_3_1,
-                      "Predefined Query 3.2" : predefined_query_3_2,
-                      "Predefined Query 3.3" : predefined_query_3_3,
-                      "Predefined Query 3.4" : predefined_query_3_4,
-                      "Predefined Query 3.5" : predefined_query_3_5,
-                      "Predefined Query 3.6" : predefined_query_3_6,
-                      "Predefined Query 3.7" : predefined_query_3_7,
-                      "Predefined Query 3.8" : predefined_query_3_8,
-                      "Predefined Query 3.9" : predefined_query_3_9,
-                      "Predefined Query 3.10": predefined_query_3_10,
-                      "Predefined Query 3.11": predefined_query_3_11,
-                      "Predefined Query 3.12": predefined_query_3_12,
-                      }

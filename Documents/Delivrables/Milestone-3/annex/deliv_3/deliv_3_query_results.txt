@@ -1,0 +1,406 @@
+query 1:
++-----------------+-----------+
+| number_of_hosts | city_name |
++-----------------+-----------+
+|             345 | Barcelona |
+|             370 | Berlin    |
+|             249 | Madrid    |
++-----------------+-----------+
+
+
+query 2:
++--------------------+----------------------+
+| neighbourhood_name | review_scores_rating |
++--------------------+----------------------+
+| Aluche             |                  100 |
+| Friedrichshain     |                  100 |
+| Prenzlauer Berg    |                  100 |
+| Valdeacederas      |                  100 |
+| Nueva España       |                  100 |
++--------------------+----------------------+
+
+
+query 3:
++---------+-------------+
+| host_id | host_name   |
++---------+-------------+
+|   12690 | Eva&Jacques |
++---------+-------------+
+
+
+query 4:
++------------+--------------------+
+| listing_id | price              |
++------------+--------------------+
+|      41805 |                 20 |
+|      37501 | 21.065573770491802 |
+|      41763 |  21.29032258064516 |
+|      27802 |                 22 |
+|      27596 |                 22 |
++------------+--------------------+s
+
+
+query 5:
++------------+----------------------+-------+
+| listing_id | review_scores_rating | accom |
++------------+----------------------+-------+
+|      31808 |                  100 |     1 |
+|      28619 |                  100 |     1 |
+|      28668 |                  100 |     1 |
+|      41421 |                  100 |     1 |
+|      37613 |                  100 |     1 |
+|      32549 |                  100 |     2 |
+|       4423 |                  100 |     2 |
+|      11868 |                  100 |     2 |
+|      32584 |                  100 |     2 |
+|      41341 |                  100 |     2 |
+|      12073 |                  100 |     3 |
+|       8562 |                  100 |     3 |
+|      12166 |                  100 |     3 |
+|      12257 |                  100 |     3 |
+|      37770 |                  100 |     3 |
+|      28559 |                  100 |     4 |
+|      37189 |                  100 |     4 |
+|      32714 |                  100 |     4 |
+|      12053 |                  100 |     4 |
+|       2353 |                  100 |     4 |
+|      11856 |                  100 |     5 |
+|      12196 |                  100 |     5 |
+|       8623 |                  100 |     5 |
+|      12215 |                  100 |     5 |
+|      41587 |                  100 |     5 |
+|      37203 |                  100 |     6 |
+|       8363 |                  100 |     6 |
+|       2205 |                  100 |     6 |
+|      33532 |                  100 |     6 |
+|      42026 |                  100 |     6 |
+|      38507 |                  100 |     7 |
+|      10303 |                  100 |     7 |
+|      30703 |                  100 |     7 |
+|      40664 |                  100 |     7 |
+|      35309 |                  100 |     7 |
+|       5045 |                  100 |     8 |
+|       1875 |                  100 |     8 |
+|       5572 |                  100 |     8 |
+|       9748 |                  100 |     8 |
+|       7021 |                  100 |     8 |
+|       6936 |                  100 |     9 |
+|      23683 |                  100 |     9 |
+|       5038 |                  100 |     9 |
+|      32888 |                  100 |     9 |
+|      31904 |                  100 |     9 |
+|      10447 |                  100 |    10 |
+|      20538 |                  100 |    10 |
+|      10733 |                  100 |    10 |
+|      12417 |                  100 |    10 |
+|      40712 |                  100 |    10 |
+|      16339 |                   99 |    11 |
+|      32242 |                   99 |    11 |
+|      32252 |                   99 |    11 |
+|      32218 |                   98 |    11 |
+|      31161 |                   98 |    11 |
+|       4185 |                  100 |    12 |
+|      16681 |                  100 |    12 |
+|       4049 |                  100 |    12 |
+|      16038 |                  100 |    12 |
+|      11151 |                  100 |    12 |
+|       9174 |                  100 |    13 |
+|      23137 |                   99 |    13 |
+|      21513 |                   99 |    13 |
+|      21398 |                   95 |    13 |
+|       2944 |                   95 |    13 |
+|       9214 |                  100 |    14 |
+|      20878 |                  100 |    14 |
+|       6977 |                  100 |    14 |
+|      29198 |                   99 |    14 |
+|      20503 |                   98 |    14 |
+|      36476 |                   98 |    15 |
+|      28161 |                   96 |    15 |
+|      15858 |                   95 |    15 |
+|      31560 |                   95 |    15 |
+|      31604 |                   92 |    15 |
+|      24687 |                  100 |    16 |
+|      32575 |                  100 |    16 |
+|      30045 |                  100 |    16 |
+|        261 |                  100 |    16 |
+|      12419 |                  100 |    16 |
++------------+----------------------+-------+
+
+
+query 6:
+(here are only the 5 first rows)
++---------+-------------+-----------------------+
+| host_id | listing_ids | n_reviews_per_listing |
++---------+-------------+-----------------------+
+|       3 | 3           | 222                   |
+|      12 | 12          | 125                   |
+|      16 | 13, 14, 15  | 206, 178, 172         |
+|      17 | 17          | 50                    |
+|      19 | 19          | 2                     |
+|   ...   |     ...     |         ...           |
++---------+-------------+-----------------------+
+
+
+
+query 7:
++-----------------------+-----------------------------------------------+
+| neighbourhood_name    | amenities                                     |
++-----------------------+-----------------------------------------------+
+| Kreuzberg             | Heating, Kitchen, Wifi                        |
+| Friedrichshain        | Heating, Kitchen, Wifi                        |
+| Prenzlauer Berg       | Heating, Kitchen, Wifi                        |
+| Alt-Hohenschönhausen  | Wifi, Heating, Essentials                     |
+| Moabit                | Kitchen, Wifi, Essentials                     |
+| Schöneberg            | Wifi, Heating, Essentials                     |
+| Charlottenburg        | Essentials, Wifi, Heating                     |
+| Wedding               | Heating, Kitchen, Wifi                        |
+| Mitte                 | Heating, Essentials, Wifi                     |
+| Neukölln              | Heating, Kitchen, Wifi                        |
+| Tempelhof             | Essentials, Kitchen, Wifi                     |
+| Pankow                | Wifi, Heating, Kitchen                        |
+| Wilmersdorf           | Wifi, Essentials, Heating                     |
+| Alt-Treptow           | Wifi, Essentials, Heating                     |
+| Steglitz              | Wifi, Essentials, Heating                     |
+| Potsdamer Platz       | Wifi, Essentials, Heating                     |
+| Schmargendorf         | Wifi, Shampoo, Essentials                     |
+| Reinickendorf         | Heating, Kitchen, Wifi                        |
+| Karlshorst            | Washer, Heating, Wifi                         |
+| Köpenick              | Essentials, Wifi, Heating                     |
+| Westend               | Essentials, Wifi, Heating                     |
+| Altglienicke          | Wifi, Heating, Kitchen                        |
+| Halensee              | Washer, Wifi, Heating                         |
+| Lichterfelde          | Washer, Wifi, Heating                         |
+| Zehlendorf            | Essentials, Wifi, Heating                     |
+| Mariendorf            | Hair dryer, Essentials, Kitchen               |
+| Lichtenberg           | Heating, Kitchen, Wifi                        |
+| Wittenau              | Shampoo, Heating, Essentials                  |
+| Friedrichsfelde       | Kitchen, Heating, Wifi                        |
+| Marzahn               | Wifi, Heating, Essentials                     |
+| Bohnsdorf             | Safety card, Heating, Cat(s)                  |
+| Biesdorf              | TV, Wifi, Heating                             |
+| Grunewald             | Wifi, Heating, Essentials                     |
+| Fennpfuhl             | Kitchen, Heating, Essentials                  |
+| Kaulsdorf             | Essentials, Lock on bedroom door, Hair dryer  |
+| Mahlsdorf             | Shampoo, Essentials, Wifi                     |
+| Hermsdorf             | Heating, Fire extinguisher, Essentials        |
+| Hansaviertel          | Kitchen, Essentials, Wifi                     |
+| Tiergarten            | Heating, Essentials, Wifi                     |
+| Friedrichshagen       | Hangers, Heating, Essentials                  |
+| Nikolassee            | Heating, Essentials, Wifi                     |
+| Schmöckwitz           | TV, Heating, Kitchen                          |
+| Rudow                 | Hangers, Heating, Essentials                  |
+| Weißensee             | Essentials, Kitchen, Wifi                     |
+| Baumschulenweg        | Wifi, Essentials, Kitchen                     |
+| Rahnsdorf             | Wifi, Washer, Hair dryer                      |
+| Britz                 | Essentials, Wifi, Kitchen                     |
+| Friedenau             | Essentials, Wifi, Heating                     |
+| Rummelsburg           | Kitchen, Wifi, Heating                        |
+| Johannisthal          | Heating, Essentials, Hair dryer               |
+| Tegel                 | Hot water, Laptop friendly workspace, Wifi    |
+| Wannsee               | Smoke detector, Heating, Essentials           |
+| Charlottenburg-Nord   | Kitchen, Essentials, Wifi                     |
+| Plänterwald           | Heating, Kitchen, Wifi                        |
+| Gropiusstadt          | Heating, Hair dryer, Essentials               |
+| Siemensstadt          | Wifi, Heating, Washer                         |
+| Oberschöneweide       | Wifi, Kitchen, Heating                        |
+| Buch                  | Essentials, TV, Kitchen                       |
+| Französisch Buchholz  | Essentials, Wifi, Hangers                     |
+| Lankwitz              | Essentials, Kitchen, Heating                  |
+| Niederschönhausen     | Essentials, Wifi, Heating                     |
+| Niederschöneweide     | Heating, Wifi, Washer                         |
+| Hellersdorf           | Hair dryer, Heating, Kitchen                  |
+| Wilhelmstadt          | Heating, Hangers, Kitchen                     |
+| Dahlem                | Kitchen, Heating, Hangers                     |
+| Gatow                 | Kitchen, Heating, Essentials                  |
+| Karow                 | TV, Heating, Essentials                       |
+| Lichtenrade           | Wifi, Heating, Essentials                     |
+| Neu-Hohenschönhausen  | Kitchen, Washer, Essentials                   |
+| Kladow                | Essentials, Hangers, Heating                  |
+| Märkisches Viertel    | Heating, Free street parking, Wifi            |
+| Marienfelde           | Heating, Shampoo, Wifi                        |
+| Grünau                | Wifi, Heating, Kitchen                        |
+| Falkenhagener Feld    | Essentials, Heating, Kitchen                  |
+| Spandau               | Heating, Iron, Hangers                        |
+| Waidmannslust         | Hot water, TV, Laptop friendly workspace      |
+| Blankenburg           | Washer, Wifi, Heating                         |
+| Staaken               | Hangers, Wifi, Laptop friendly workspace      |
+| Heiligensee           | Essentials, Wifi, Lock on bedroom door        |
+| Buckow                | Internet, Wifi, Heating                       |
+| Frohnau               | Hangers, Kitchen, Heating                     |
+| Wilhelmsruh           | Essentials, Bed linens, Kitchen               |
+| Adlershof             | Heating, Essentials, Wifi                     |
+| Hakenfelde            | Bathtub, Hot water, Laptop friendly workspace |
+| Müggelheim            | Washer, Hangers, Smoking allowed              |
+| Haselhorst            | Hair dryer, Coffee maker, Refrigerator        |
+| Lübars                | Coffee maker, Heating, Wifi                   |
+| Rosenthal             | Free parking on premises, Heating, Wifi       |
++-----------------------+-----------------------------------------------+
+
+
+
+query 8:
++--------------------+
+| average_difference |
++--------------------+
+|                  0 |
++--------------------+
+
+
+query 9:
++-----------+---------------+
+| city_name | total_reviews |
++-----------+---------------+
+| Madrid    |        362324 |
++-----------+---------------+
+
+
+query 10:
++---------------------+
+| neighbourhood_name  |
++---------------------+
+| Acacias             |
+| Adelfas             |
+| Almagro             |
+| Aluche              |
+| Arapiles            |
+| Arganzuela          |
+| Argüelles           |
+| Atocha              |
+| Barajas             |
+| Bellas Vistas       |
+| Berruguete          |
+| Carabanchel         |
+| Castellana          |
+| Castilla            |
+| Castillejos         |
+| Centro              |
+| Chamberí            |
+| Ciudad Jardin       |
+| Ciudad Lineal       |
+| Cortes              |
+| Cuatro Caminos      |
+| Delicias            |
+| El Tréntaiseis      |
+| El Viso             |
+| Embajadores         |
+| Estrella            |
+| Fuencarral-el Pardo |
+| Fuente del Berro    |
+| Gaztambide          |
+| Goya                |
+| Guindalera          |
+| Hispanoamérica      |
+| Hortaleza           |
+| Ibiza               |
+| Imperial            |
+| Jerónimos           |
+| Justicia            |
+| La Chopera          |
+| La Latina           |
+| Legazpi             |
+| Lista               |
+| Malasaña            |
+| Moncloa             |
+| Moratalaz           |
+| Nueva España        |
+| Pacifico            |
+| Palacio             |
+| Palos do Moguer     |
+| Prosperidad         |
+| Puente de Vallecas  |
+| Recoletos           |
+| Retiro              |
+| Rios Rosas          |
+| Salamanca           |
+| San Blas            |
+| Sol                 |
+| Tetuán              |
+| Trafalgar           |
+| Usera               |
+| Vallehermosa        |
+| Vicálvaro           |
+| Villa de Vallecas   |
+| Villaverde          |
++---------------------+
+
+
+
+
+query 11:
++--------------+
+| country_name |
++--------------+
+| Spain        |
+| Germany      |
++--------------+
+
+
+query 12:
++----------------------------------+-----------------------+
+| neighbourhood_name               | strict_over_all_ratio |
++----------------------------------+-----------------------+
+| Horta-Guinardó                   |                1.0000 |
+| El Camp de l'Arpa del Clot       |                0.5164 |
+| El Poblenou                      |                0.3920 |
+| Vila de Gràcia                   |                0.4856 |
+| El Baix Guinardó                 |                0.4725 |
+| La Nova Esquerra de l'Eixample   |                0.4843 |
+| El Raval                         |                0.5672 |
+| Camp d'en Grassot i Gràcia Nova  |                0.4156 |
+| El Gòtic                         |                0.5845 |
+| L'Antiga Esquerra de l'Eixample  |                0.5444 |
+| La Barceloneta                   |                0.5703 |
+| Dreta de l'Eixample              |                0.5878 |
+| El Besòs i el Maresme            |                0.5541 |
+| el Fort Pienc                    |                0.4569 |
+| El Born                          |                0.4904 |
+| Diagonal Mar - La Mar Bella      |                0.7087 |
+| Vallcarca i els Penitents        |                0.4624 |
+| El Poble-sec                     |                0.5225 |
+| Sant Antoni                      |                0.5293 |
+| El Clot                          |                0.3947 |
+| Sants-Montjuïc                   |                0.4068 |
+| Pedralbes                        |                0.5000 |
+| Guinardó                         |                0.2743 |
+| Sant Andreu de Palomar           |                0.3182 |
+| Provençals del Poblenou          |                0.4225 |
+| Horta                            |                0.2692 |
+| La Salut                         |                0.3049 |
+| Sant Pere/Santa Caterina         |                0.5347 |
+| Sant Gervasi - Galvany           |                0.6161 |
+| Sant Martí de Provençals         |                0.2941 |
+| La Sagrada Família               |                0.4860 |
+| Carmel                           |                0.3784 |
+| El Coll                          |                0.3077 |
+| Glòries - El Parc                |                0.5561 |
+| La Vila Olímpica                 |                0.5917 |
+| Vilapicina i la Torre Llobeta    |                0.3261 |
+| El Putget i Farró                |                0.3007 |
+| Eixample                         |                0.5750 |
+| Sarrià                           |                0.3846 |
+| El Congrés i els Indians         |                0.2453 |
+| Porta                            |                0.2857 |
+| Torre Baró                       |                0.3750 |
+| Les Tres Torres                  |                0.4348 |
+| Sant Genís dels Agudells         |                0.3077 |
+| La Font d'en Fargues             |                0.4615 |
+| Navas                            |                0.3607 |
+| Les Corts                        |                0.4130 |
+| La Maternitat i Sant Ramon       |                0.3789 |
+| La Sagrera                       |                0.2444 |
+| La Teixonera                     |                0.2000 |
+| Gràcia                           |                0.2500 |
+| La Verneda i La Pau              |                0.5000 |
+| La Vall d'Hebron                 |                0.3333 |
+| Sant Gervasi - la Bonanova       |                0.3529 |
+| La Prosperitat                   |                0.0833 |
+| Nou Barris                       |                0.3636 |
+| Can Baro                         |                0.4571 |
+| Turó de la Peira - Can Peguera   |                0.2000 |
+| Verdum - Los Roquetes            |                0.6296 |
+| La Trinitat Vella                |                0.3333 |
+| El Bon Pastor                    |                0.4286 |
+| Trinitat Nova                    |                0.3333 |
+| Sant Martí                       |                0.8000 |
+| Ciutat Vella                     |                0.6667 |
++----------------------------------+-----------------------+
