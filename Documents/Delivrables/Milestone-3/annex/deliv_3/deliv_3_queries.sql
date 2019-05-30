@@ -1,6 +1,4 @@
--- WARNIING !! when formatting, be sure that := have not a space in between. Formatter puts one but it does not work if so.
--- Query 1): number of hosts per city that put square_feet in their listing
--- time: 0.65 sec
+-----------------query 01---------------------
 SELECT COUNT(DISTINCT (h1.host_id)) AS number_of_hosts,
 	city_name
 FROM Host h1,
@@ -21,8 +19,7 @@ GROUP BY city_name
 ORDER BY city_name ASC;
 
 
--- Query 2): top 5 Neighbourhoods of Madrid based on median of review_scores_rating
--- time: 0.24 sec
+-----------------query 02---------------------
 WITH subtable
 AS (
 	SELECT @row := @row + 1 AS rownum,
@@ -58,8 +55,9 @@ WHERE subtable.rownum IN (
 		)
 ORDER BY subtable.review_scores_rating DESC LIMIT 5;
 
--- Query 3): find hosts with higher number of listings
--- time: 0.11 sec
+
+
+-----------------query 03---------------------
 WITH hosts_with_number
 AS (
 	SELECT h.host_id,
@@ -84,8 +82,9 @@ WHERE number = (
 		FROM highest_number
 		);
 
--- Query 4): 5 cheapest in Berlin with lots of specs
--- time: 14.88 sec
+
+
+-----------------query 04---------------------
 SELECT l.listing_id,
 	avg(cal.calendar_price) AS price
 FROM Listing l,
@@ -117,8 +116,8 @@ GROUP BY l.listing_id
 ORDER BY price ASC LIMIT 5;
 
 
--- Query 5):
--- time: 3.90 sec
+
+-----------------query 05---------------------
 WITH listings_with_facilities
 AS (
 	SELECT l.listing_id,
@@ -156,8 +155,7 @@ WHERE l1.listing_id IN (
 ORDER BY a.accom;
 
 
--- Query 6): Busiest Listing per host
--- time: 0,76 sec
+-----------------query 06---------------------
 WITH listings_with_number_reviews
 AS (
 	SELECT l.listing_id,
@@ -189,11 +187,7 @@ WHERE l.listing_id IN (
 GROUP BY h.host_id;
 
 
-
-
-
--- Query 7): Three most used amenities per Neighbourhood in Private Room
--- time: 0,66 sec
+-----------------query 07---------------------
 WITH amenity_per_neigh_w_listings_n
 AS (
 	SELECT a.amenity_id,
@@ -236,8 +230,7 @@ GROUP BY apn.neighbourhood_id;
 
 
 
---Query 8):
--- time: 0,08 sec
+-----------------query 08---------------------
 WITH host_id_with_n_verf
 AS (
 	SELECT host_id,
@@ -273,9 +266,7 @@ SELECT (
 
 
 
-
--- Query 9):
--- time: 2,29 sec
+-----------------query 09---------------------
 SELECT c1.city_name,
 	total_reviews
 FROM City c1,
@@ -305,9 +296,7 @@ WHERE c1.city_id = total_reviews_per_city.city_id
 ORDER BY total_reviews DESC LIMIT 1;
 
 
---Query 10):
--- time: 1 min 37,95 sec
--- Long time to execute maybe optimize with index
+-----------------query 10---------------------
 SELECT neigh_n_occupied.neighbourhood_name
 FROM (
 	SELECT n1.neighbourhood_name,
@@ -354,9 +343,9 @@ WHERE neigh_n_occupied.n_occupied / (
 		WHERE l1.neighbourhood_id = neigh_n_occupied.neighbourhood_id
 	) >= 0.5;
 
---Query 11)
--- time: 49.26 sec
--- Pretty long too
+
+
+-----------------query 11---------------------
 SELECT DISTINCT (country_name)
 FROM (
 	SELECT ctry.country_id,
@@ -399,8 +388,8 @@ WHERE subtable.n_available / (
 		) >= 0.2;
 
 
---Query 12):
--- time: 0.48 sec
+
+-----------------query 12---------------------
 SELECT subtable.neighbourhood_name,
 	subtable.n_strict_grace / total_list_per_neigh.n_listings as strict_over_all_ratio
 FROM (

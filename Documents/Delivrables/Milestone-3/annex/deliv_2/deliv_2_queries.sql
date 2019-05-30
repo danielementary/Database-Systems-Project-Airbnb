@@ -28,9 +28,8 @@ WHERE H.host_id = L.host_id
 	AND D.day_date < "2019-10-01";
 
 -----------------query 04---------------------
-SELECT COUNT(L1.listing_id)
-FROM
-  Listing L1,
+SELECT COUNT(L1.listing_id) AS number_of_listings
+FROM Listing L1,
 	Listing L2,
 	Host H1,
 	Host H2
@@ -61,7 +60,6 @@ GROUP BY L.listing_id
 HAVING COUNT(L.listing_id) = 1;
 
 -----------------query 07---------------------
--- VERY expensive if we use the price in calendar, so we use listing.price because it is satisfying approximation and time goes from 442sec to 3sec
 WITH amenities_wifi
 AS (
 	SELECT A.amenity_id
@@ -83,16 +81,14 @@ AS (
 			) AS wifi
 	FROM Listing l,
 		Listing_amenity_map lam
-
 	WHERE l.listing_id = lam.listing_id
 	GROUP BY wifi
 	)
-SELECT t1.avg_price - t2.avg_price as average_price_difference
+SELECT t1.avg_price - t2.avg_price AS average_price_difference
 FROM prices t1,
 	prices t2
 WHERE t1.wifi = 1
 	AND t2.wifi = 0;
-
 
 -----------------query 08---------------------
 WITH eight_beds_average_price
@@ -115,7 +111,6 @@ FROM eight_beds_average_price t1,
 	eight_beds_average_price t2
 WHERE t1.city_name = 'Berlin'
 	AND t2.city_name = 'Madrid';
-
 
 -----------------query 09---------------------
 SELECT H.host_id,
