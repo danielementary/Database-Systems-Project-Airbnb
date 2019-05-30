@@ -94,7 +94,7 @@ AS (
 		AND l.listing_id = cal.listing_id
 		AND cal.calendar_price IS NOT NULL
 	)
-SELECT ABS(l1.avg_wifi - l2.avg_without_wifi)
+SELECT l1.avg_wifi - l2.avg_without_wifi as price_difference
 FROM listings_with_wifi l1,
 	listings_without_wifi l2;
 
