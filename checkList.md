@@ -8,8 +8,10 @@
 * for the 3 chosen queries : <br>
 rajouter leur runtime, les indexes rajoutés, expliquer leur query plan et la distribution des couts
 
-* queries in deliverable 2 -> indexes ???? some are very slow -> query 3, 6
+* queries in deliverable 2 -> indexes DONE some are very slow -> query 3, 6
 * query 04, 07 deliverable2 ---> doesnt work ???
+
+* Copy paste the queries from sql to python code ! 
 
 ### in **annex** folder :
 * check the names of each file. <br>
