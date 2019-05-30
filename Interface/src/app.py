@@ -134,6 +134,8 @@ class App(Tk):
 
         db.insert_listing(self.databaseConnection, values)
         self.updateDatabaseVariables()
+        self.insertFrame.grid_slaves(row=5, column=8)[0].grid_forget()
+        self.insertFrame.grid_slaves(row=6, column=8)[0].grid_forget()
         self.drawInsert()
 
     def executePredefinedQuery(self):
@@ -230,8 +232,8 @@ class App(Tk):
         self.settingsFrame = ttk.Frame(self.tabControl)
 
         self.tabControl.add(self.searchFrame,   text="Search")
-        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
         self.tabControl.add(self.insertFrame,   text="Insert A Listing")
+        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
         self.tabControl.add(self.deleteFrame,   text="Delete")
         self.tabControl.add(self.settingsFrame, text="Settings")
 
