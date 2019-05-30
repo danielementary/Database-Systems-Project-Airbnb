@@ -18,13 +18,26 @@ class Results(Toplevel):
         Label(self, text="Please close this windows before next operations.").pack(padx=10, pady=10)
 
         topFrame = Frame(self)
-        topFrame.pack(padx=10, pady=10)
+        topFrame.pack(expand=1, fill=BOTH, padx=10, pady=10)
 
         bottomFrame = Frame(self, bg="white")
         bottomFrame.pack(side=BOTTOM, expand=1, fill=BOTH, padx=10, pady=10)
 
         Label(topFrame, text="MySQL Statement : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
-        Label(topFrame, text=sql, anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+
+        splitted = sql.split("\n")
+
+        scrollbarSql = Scrollbar(topFrame)
+        scrollbarSql.pack(side=LEFT, padx=10, pady=10, fill=BOTH)
+
+        listboxSql = Listbox(topFrame)
+        listboxSql.pack(side=LEFT, expand=1, fill=BOTH)
+
+        for s in splitted:
+            listboxSql.insert(END, s)
+
+        listboxSql.config(yscrollcommand=scrollbarSql.set)
+        scrollbarSql.config(command=listboxSql.yview)
 
         if (values is not None):
             Label(topFrame, text="with values : ", anchor=W).pack(side=LEFT, padx=10, pady=10, fill=BOTH)
