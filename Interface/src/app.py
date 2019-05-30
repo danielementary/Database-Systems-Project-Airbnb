@@ -48,6 +48,7 @@ class App(Tk):
                     self.dataLabel["text"] = "Loaded"
                     self.updateDatabaseVariables()
                     self.drawForms()
+                    self.drawDelete()
                     self.drawPredefinedQueries()
                     self.drawInsert()
             else:
@@ -64,6 +65,7 @@ class App(Tk):
         self.dataLabel["text"] = "Loaded"
         self.updateDatabaseVariables()
         self.drawForms()
+        self.drawDelete()
         self.drawPredefinedQueries()
 
     def searchInDatabase(self):
@@ -134,6 +136,8 @@ class App(Tk):
 
         db.insert_listing(self.databaseConnection, values)
         self.updateDatabaseVariables()
+        self.insertFrame.grid_slaves(row=5, column=8)[0].grid_forget()
+        self.insertFrame.grid_slaves(row=6, column=8)[0].grid_forget()
         self.drawInsert()
 
     def executePredefinedQuery(self):
@@ -230,8 +234,8 @@ class App(Tk):
         self.settingsFrame = ttk.Frame(self.tabControl)
 
         self.tabControl.add(self.searchFrame,   text="Search")
-        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
         self.tabControl.add(self.insertFrame,   text="Insert A Listing")
+        self.tabControl.add(self.queriesFrame,  text="Predefined Queries")
         self.tabControl.add(self.deleteFrame,   text="Delete")
         self.tabControl.add(self.settingsFrame, text="Settings")
 
@@ -243,8 +247,6 @@ class App(Tk):
 
         self.initialQueriesFrameLabel = Label(self.queriesFrame, text="Predefined queries are available once connected to the DB. Please try 'Connect to DB' in 'Settings' tab.")
         self.initialQueriesFrameLabel.grid(row=0, column=0, sticky=W, padx=5, pady=5)
-
-        Label(self.deleteFrame, text="This will be implemented later on.").grid(row=0, column=0, sticky=W, padx=5, pady=5)
 
         Label( self.settingsFrame, text="These buttons are not needed if everything runs as expected.").grid(row=0, column=0, sticky=W, padx=5, pady=5, columnspan=2)
 
@@ -621,6 +623,25 @@ class App(Tk):
         self.insertButton.grid(row=0, column=8, padx=5, pady=5)
         self.insertButton["state"] = DISABLED
         Label(self.insertFrame, text="Please check host and neighbourhood before inserting the listing.").grid(row=0, column=3, sticky=W, padx=5, pady=5, columnspan=5)
+
+    def drawDelete(self):
+        self.deleteTable = StringVar(self.deleteFrame)
+        self.deleteTable.set(st.delete_tables[0])
+        self.deleteTableOptionMenu = OptionMenu(self.deleteFrame,
+                                                self.deleteTable,
+                                                *list(st.delete_tables))
+        self.deleteTableOptionMenu.grid(row=0, column=0, padx=5, pady=5)
+
+        Label(self.deleteFrame, text="id").grid(row=0, column=1, padx=5, pady=5)
+
+        self.deleteIdEntry = Entry(self.deleteFrame)
+        self.deleteIdEntry.grid(row=0, column=2, sticky=W, padx=5, pady=5)
+
+        Button(self.deleteFrame, text="delete", command=self.deleteFromDatabase).grid(row=0, column=3, padx=5, pady=5)
+
+    def deleteFromDatabase(self):
+        sql = "DELETE FROM {} WHERE {} = {}".format(self.deleteTable.get(), st.id_map[self.deleteTable.get()], self.deleteIdEntry.get())
+        db.execute_sql(self.databaseConnection, sql, "Delete by id")
 
 
     def showResults(self, queryResults, sql, values):
