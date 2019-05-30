@@ -11,6 +11,9 @@ import database.select_tables as st
 from database.create_tables import create_statements_ordered
 from database.insert_tables import insert_tables_names_ordered
 
+from database.create_indexes import create_indexes as create_indexes_list
+from database.drop_indexes   import drop_indexes   as drop_indexes_list
+
 DB_NAME = "Airbnb"
 DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../Datasets/Final/")
 
@@ -224,6 +227,9 @@ class App(Tk):
         self.dataLabel = Label(self.databaseSettingsFrame, text="Not Loaded")
         self.dataLabel.pack(side=LEFT, padx=5, pady=5)
 
+        self.topIndex = Label(self.databaseSettingsFrame, text="Indexes are not actived")
+        self.topIndex.pack(side=LEFT, padx=5, pady=5)
+
     def drawTabs(self):
         self.tabControl = ttk.Notebook(self)
 
@@ -255,6 +261,12 @@ class App(Tk):
 
         self.connectDatabaseButton.grid(row=1, column=0, sticky=W, padx=5, pady=5)
         self.deleteDatabaseButton .grid(row=1, column=1, sticky=W, padx=5, pady=5)
+
+        self.createIndexesButton = Button(self.settingsFrame, text="Create Indexes", command=self.create_indexes)
+        self.dropIndexesButton   = Button(self.settingsFrame, text="Drop Indexes",   command=self.drop_indexes)
+
+        self.createIndexesButton.grid(row=2, column=0, sticky=W, padx=5, pady=5)
+        self.dropIndexesButton  .grid(row=2, column=1, sticky=W, padx=5, pady=5)
 
     def drawForms(self):
         self.listingNameEntry  = Entry(self.searchFrame)
@@ -643,6 +655,13 @@ class App(Tk):
         sql = "DELETE FROM {} WHERE {} = {}".format(self.deleteTable.get(), st.id_map[self.deleteTable.get()], self.deleteIdEntry.get())
         db.execute_sql(self.databaseConnection, sql, "Delete by id")
 
+    def create_indexes(self):
+        self.topIndex["text"] = "Indexes are now actived"
+        db.execute_sql_list(self.databaseConnection, create_indexes_list, "Create indexes")
+
+    def drop_indexes(self):
+        self.topIndex["text"] = "Indexes are not actived"
+        db.execute_sql_list(self.databaseConnection, drop_indexes_list, "Drop indexes")
 
     def showResults(self, queryResults, sql, values):
         Results(self, queryResults, sql, values).focus()
