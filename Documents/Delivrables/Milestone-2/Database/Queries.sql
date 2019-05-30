@@ -64,8 +64,7 @@ WITH amenities_wifi
 AS (
 	SELECT A.amenity_id
 	FROM Amenity A
-	WHERE A.amenity_name = "Wifi"
-		OR A.amenity_name = "Pocket wifi"
+	WHERE A.amenity_name LIKE "%wifi%"
 	),
 listings_with_wifi
 AS (
