@@ -105,8 +105,6 @@ class App(Tk):
             self.showResults(queryResults, st.select_neighbourhood, values)
 
     def insertListingInDatabase(self):
-        columns = ["listing_id", "listing_name", "listing_summary", "accommodates", "square_feet", "price", \
-                   "property_type_id", "room_type_id", "bed_type_id", "cancellation_policy_id"]
         values  = []
 
         id = db.select_sql(self.databaseConnection, "SELECT MAX(listing_id) FROM Listing", "Select biggest listing_id")[0][0] + 1
@@ -127,12 +125,14 @@ class App(Tk):
         values.append(self.insertListingAccomodatesScale.get())
         values.append(self.insertListingSquareFeetScale.get())
         values.append(self.insertListingPriceScale.get())
+        values.append(self.listingHostId)
+        values.append(self.listingNeighbourhoodId)
         values.append(self.propertyTypeIdDict[self.insertListingPropertyTypeId.get()])
         values.append(self.roomTypeIdDict[self.insertListingRoomTypeId.get()])
         values.append(self.bedTypeIdDict[self.insertListingBedTypeId.get()])
         values.append(self.cancellationPolicyIdDict[self.insertListingCancellationPolicyId.get()])
 
-        print(columns, values, sep="\n")
+        db.insert_listing(self.databaseConnection, values)
 
     def executePredefinedQuery(self):
         sql = st.predefined_queries[self.predefniedQuery.get()]
@@ -362,6 +362,8 @@ class App(Tk):
                 self.listingHostId = result[0][0]
             else:
                 self.listingHostId = db.select_sql(self.databaseConnection, "SELECT MAX(host_id) FROM Host", "Select biggest host_id")[0][0] + 1
+                values = [self.listingHostId, self.insertListingHost.get(), self.neighbourhoodIdDict[self.insertListingHostNeighboorhood.get()]]
+                db.insert_host(self.databaseConnection, values)
 
             Label(self.insertFrame, text="id : {}".format(self.listingHostId)).grid(row=5, column=8, sticky=W, padx=5, pady=5)
 
@@ -381,6 +383,8 @@ class App(Tk):
                 self.listingNeighbourhoodId = result[0][0]
             else:
                 self.listingNeighbourhoodId = db.select_sql(self.databaseConnection, "SELECT MAX(neighbourhood_id) FROM Neighbourhood", "Select biggest neighbourhood_id")[0][0] + 1
+                values = [self.listingNeighbourhoodId, self.insertListingNeighbourhood.get(), self.cityIdDict[self.insertListingNeighbourhoodCity.get()]]
+                db.insert_neighboorhood(self.databaseConnection, values)
 
             Label(self.insertFrame, text="id : {}".format(self.listingNeighbourhoodId)).grid(row=6, column=8, sticky=W, padx=5, pady=5)
 
