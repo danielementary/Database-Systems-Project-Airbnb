@@ -126,8 +126,8 @@ def populate_tables(db_connection, tables_to_populate, path_to_csv_dir):
 def insert_listing(db_connection, values):
     cursor = db_connection.cursor()
     sql = "INSERT INTO Listing (listing_id, listing_name, listing_summary, accommodates, square_feet, price, \
-                                host_id, neighbourhood_id, property_type_id, room_type_id, bed_type_id, \
-                                cancellation_policy_id) VALUES {}".format(tuple(values))
+                                host_id, neighbourhood_id, is_business_travel_ready, property_type_id, room_type_id, \
+                                bed_type_id, cancellation_policy_id) VALUES {}".format(tuple(values))
     cursor.execute(sql)
     cursor.close()
     print("Listing {} has been successfully inserted by {}".format(values[0], values[-6]))

@@ -65,22 +65,20 @@ FROM Listing;
 """
 
 select_listing = """
-SELECT listing_name,
-       listing_url,
+SELECT listing_id,
+       listing_name,
        accommodates,
-       square_feet, price,
-       review_scores_rating
+       square_feet,
+       price
 FROM Listing
 WHERE listing_name LIKE %s AND accommodates >= %s
                            AND square_feet  >= %s
                            AND price <= %s
                            AND is_business_travel_ready = %s
-                           AND review_scores_rating >= %s
                            AND property_type_id = %s
                            AND cancellation_policy_id = %s;"""
 select_host = """
-SELECT host_name,
-       host_since
+SELECT host_name
 FROM Host
 WHERE host_name LIKE %s;
 """

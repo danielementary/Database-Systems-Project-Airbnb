@@ -75,7 +75,6 @@ class App(Tk):
                             self.squareFeetScale.get(),
                             self.priceScale.get(),
                             self.isBusinessTravelReady.get(),
-                            self.reviewScoreRatingScale.get(),
                             self.propertyTypeIdDict[self.propertyTypeId.get()],
                             self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]])
 
@@ -127,12 +126,15 @@ class App(Tk):
         values.append(self.insertListingPriceScale.get())
         values.append(self.listingHostId)
         values.append(self.listingNeighbourhoodId)
+        values.append(self.insertListingIsBusinessTravelReady.get())
         values.append(self.propertyTypeIdDict[self.insertListingPropertyTypeId.get()])
         values.append(self.roomTypeIdDict[self.insertListingRoomTypeId.get()])
         values.append(self.bedTypeIdDict[self.insertListingBedTypeId.get()])
         values.append(self.cancellationPolicyIdDict[self.insertListingCancellationPolicyId.get()])
 
         db.insert_listing(self.databaseConnection, values)
+        self.updateDatabaseVariables()
+        self.drawInsert()
 
     def executePredefinedQuery(self):
         sql = st.predefined_queries[self.predefniedQuery.get()]
@@ -172,15 +174,11 @@ class App(Tk):
                 Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
                 self.isBusinessTravelReadyCheckButton                 .grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Review Scores Rating (min)").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-                self.reviewScoreRatingScale                               .grid(row=6, column=1, sticky=W, padx=5, pady=5)
-                self.reviewScoreRatingScale.set(self.reviewScoresRatingMinMax[0])
+                Label(self.searchFrame, text="Property Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+                self.propertyTypeIdOptionMenu                .grid(row=6, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
-                self.propertyTypeIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
-
-                Label(self.searchFrame, text="Cancellation Policy").grid(row=8, column=0, sticky=W, padx=5, pady=5)
-                self.cancellationPolicyIdOptionMenu                .grid(row=8, column=1, sticky=W, padx=5, pady=5)
+                Label(self.searchFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+                self.cancellationPolicyIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
 
             elif (value == "Host"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
@@ -277,11 +275,6 @@ class App(Tk):
         self.isBusinessTravelReady = IntVar(self.searchFrame)
         self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame,
                                                             variable=self.isBusinessTravelReady)
-
-        self.reviewScoreRatingScale = Scale(self.searchFrame, from_=self.reviewScoresRatingMinMax[0],
-                                                                 to=self.reviewScoresRatingMinMax[1],
-                                                             orient=HORIZONTAL,
-                                                             length=160)
 
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
@@ -585,37 +578,43 @@ class App(Tk):
         self.insertListingCheckNeighboorhoodButton = Button(self.insertFrame, text="Check Neighbourhood", command=self.checkNeighboorhood)
         self.insertListingCheckNeighboorhoodButton.grid(row=6, column=7, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Businness Travel Ready").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+        self.insertListingIsBusinessTravelReady = IntVar(self.insertFrame)
+        self.insertListingIsBusinessTravelReadyCheckButton = Checkbutton(self.insertFrame,
+                                                                         variable=self.insertListingIsBusinessTravelReady)
+        self.insertListingIsBusinessTravelReadyCheckButton.grid(row=7, column=2, sticky=W, padx=5, pady=5)
+
+        Label(self.insertFrame, text="Property Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
         self.insertListingPropertyTypeId = StringVar(self.insertFrame)
         self.insertListingPropertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
         self.insertListingPropertyTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                                 self.insertListingPropertyTypeId,
                                                                 *list(self.propertyTypeIdDict.keys()))
-        self.insertListingPropertyTypeIdOptionMenu.grid(row=7, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingPropertyTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Room Type").grid(row=8, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Room Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
         self.insertListingRoomTypeId = StringVar(self.insertFrame)
         self.insertListingRoomTypeId.set(list(self.roomTypeIdDict.keys())[0])
         self.insertListingRoomTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                             self.insertListingRoomTypeId,
                                                             *list(self.roomTypeIdDict.keys()))
-        self.insertListingRoomTypeIdOptionMenu.grid(row=8, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingRoomTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Bed Type").grid(row=9, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Bed Type").grid(row=10, column=0, sticky=W, padx=5, pady=5)
         self.insertListingBedTypeId = StringVar(self.insertFrame)
         self.insertListingBedTypeId.set(list(self.bedTypeIdDict.keys())[0])
         self.insertListingBedTypeIdOptionMenu = OptionMenu(self.insertFrame,
                                                            self.insertListingBedTypeId,
                                                            *list(self.bedTypeIdDict.keys()))
-        self.insertListingBedTypeIdOptionMenu.grid(row=9, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingBedTypeIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
 
-        Label(self.insertFrame, text="Cancellation Policy").grid(row=10, column=0, sticky=W, padx=5, pady=5)
+        Label(self.insertFrame, text="Cancellation Policy").grid(row=11, column=0, sticky=W, padx=5, pady=5)
         self.insertListingCancellationPolicyId = StringVar(self.insertFrame)
         self.insertListingCancellationPolicyId.set(list(self.cancellationPolicyIdDict.keys())[0])
         self.insertListingCancellationPolicyIdOptionMenu = OptionMenu(self.insertFrame,
                                                                       self.insertListingCancellationPolicyId,
                                                                       *list(self.cancellationPolicyIdDict.keys()))
-        self.insertListingCancellationPolicyIdOptionMenu.grid(row=10, column=1, sticky=W, padx=5, pady=5)
+        self.insertListingCancellationPolicyIdOptionMenu.grid(row=11, column=1, sticky=W, padx=5, pady=5)
 
 
         self.insertButton = Button(self.insertFrame, text="Insert", command=self.insertListingInDatabase)
