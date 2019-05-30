@@ -94,7 +94,7 @@ WHERE t1.wifi = 1
 
 
 -----------------query 08---------------------
-WITH 8 _beds_average_price
+WITH eight_beds_average_price
 AS (
 	SELECT avg(cal.calendar_price) AS avg_price,
 		c.city_name
@@ -110,10 +110,11 @@ AS (
 	GROUP BY c.city_name
 	)
 SELECT t1.avg_price - t2.avg_price AS Berlin_minus_Madrid_8_beds_avg_price
-FROM 8 _beds_average_price t1,
-	8 _beds_average_price t2
+FROM eight_beds_average_price t1,
+	eight_beds_average_price t2
 WHERE t1.city_name = 'Berlin'
 	AND t2.city_name = 'Madrid';
+
 
 -----------------query 09---------------------
 SELECT H.host_id,
