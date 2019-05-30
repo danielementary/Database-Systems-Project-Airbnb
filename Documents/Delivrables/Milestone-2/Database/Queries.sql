@@ -90,37 +90,30 @@ SELECT t1.avg_price - t2.avg_price as average_price_difference
 FROM prices t1,
 	prices t2
 WHERE t1.wifi = 1
-	AND t2.wifi = 0
+	AND t2.wifi = 0;
 
 
 -----------------query 08---------------------
-SELECT (
-		(
-			SELECT avg(cal.calendar_price)
-			FROM Listing l,
-				Neighbourhood n,
-				City c,
-				Calendar cal
-			WHERE cal.listing_id = l.listing_id
-				AND cal.calendar_price IS NOT NULL
-				AND l.beds = 8
-				AND c.city_name = 'Berlin'
-				AND c.city_id = n.city_id
-				AND n.neighbourhood_id = l.neighbourhood_id
-			) - (
-			SELECT avg(cal.calendar_price)
-			FROM Listing l,
-				Neighbourhood n,
-				City c,
-				Calendar cal
-			WHERE cal.listing_id = l.listing_id
-				AND cal.calendar_price IS NOT NULL
-				AND l.beds = 8
-				AND c.city_name = 'Madrid'
-				AND c.city_id = n.city_id
-				AND n.neighbourhood_id = l.neighbourhood_id
-			)
-		) AS Berlin_minus_Madrid_8_beds_avg_price;
+WITH 8 _beds_average_price
+AS (
+	SELECT avg(cal.calendar_price) AS avg_price,
+		c.city_name
+	FROM Listing l,
+		Neighbourhood n,
+		City c,
+		Calendar cal
+	WHERE cal.listing_id = l.listing_id
+		AND cal.calendar_price IS NOT NULL
+		AND l.beds = 8
+		AND c.city_id = n.city_id
+		AND n.neighbourhood_id = l.neighbourhood_id
+	GROUP BY c.city_name
+	)
+SELECT t1.avg_price - t2.avg_price AS Berlin_minus_Madrid_8_beds_avg_price
+FROM 8 _beds_average_price t1,
+	8 _beds_average_price t2
+WHERE t1.city_name = 'Berlin'
+	AND t2.city_name = 'Madrid';
 
 -----------------query 09---------------------
 SELECT H.host_id,
