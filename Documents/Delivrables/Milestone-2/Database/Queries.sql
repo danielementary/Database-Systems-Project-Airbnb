@@ -9,10 +9,9 @@ FROM Listing L,
 	Listing_amenity_map M
 WHERE L.listing_id = M.listing_id
 	AND M.amenity_id IN (
-		SELECT DISTINCT amenity_id
+		SELECT DISTINCT amenity_name
 		FROM Amenity
-		WHERE amenity_name = "TV"
-			OR amenity_name = "Smart TV"
+		WHERE amenity_name LIKE "%TV%"
 		);
 
 -----------------query 03---------------------
@@ -30,6 +29,8 @@ WHERE H.host_id = L.host_id
 
 -----------------query 04---------------------
 SELECT COUNT(L1.listing_id)
+FROM
+  Listing L1,
 	Listing L2,
 	Host H1,
 	Host H2
