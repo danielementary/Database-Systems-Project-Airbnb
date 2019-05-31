@@ -80,13 +80,15 @@ SELECT listing_id,
        accommodates,
        square_feet,
        price
-FROM Listing
-WHERE listing_name LIKE %s AND accommodates >= %s
-                           AND square_feet  >= %s
-                           AND price <= %s
-                           AND is_business_travel_ready = %s
-                           AND property_type_id = %s
-                           AND cancellation_policy_id = %s;"""
+FROM Listing l, Neighbourhood n
+WHERE listing_name LIKE %s AND l.accommodates >= %s
+                           AND l.square_feet  >= %s
+                           AND l.price <= %s
+                           AND l.is_business_travel_ready = %s
+                           AND l.neighbourhood_id = n.neighbourhood_id
+                           AND n.city_id = %s
+                           AND l.property_type_id = %s
+                           AND l.cancellation_policy_id = %s;"""
 select_host = """
 SELECT host_id,
        host_name
