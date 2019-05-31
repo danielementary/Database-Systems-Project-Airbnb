@@ -53,8 +53,6 @@ class Results(Toplevel):
 
                 resultsScrollbarY.config(command=resultsListbox.yview)
 
-                resultsListbox.bind("<<ListboxSelect>>", self.onResultSelect)
-
                 self.sizes = [len(str(e)) for e in queryResults[0]]
                 for r in queryResults:
                     self.sizes = self.maxSizes(self.sizes, [len(str(e)) for e in r])
@@ -63,7 +61,7 @@ class Results(Toplevel):
                     temp = ""
                     c    = 0
                     for e in r:
-                        temp += "{0:<{1}}".format(e, self.sizes[c]+10)
+                        temp += "{0:>{1}}".format(e, self.sizes[c]+15)
                         c    += 1
                     resultsListbox.insert(END, temp)
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
@@ -75,12 +73,6 @@ class Results(Toplevel):
     def maxSizes(self, list1, list2):
         lists = zip(list1, list2)
         return [max(e[0], e[1]) for e in lists]
-
-    def onResultSelect(self, event):
-        widget = event.widget
-        index = int(widget.curselection()[0])
-        value = widget.get(index)
-        print(index, value, sep="\n")
 
     def closeResults(self):
         self.master.searchButton         ["state"] = NORMAL

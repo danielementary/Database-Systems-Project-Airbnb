@@ -81,6 +81,7 @@ class App(Tk):
                             self.squareFeetScale.get(),
                             self.priceScale.get(),
                             self.isBusinessTravelReady.get(),
+                            self.cityIdDict[self.searchListingCityId.get()],
                             self.propertyTypeIdDict[self.propertyTypeId.get()],
                             self.cancellationPolicyIdDict[self.cancellationPolicyId.get()]])
 
@@ -179,14 +180,17 @@ class App(Tk):
                 self.priceScale                            .grid(row=4, column=1, sticky=W, padx=5, pady=5)
                 self.priceScale.set(self.priceMinMax[1])
 
-                Label(self.searchFrame, text="Businness Travel Ready").grid(row=5, column=0, sticky=W, padx=5, pady=5)
-                self.isBusinessTravelReadyCheckButton                 .grid(row=5, column=1, sticky=W, padx=5, pady=5)
+                Label(self.searchFrame, text="City").grid(row=5, column=0, sticky=W, padx=5, pady=5)
+                self.searchListingCityIdOptionMenu  .grid(row=5, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Property Type").grid(row=6, column=0, sticky=W, padx=5, pady=5)
-                self.propertyTypeIdOptionMenu                .grid(row=6, column=1, sticky=W, padx=5, pady=5)
+                Label(self.searchFrame, text="Businness Travel Ready").grid(row=6, column=0, sticky=W, padx=5, pady=5)
+                self.isBusinessTravelReadyCheckButton                 .grid(row=6, column=1, sticky=W, padx=5, pady=5)
 
-                Label(self.searchFrame, text="Cancellation Policy").grid(row=7, column=0, sticky=W, padx=5, pady=5)
-                self.cancellationPolicyIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
+                Label(self.searchFrame, text="Property Type").grid(row=7, column=0, sticky=W, padx=5, pady=5)
+                self.propertyTypeIdOptionMenu                .grid(row=7, column=1, sticky=W, padx=5, pady=5)
+
+                Label(self.searchFrame, text="Cancellation Policy").grid(row=8, column=0, sticky=W, padx=5, pady=5)
+                self.cancellationPolicyIdOptionMenu                .grid(row=8, column=1, sticky=W, padx=5, pady=5)
 
             elif (value == "Host"):
                 Label(self.searchFrame, text="Name").grid(row=1, column=0, sticky=W, padx=5, pady=5)
@@ -290,6 +294,12 @@ class App(Tk):
         self.isBusinessTravelReady = IntVar(self.searchFrame)
         self.isBusinessTravelReadyCheckButton = Checkbutton(self.searchFrame,
                                                             variable=self.isBusinessTravelReady)
+
+        self.searchListingCityId = StringVar(self.searchFrame)
+        self.searchListingCityId.set(list(self.cityIdDict.keys())[0])
+        self.searchListingCityIdOptionMenu = OptionMenu(self.searchFrame,
+                                                   self.searchListingCityId,
+                                                   *list(self.cityIdDict.keys()))
 
         self.propertyTypeId = StringVar(self.searchFrame)
         self.propertyTypeId.set(list(self.propertyTypeIdDict.keys())[0])
