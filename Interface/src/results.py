@@ -63,7 +63,7 @@ class Results(Toplevel):
                     temp = ""
                     c    = 0
                     for e in r:
-                        temp += "{0:<{1}}".format(e, self.sizes[c]+10)
+                        temp += "{0:>{1}}".format(e, self.sizes[c]+15)
                         c    += 1
                     resultsListbox.insert(END, temp)
                 Label(self, text="Results ({})".format(resultLength)).pack(side=BOTTOM, fill=X, padx=10, pady=10)
