@@ -88,13 +88,15 @@ WHERE listing_name LIKE %s AND accommodates >= %s
                            AND property_type_id = %s
                            AND cancellation_policy_id = %s;"""
 select_host = """
-SELECT host_name
+SELECT host_id,
+       host_name
 FROM Host
 WHERE host_name LIKE %s;
 """
 
 select_neighbourhood = """
-SELECT neighbourhood_name
+SELECT neighbourhood_id,
+       neighbourhood_name
 FROM Neighbourhood
 WHERE neighbourhood_name LIKE %s AND city_id = %s;"""
 
