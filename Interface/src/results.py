@@ -5,7 +5,7 @@ class Results(Toplevel):
     def __init__(self, master, queryResults, sql, values, **options):
         Toplevel.__init__(self, master, **options)
         self.title("DBS-Project Group32 Results")
-        self.geometry("1280x720")
+        self.geometry("1400x800")
         self.resizable(width=False, height=False)
         self.protocol("WM_DELETE_WINDOW", self.closeResults)
 

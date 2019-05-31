@@ -21,7 +21,7 @@ class App(Tk):
     def __init__(self):
         super(App, self).__init__()
         self.title("DBS-Project Group32")
-        self.geometry("1280x720")
+        self.geometry("1400x800")
         self.resizable(width=False, height=False)
         self.protocol("WM_DELETE_WINDOW", self.disconnectAndClose)
 
