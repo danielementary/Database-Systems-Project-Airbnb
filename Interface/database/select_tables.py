@@ -327,13 +327,13 @@ ORDER BY subtable.review_scores_rating DESC LIMIT 5;
 
 predefined_query_3_3 = """
 SELECT h.host_id,
-    h.host_name,
-    count(DISTINCT (l.listing_id)) AS number_of_listings
+	h.host_name,
+	count(DISTINCT (l.listing_id)) AS number_of_listings
 FROM Listing l,
-    Host h
+	Host h
 WHERE h.host_id = l.host_id
 GROUP BY h.host_id
-ORDER BY number DESC LIMIT 1;
+ORDER BY number_of_listings DESC LIMIT 1;
 """
 
 predefined_query_3_4 = """

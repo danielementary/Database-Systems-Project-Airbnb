@@ -66,7 +66,7 @@ FROM Listing l,
 	Host h
 WHERE h.host_id = l.host_id
 GROUP BY h.host_id
-ORDER BY number DESC LIMIT 1;
+ORDER BY number_of_listings DESC LIMIT 1;
 
 
 
