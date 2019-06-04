@@ -126,7 +126,7 @@ FROM Listing L,
     Listing_amenity_map M
 WHERE L.listing_id = M.listing_id
     AND M.amenity_id IN (
-        SELECT DISTINCT amenity_name
+        SELECT DISTINCT amenity_id
         FROM Amenity
         WHERE amenity_name LIKE "%TV%"
         );
