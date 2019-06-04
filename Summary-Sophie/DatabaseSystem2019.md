@@ -398,7 +398,7 @@ number of buckets at the beginning of a round = $N_{level} = N * 2^{Level}$
 
 We only need 3 pages in main memory. <br>
 The procedure : <br>
-* pages are read in one at a times
+* pages are read in one at a time
 * the loaded page's records are sorted
 * the sorted page can be written out
 * in the next passes, pairs of runs (sorted pages) are read and merged to produce runs twice as long.
@@ -472,3 +472,83 @@ the number of data records.
 | 2.  |  same as clustered   |  same as clustered + ...  |    
 
 *Note* : let $p$ be average records per data page, and $N$ number of data pages
+
+
+---------
+###Lecture 9 : Query Processing with Relational Operations
+#####9.1 Introduction
+Common techniques for operators :
+* indexing : use an index to examine the tuples that satisfy the condition.
+
+* iteration : examine all tuples in an input table, one after the other. If we need only a few fields from each tuple and there is an index whose key contains all these fields, instead of examining data tuples, we can scan all index data entries.
+
+* partitioning : by partitioning tuples on a sort key, we can often decompose an operation into a less expensive collection of operations on partitions. Sorting and hashing are two commonly used partitioning techniques.
+
+#####9.2 Access path
+An access path is the **way** tuples are retrieved. They are two possibilities :
+* file scan
+* index plus a matching selection condition
+
+An index **matches** a selection if it can be used to retrieve juste the tuples that satisfy the condition.
+
+#####9.3 The conjunctive normal form (CNF)
+conjunction of conditions of the form *attr* op *value*, where op is one of the comparison operators.
+
+* hash index **matches** a CNF if there is a term of the form  *attribute=value* in the selection for each attribute in the index's search key.
+
+* tree index **matches** a CNF if there is a term of the form *attribute* op *value* for each attribute in a *prefix* of the search key.
+
+* a conjunct that that the index matches is referred as a **primary conjunct**.
+
+#####9.4 Selectivity
+The selectivity of an access pass is the number of pages(index pages plus data pages) retrieved if we use this access path to retrieve all desired tuples. <br>
+The most selective access path is the one that retrieves the fewest pages.
+
+#####9.5 algorithms for relational operations
+######9.5.1 Selection
+$\sigma_{R.attr \text{ op }value(R)}$
+
+* iteration :  <br> no index that matches *R.attr*, we have to scan *R*
+
+* indexing : <br> if an index matches, we can retrieve relevant tuples by finding them in the index and locating them on disk
+
+* partition : <br> do a binary search on sorted data to find the first tuple that matches, to retrieve the remaining entries we simply scan the collection starting at the first tuple we found.
+
+######9.5.2 Projection
+*SELECT DISTINCT R.attr*
+
+* iteration : <br> ??
+
+* indexing : <br> if an index matches, if an index exist for al the projection attributes, then only need to look at the leaves of the tree.
+
+* partition 1 : <br> to eliminate duplicates when doing projection, simply project out unwanted attributes and hash combination of the remaining attributes so duplicates can easily be detected. <br>
+Two steps : partitioning and then duplicates elimination <br>
+  1. partitioning : read relation using one input buffer<br>
+     for each tuple (discard unwanted fields, apply hash function to choose one of the B-1 output buffers)<br>
+     Result in B-1 partitions, it is *guaranteed* that 2 tuples from different partitions are distinct
+     ![hash](images/projection_hashing.png "hash")
+  2. for each partition read and build an in-memory hash table while discarding duplicates. A partition fits in memory if $B > \sqrt T$ <br>
+  the cost : suppose partitions fit in memory : read all N pages holding the table, suppose they are 20 buffers
+  $$
+    M + 2T \ \text{ I/Os}
+  $$
+  Where M is the # of pages in R, T is the # of pages of R with unneeded attributes removed  
+
+* partition 2 : <br>   
+  -1. Scan R, extract only the needed attributes.
+  –2. Sort the resulting set
+  –3. Remove adjacent duplicates
+
+######9.5.3 Join
+
+* iteration : <br>
+
+* indexing :  <br>
+
+* partition :  <br>
+
+* iteration : <br>
+
+* indexing : <br>
+
+* partition : <br>
