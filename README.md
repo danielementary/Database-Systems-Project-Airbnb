@@ -46,3 +46,9 @@ Install mysql-server : **Do not** choose `strong password encryption`
 - Tables should be populated automatically : Takes about 20min (blocking)
 - Have a look at the top of the window to know about connection status
 - Have a look at the terminal to see the last activities
+
+## Collaborators
+
+- Sophie Ammann
+- Samuel Chassot
+- Daniel Filipe Nunes Silva
