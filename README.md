@@ -1,9 +1,5 @@
 # Database-Systems-Project-Airbnb
 
-## Dependencies
-### Git LFS (to clone repository)
-https://git-lfs.github.com/
-
 ### MySQL
 #### Configuration
 Install mysql-server : **Do not** choose `strong password encryption`
@@ -48,7 +44,6 @@ Install mysql-server : **Do not** choose `strong password encryption`
 - Have a look at the terminal to see the last activities
 
 ## Collaborators
-
 - Sophie Ammann
 - Samuel Chassot
 - Daniel Filipe Nunes Silva
